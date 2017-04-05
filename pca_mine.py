@@ -54,10 +54,22 @@ tot = 0.0
 for i in range(len(eval)):
     tot += eval[i]
 
+eig_pairs = [(numpy.abs(eval[i]), evct[:,i]) for i in range(len(eval))]
+eig_pairs.sort(key=lambda x: x[0], reverse=True)
+
 for i in range(len(eval)):
-    sys.stdout.write("%10.5f ["%(eval[i]/tot))
+    sys.stdout.write("%10.5f ["%(eig_pairs[i][0]/tot))
     for j in range(evct.shape[0]):
-        sys.stdout.write("%10.5f "%(evct[j, i]))
+        sys.stdout.write("%10.5f "%((eig_pairs[i][1])[j]))
     sys.stdout.write("]\n")
 
+matrix_w = numpy.hstack((eig_pairs[0][1].reshape(n,1), eig_pairs[1][1].reshape(n,1)))
 
+transformed = matrix_w.T.dot(pcamat)
+#assert transformed.shape == (n,noss), "The matrix has not the expected dimension."
+
+print " "
+for j in range(transformed.shape[1]):
+    for i in range(transformed.shape[0]):
+        sys.stdout.write("%10.5f "%(transformed[i, j]))
+    sys.stdout.write("\n")
