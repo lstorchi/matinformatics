@@ -50,9 +50,12 @@ for j in range(len(filenames)):
 results = matplotlib.mlab.PCA(pcamat)
 
 #this will return an array of variance percentages for each component
-print results.fracs
+#print results.fracs
 
 #this will return a 2d array of the data projected into PCA space
-print results.Y 
+#print results.Y 
 
-print results.s
+for i, j in results.Y:
+    sys.stdout.write("%10.5f %10.5f\n"%(i, j))
+
+#print results.Wt
