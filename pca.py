@@ -50,20 +50,23 @@ for j in range(len(filenames)):
 results = matplotlib.mlab.PCA(pcamat)
 
 #this will return a 2d array of the data projected into PCA space
-print results.Y 
+#print results.Y 
 
-#for i, j in results.Y:
-#    sys.stdout.write("%10.5f %10.5f\n"%(i, j))
+for i, j in results.Y:
+    sys.stdout.write("%10.5f %10.5f\n"%(i, j))
 
 # The weight vector for projecting a numdims point orarray into PCA space 
-print "weight vector: ", results.Wt
+print "weight vector: "
+print results.Wt
 
 #this will return an array of variance percentages for each component
 print "variance percentages: ", results.fracs
 
-print results.mu
-print results.s
+#print results.mu
+#print results.s
 
-i = numpy.identity(pcamat.shape[1]) 
-coef = results.project(i)
-print coef
+#i = numpy.identity(pcamat.shape[1]) 
+#coef = results.project(i)
+#print coef
+
+#print results.center(pcamat)
