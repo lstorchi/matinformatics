@@ -36,34 +36,28 @@ for f in filenames:
         print "Different dim "
         exit(1)
 
-pcamat = numpy.zeros((noss, n), dtype='float64')
+pcamat = numpy.zeros((n, noss), dtype='float64')
 
-for j in range(len(filenames)):
-    fp = open(filenames[j])
-    i = 0
+for i in range(len(filenames)):
+    fp = open(filenames[i])
+    j = 0
     for l in fp:
         pcamat[i, j] = float(l) 
-        i += 1
+        j += 1
     
     fp.close()
 
-results = matplotlib.mlab.PCA(pcamat)
+c = numpy.corrcoef(pcamat)
+eval, evct = numpy.linalg.eig(c)
 
-#this will return a 2d array of the data projected into PCA space
-print results.Y 
+tot = 0.0
+for i in range(len(eval)):
+    tot += eval[i]
 
-#for i, j in results.Y:
-#    sys.stdout.write("%10.5f %10.5f\n"%(i, j))
+for i in range(len(eval)):
+    sys.stdout.write("%10.5f ["%(eval[i]/tot))
+    for j in range(evct.shape[0]):
+        sys.stdout.write("%10.5f "%(evct[j, i]))
+    sys.stdout.write("]\n")
 
-# The weight vector for projecting a numdims point orarray into PCA space 
-print "weight vector: ", results.Wt
 
-#this will return an array of variance percentages for each component
-print "variance percentages: ", results.fracs
-
-print results.mu
-print results.s
-
-i = numpy.identity(pcamat.shape[1]) 
-coef = results.project(i)
-print coef
