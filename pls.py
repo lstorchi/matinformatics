@@ -1,5 +1,11 @@
+import math
+import numpy
 import sys
 import re
+
+from sklearn.cross_decomposition import PLSRegression
+from sklearn.cross_decomposition import PLSCanonical
+from sklearn.preprocessing import scale
 
 ###############################################################################
 
@@ -47,4 +53,22 @@ for l in fp:
 
     dataX.append(X)
 
-#print dataX, dataY
+X = numpy.asarray(dataX)
+Y = numpy.asarray(dataY)
+
+sX = X
+sY = Y
+
+pls2 = PLSRegression (n_components=3, scale=False, tol=1e-06)
+#pls2 = PLSCanonical(n_components=3, scale=False, tol=1e-06, algorithm="svd")
+
+pls2.fit (sX, sY)
+
+Y_pred = pls2.predict(X)
+
+diff = []
+for i in range(len(Y_pred)):
+    diff.append(math.fabs(Y_pred[i][0]-sY[i]))
+    print Y_pred[i][0], " ", Y[i], " ", math.fabs(Y_pred[i][0]-sY[i])
+
+print numpy.mean(diff) , " ", numpy.std(diff)
