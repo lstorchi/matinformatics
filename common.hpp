@@ -17,4 +17,5 @@ bool build_and_validate_pls (std::string & at,
     std::vector<float> & yv, 
     std::vector<std::vector<float> > & xv, 
     int numofobjs, int num_of_components,
-    int validation);
+    int validation, float & zeroval, 
+    std::vector<float> & coeff);

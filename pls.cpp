@@ -58,8 +58,11 @@ int main (int argc, char ** argv)
   int num_of_components = 3;
   std::string at = "MYT_";
 
+  float zeroval;
+  std::vector<float> coeff;
+
   build_and_validate_pls (at, obj_name_v, yv, xv, 
-    numofobjs, num_of_components, 0);
+    numofobjs, num_of_components, 0, zeroval, coeff);
 
   return 0;
 }

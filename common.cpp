@@ -173,7 +173,8 @@ bool build_and_validate_pls (std::string & at,
     std::vector<float> & yv, 
     std::vector<std::vector<float> > & xv, 
     int numofobjs, int num_of_components,
-    int validation)
+    int validation, float & zeroval, 
+    std::vector<float> & coeff)
 {
 
   Matrix x, y;
@@ -252,8 +253,6 @@ bool build_and_validate_pls (std::string & at,
     }
   
     // computing b0
-    float zeroval = 0.0;
-    std::vector<float> coeff;
     int max = num_of_components;
     for (int k=0; k<x.nvar; k++) 
     {
@@ -285,11 +284,7 @@ bool build_and_validate_pls (std::string & at,
       ++counter;
       fout.width(18); fout.precision(11);
       fout << *it << std::endl;
-      /*if (counter%5 == 0)
-          fout << std::endl;*/
     }
-    //fout << std::endl;
-    
     fout.close();
     
     lsFreeMatrix (&x); 
