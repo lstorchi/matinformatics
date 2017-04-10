@@ -73,14 +73,15 @@ int main (int argc, char ** argv)
   std::cout << "Start PLS..." << std::endl;
 
   int numofobjs = (int) xv.size();
-  int num_of_components = 3;
+  int num_of_components = 1;
+  int validate = 1;
   std::string at = "MYT_";
 
   float zeroval;
   std::vector<float> coeff;
 
   build_and_validate_pls (at, obj_name_v, yv, xv, 
-    numofobjs, num_of_components, 0, zeroval, coeff);
+    numofobjs, num_of_components, validate, zeroval, coeff);
 
   std::vector<float> diff;
   for (int i=0; i<numofobjs; ++i)
