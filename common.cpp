@@ -59,13 +59,17 @@ int fill_matrix (Matrix & x, Matrix & y, std::vector<float> & yv,
 {
   int nobj = (int) yv.size();
 
-  lsAllocMatrix (&x, nobj, (int) (xv.size() * xv[0].size()));
+  lsAllocMatrix (&x, nobj, (int) (xv[0].size()));
   lsAllocMatrix (&y, nobj, 1);
   for (int i=0; i<nobj; ++i)
   {
     y.data[i][0] = yv[i];
     for (int j=0; j<(int)xv[i].size(); ++j)
+    {
+      //std::cout << xv[i][j] << " ";
       x.data[i][j] = xv[i][j];
+    }
+    //std::cout << std::endl;
   }
  
   return nobj;
@@ -81,9 +85,11 @@ int build_pls (Matrix & x, Matrix & y, int num_of_components,
   
   vxac  = 0.00;
   
+  std::cout << "start CheckMissing " << std::endl;
   lsCheckMissing (&x, -99.00);
   lsCheckMissing (&y, -99.00);
-  
+
+  std::cout << "start AutoscaleMatrix " << std::endl;
   lsAutoscaleMatrix (&y);
   lsAutoscaleMatrix (&x);
   
@@ -92,6 +98,7 @@ int build_pls (Matrix & x, Matrix & y, int num_of_components,
   
   for (comp=0; comp<=num_of_components; comp++) 
   {
+    std::cout << "start cmp: " << comp << std::endl;
     lsAllocLV (&plscoeff[comp], &x, &y);
     
     lsExtractLV  (&x, &y, &plscoeff[comp]);
@@ -190,9 +197,12 @@ bool build_and_validate_pls (std::string & at,
       sdec[i] = 0.0;
       r2[i] = 0.0;
     }
+
+    std::cout << "build_pls..." << std::endl;
     
     build_pls (x, y, num_of_components, sdec, r2, plscoeff);
   
+    std::cout << "validation ... " << std::endl;
     fill_matrix (x, y, yv, xv);
   
     if (validation != 0)
@@ -200,19 +210,6 @@ bool build_and_validate_pls (std::string & at,
       bool userg = (validation == 1);
       validate_pls (x, y, q2, sdep, num_of_components, userg);
   
-      std::stringstream ssp0;
-      ssp0 << at << "parameters.txt";
-      if (access( ssp0.str().c_str(), F_OK ) != -1)
-        std::remove(ssp0.str().c_str());
-      std::ofstream fout0 (ssp0.str().c_str(), std::ios::app);
-  
-      fout0 << "n r2 q2 sdep" << std::endl;
-      for (int j=0; j<=num_of_components; j++)
-        fout0 << j+1 << " " << r2[j] << " " << 
-          q2[j] << " " << sdep[j] << std::endl;
-   
-      fout0.close();
-                                                         
       std::cout << "n r2 q2 sdep" << std::endl;
       for (int j=0; j<=num_of_components; j++)
         std::cout << j+1 << " " << r2[j] << " " << 
@@ -221,19 +218,6 @@ bool build_and_validate_pls (std::string & at,
     }
     else 
     {
-      std::stringstream ssp0;
-      ssp0 << at << "parameters.txt";
-      if (access( ssp0.str().c_str(), F_OK ) != -1)
-        std::remove(ssp0.str().c_str());
-      std::ofstream fout0 (ssp0.str().c_str(), std::ios::app);
-  
-      fout0 << "n r2 q2 sdep" << std::endl;
-      for (int j=0; j<=num_of_components; j++)
-        fout0 << j+1 << " " << r2[j] << " " << 
-          q2[j] << " " << sdep[j] << std::endl;
-   
-      fout0.close();
-                                                         
       std::cout << "n r2 q2 sdep" << std::endl;
       for (int j=0; j<=num_of_components; j++)
         std::cout << j+1 << " " << r2[j] << " " << 
