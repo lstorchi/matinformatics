@@ -6,6 +6,24 @@
 #include <basstat_inc.h>
 #include <common.hpp>
 
+double Average(std::vector<float> v)
+{  
+  double sum = 0.0;
+  for (int i=0; i<v.size(); i++)
+    sum += v[i];
+                
+  return sum/v.size();
+}
+
+double Deviation(std::vector<float> v, double ave)
+{
+  double E=0;
+  for(int i=0;i<v.size();i++)
+    E+=(v[i] - ave)*(v[i] - ave);
+
+  return sqrt(1.0/v.size()*E);
+}
+
 int main (int argc, char ** argv)
 {
   if (argc != 2)
@@ -63,6 +81,22 @@ int main (int argc, char ** argv)
 
   build_and_validate_pls (at, obj_name_v, yv, xv, 
     numofobjs, num_of_components, 0, zeroval, coeff);
+
+  std::vector<float> diff;
+  for (int i=0; i<numofobjs; ++i)
+  {
+    std::cout << obj_name_v[i] << " " << yv[i] << " ";
+    float esty = zeroval;
+    for (int j=0; j<(int)coeff.size(); ++j)
+      esty += coeff[j] * xv[i][j];
+    std::cout << esty << std::endl;
+    diff.push_back(fabsf(yv[i]-esty));
+  }
+
+  double avg = Average(diff); 
+  double std = Deviation(diff, avg);
+
+  std::cout << avg << " +/- " << std << std::endl;
 
   return 0;
 }
