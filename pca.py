@@ -52,8 +52,8 @@ results = matplotlib.mlab.PCA(pcamat)
 #this will return a 2d array of the data projected into PCA space
 #print results.Y 
 
-for i, j in results.Y:
-    sys.stdout.write("%10.5f %10.5f\n"%(i, j))
+for i, j, k in results.Y:
+    sys.stdout.write("%10.5f %10.5f %10.5f\n"%(i, j, k))
 
 # The weight vector for projecting a numdims point orarray into PCA space 
 print "weight vector: "
