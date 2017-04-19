@@ -16,36 +16,32 @@ def filecount (fname):
 
 ###############################################################################
 
-filenames = []
+filename = ""
 n = 0
 
-if len(sys.argv) >= 4:
+if len(sys.argv) == 3:
     n = int(sys.argv[1])
-    for i in range(2, 2+n):
-        filenames.append(sys.argv[i])
+    filename = (sys.argv[2])
 else:
-    print "usage: ", sys.argv[0] , " N file1 file2 ... fileN "
+    print "usage: ", sys.argv[0] , " N file "
     print "        N should be >= 2" 
     exit(1)
 
-noss = filecount(filenames[0])
-
-for f in filenames:
-    nnew = filecount(f)
-    if nnew != noss:
-        print "Different dim "
-        exit(1)
+noss = filecount(filename) - 1
 
 pcamat = numpy.zeros((noss, n), dtype='float64')
 
-for j in range(len(filenames)):
-    fp = open(filenames[j])
-    i = 0
-    for l in fp:
-        pcamat[i, j] = float(l) 
-        i += 1
-    
-    fp.close()
+fp = open(filename)
+fp.readline()
+
+i = 0
+for l in fp:
+    av = l.split()
+    for j in range(n):
+      pcamat[i, j] = float(av[j+1]) 
+    i += 1
+
+fp.close()
 
 results = matplotlib.mlab.PCA(pcamat)
 
