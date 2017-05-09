@@ -18,7 +18,7 @@ def filecount (fname):
 
 def corrval (a1, a2):
 
-  print "P-value: " , scipy.stats.pearsonr(a1, a2)
+  print "%4.2f "%(scipy.stats.pearsonr(a1, a2)[0]) + " P "
 
   a1m = numpy.mean(a1)
   a2m = numpy.mean(a2) 
@@ -29,19 +29,19 @@ def corrval (a1, a2):
   for i in range(n1):
       pcmp += (a1[i] - a1m)*(a2[i] - a2m)
 
-  print "P computed: ", pcmp/(n1*a1s*a2s)
+  #print "P computed: ", pcmp/(n1*a1s*a2s)
 
-  print scipy.stats.spearmanr(a1, a2)
-  print scipy.stats.kendalltau(a1, a2)
+  print "%4.2f "%(scipy.stats.spearmanr(a1, a2)[0])+ " S"
+  print "%4.2f "%(scipy.stats.kendalltau(a1, a2)[0])+ " K"
 
 ###############################################################################
 
 file1 = ""
 
-if len(sys.argv) == 2:
+if len(sys.argv) == 3:
     file1 = sys.argv[1]
 else:
-    print "usage: ", sys.argv[0] , " file1 "
+    print "usage: ", sys.argv[0] , " file1 ynum "
     exit(1)
 
 n1 = filecount(file1) - 1
@@ -62,12 +62,15 @@ for l in fp1:
     a1[i] = float(av[1])
     a2[i] = float(av[2])
     a3[i] = float(av[3])
-    y[i] = float(av[7])
+    y[i] = float(av[int(sys.argv[2])])
+    #y[i] = float(av[6])+float(av[7])
     i += 1
 
 fp1.close()
 
+print "a1, y"
 corrval(a1, y)
+print "a2, y"
 corrval(a2, y)
+print "a3, y"
 corrval(a3, y)
-
