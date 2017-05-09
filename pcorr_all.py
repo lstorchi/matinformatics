@@ -62,7 +62,7 @@ for l in fp1:
     a1[i] = float(av[1])
     a2[i] = float(av[2])
     a3[i] = float(av[3])
-    y[i] = float(av[6])
+    y[i] = float(av[7])
     i += 1
 
 fp1.close()
