@@ -26,9 +26,9 @@ double Deviation(std::vector<float> v, double ave)
 
 int main (int argc, char ** argv)
 {
-  if (argc != 2)
+  if (argc != 3)
   {
-    std::cerr << "usage: " << argv[0] << " filename " << std::endl;
+    std::cerr << "usage: " << argv[0] << " filename columnum " << std::endl;
     return 1;
   }
 
@@ -64,7 +64,7 @@ int main (int argc, char ** argv)
         x.push_back(atof(tokens[i].c_str()));
       xv.push_back(x);
 
-      yv.push_back(atof(tokens[(int)(tokens.size()-1)].c_str()));
+      yv.push_back(atof(tokens[atoi(argv[2])].c_str()));
     }
   }
 
