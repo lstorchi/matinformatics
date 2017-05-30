@@ -63,7 +63,7 @@ for l in fp1:
     a2[i] = (float(av[2]))
     a3[i] = (float(av[3]))
     y[i] = float(av[int(sys.argv[2])])
-    y[i] = float(av[4])+float(av[5])
+    #y[i] = float(av[4])+float(av[5])
     i += 1
 
 fp1.close()
