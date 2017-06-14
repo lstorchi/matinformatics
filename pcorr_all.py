@@ -1,6 +1,7 @@
 import sys
 import numpy
 import scipy.stats
+import pandas 
 
 ###############################################################################
 
@@ -38,11 +39,12 @@ def corrval (a1, a2):
 
 file1 = ""
 
-if len(sys.argv) == 3:
+if len(sys.argv) == 2:
     file1 = sys.argv[1]
 else:
-    print "usage: ", sys.argv[0] , " file1 ynum "
+    print "usage: ", sys.argv[0] , " file"
     exit(1)
+
 
 n1 = filecount(file1) - 1
 
@@ -63,7 +65,7 @@ for l in fp1:
     a2[i] = (float(av[2]))
     a3[i] = (float(av[3]))
     y[i] = float(av[int(sys.argv[2])])
-    #y[i] = float(av[4])+float(av[5])
+    #y[i] = float(av[6])+float(av[7])
     i += 1
 
 fp1.close()
