@@ -37,12 +37,21 @@ for l in fp1:
     desw = float(av[11])
     de = float(av[12])
 
-    sys.stdout.write("%10s ,"%(av[0]))
-    for i in range(1,len(av)-1):
-        sys.stdout.write("%15.10f , "%(float(av[i])))
-    if av[i+1] == "metal":
-        sys.stdout.write("%15s\n"%((av[i+1])))
-    else:
-        sys.stdout.write("%15.10f\n"%(float(av[i+1])))
-    
+    if (math.fabs(gm2) < 0.001):
+        if (math.fabs(desw) > 0.001):
+            print "Error " 
+            exit(1)
+
+    if (math.fabs(gm2) > 0.001):
+        if (math.fabs(eta1) < 0.1) and (math.fabs(eta2) < 0.1) and \
+                (math.fabs(eta3) < 0.1) and (math.fabs(eta4) < 0.1) and \
+                (math.fabs(eta5) < 0.1):
+          sys.stdout.write("%10s ,"%(av[0]))
+          for i in range(1,len(av)-1):
+              sys.stdout.write("%15.10f , "%(float(av[i])))
+          if av[i+1] == "metal":
+              sys.stdout.write("%15s\n"%((av[i+1])))
+          else:
+              sys.stdout.write("%15.10f\n"%(float(av[i+1])))
+      
 fp1.close()

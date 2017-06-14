@@ -18,6 +18,7 @@ def filecount (fname):
 
 filename = ""
 n = 0
+SKIP = 6
 
 if len(sys.argv) == 3:
     n = int(sys.argv[1])
@@ -36,9 +37,9 @@ fp.readline()
 
 i = 0
 for l in fp:
-    av = l.split()
+    av = l.split(",")
     for j in range(n):
-      pcamat[i, j] = float(av[j+1]) 
+      pcamat[i, j] = float(av[j+SKIP]) 
     i += 1
 
 fp.close()
@@ -49,7 +50,7 @@ results = matplotlib.mlab.PCA(pcamat)
 #print results.Y 
 
 for i, j, k in results.Y:
-    sys.stdout.write("%10.5f %10.5f %10.5f\n"%(i, j, k))
+    sys.stdout.write("%10.5f , %10.5f , %10.5f\n"%(i, j, k))
 
 # The weight vector for projecting a numdims point orarray into PCA space 
 print "weight vector: "

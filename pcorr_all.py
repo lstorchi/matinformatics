@@ -5,6 +5,16 @@ import pandas
 
 ###############################################################################
 
+def is_number(s):
+    
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+###############################################################################
+
 def filecount (fname):
     
     i = -1
@@ -39,40 +49,45 @@ def corrval (a1, a2):
 
 file1 = ""
 
-if len(sys.argv) == 2:
+if len(sys.argv) == 3:
     file1 = sys.argv[1]
 else:
-    print "usage: ", sys.argv[0] , " file"
+    print "usage: ", sys.argv[0] , " file ynum"
     exit(1)
 
 
 n1 = filecount(file1) - 1
 
-a1 = numpy.zeros(n1, dtype='float64')
-a2 = numpy.zeros(n1, dtype='float64')
-a3 = numpy.zeros(n1, dtype='float64')
-
-y = numpy.zeros(n1, dtype='float64')
+lgm2 = []
+lgm5 = []
+lm2 = []
+ly = []
 
 fp1 = open(file1, "r")
 
 fp1.readline()
 
-i = 0
 for l in fp1:
-    av = l.split()
-    a1[i] = (float(av[1]))
-    a2[i] = (float(av[2]))
-    a3[i] = (float(av[3]))
-    y[i] = float(av[int(sys.argv[2])])
-    #y[i] = float(av[6])+float(av[7])
-    i += 1
+    av = l.split(",")
+
+    if (is_number(av[int(sys.argv[2])])):
+      yv = float(av[int(sys.argv[2])])
+      lgm2.append(float(av[6]))
+      lgm5.append(float(av[7]))
+      lm2.append(float(av[8]))
+      ly.append(yv)
+      #y[i] = float(av[11])+float(av[12])
+
+gm2 = numpy.asarray(lgm2)
+gm5 = numpy.asarray(lgm5)
+m2 = numpy.asarray(lm2)
+y = numpy.asarray(ly)
 
 fp1.close()
 
-print "a1, y"
-corrval(a1, y)
-print "a2, y"
-corrval(a2, y)
-print "a3, y"
-corrval(a3, y)
+print "GM2-, y"
+corrval(gm2, y)
+print "GM5+, y"
+corrval(gm5, y)
+print "M2-, y"
+corrval(m2, y)
