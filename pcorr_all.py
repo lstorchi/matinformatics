@@ -37,10 +37,10 @@ def corrval (a1, a2):
   a2s = numpy.std(a2)
 
   pcmp = 0.0
-  for i in range(n1):
+  for i in range(len(a1)):
       pcmp += (a1[i] - a1m)*(a2[i] - a2m)
 
-  #print "P computed: ", pcmp/(n1*a1s*a2s)
+  #print "P computed: ", pcmp/(len(a1)*a1s*a2s)
 
   print "%4.2f "%(scipy.stats.spearmanr(a1, a2)[0])+ " S"
   print "%4.2f "%(scipy.stats.kendalltau(a1, a2)[0])+ " K"
@@ -55,7 +55,6 @@ else:
     print "usage: ", sys.argv[0] , " file ynum"
     exit(1)
 
-
 n1 = filecount(file1) - 1
 
 lgm2 = []
@@ -66,12 +65,13 @@ ly = []
 fp1 = open(file1, "r")
 
 fp1.readline()
+idx = int(sys.argv[2])
 
 for l in fp1:
     av = l.split(",")
 
-    if (is_number(av[int(sys.argv[2])])):
-      yv = float(av[int(sys.argv[2])])
+    if (is_number(av[idx])):
+      yv = float(av[idx])
       lgm2.append(float(av[6]))
       lgm5.append(float(av[7]))
       lm2.append(float(av[8]))
@@ -82,6 +82,8 @@ gm2 = numpy.asarray(lgm2)
 gm5 = numpy.asarray(lgm5)
 m2 = numpy.asarray(lm2)
 y = numpy.asarray(ly)
+
+print len(y) , " == ", len(gm2), " == ", len(gm5), " == ", len(m2)
 
 fp1.close()
 
