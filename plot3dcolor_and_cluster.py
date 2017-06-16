@@ -51,8 +51,21 @@ X = numpy.asarray(lX)
 
 est = KMeans(n_clusters=8)
 
+
 est.fit(X)
 labels = est.labels_
+
+x = set()
+
+for i in labels:
+    x.add(i)
+
+for i in x:
+    for j in range(len(labels)):
+        if labels[j] == i:
+            sys.stdout.write ("%s "%(name[j]))
+    print ""
+            
 
 fig = matplotlib.pyplot.figure(1, figsize=(4, 3))
 matplotlib.pyplot.clf()
@@ -65,7 +78,6 @@ ax.w_zaxis.set_ticklabels([])
 ax.set_xlabel('GM2-')
 ax.set_ylabel('GM5+')
 ax.set_zlabel('M2-')
-
 
 fig = matplotlib.pyplot.figure(2, figsize=(4, 3))
 matplotlib.pyplot.clf()
