@@ -75,8 +75,8 @@ for l in fp1:
       lgm2.append(float(av[6]))
       lgm5.append(float(av[7]))
       lm2.append(float(av[8]))
+      #yv = float(av[11])+float(av[12])
       ly.append(yv)
-      #y[i] = float(av[11])+float(av[12])
 
 gm2 = numpy.asarray(lgm2)
 gm5 = numpy.asarray(lgm5)
