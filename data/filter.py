@@ -21,6 +21,10 @@ for i in range(len(av)-1):
     sys.stdout.write("%15s , "%(av[i]))
 sys.stdout.write("%15s \n"%(av[i+1]))
 
+for i in range(len(av)-1):
+    sys.stderr.write("%15s , "%(av[i]))
+sys.stderr.write("%15s \n"%(av[i+1]))
+
 i = 0
 for l in fp1:
     av = l.split()
@@ -36,6 +40,14 @@ for l in fp1:
 
     desw = float(av[11])
     de = float(av[12])
+
+    sys.stderr.write("%10s ,"%(av[0]))
+    for i in range(1,len(av)-1):
+        sys.stderr.write("%15.10f , "%(float(av[i])))
+    if av[i+1] == "metal":
+        sys.stderr.write("%15s\n"%((av[i+1])))
+    else:
+        sys.stderr.write("%15.10f\n"%(float(av[i+1])))
 
     if (math.fabs(gm2) < 0.001):
         if (math.fabs(desw) > 0.001):

@@ -61,6 +61,11 @@ lgm2 = []
 lgm5 = []
 lm2 = []
 ly = []
+leta1 = []
+leta2 = []
+leta3 = []
+leta4 = []
+leta5 = []
 
 fp1 = open(file1, "r")
 
@@ -72,9 +77,16 @@ for l in fp1:
 
     if (is_number(av[idx])):
       yv = float(av[idx])
-      lgm2.append(float(av[6]))
-      lgm5.append(float(av[7]))
-      lm2.append(float(av[8]))
+      lgm2.append(float(av[7]))
+      lgm5.append(float(av[8]))
+      lm2.append(float(av[9]))
+
+      leta1.append(float(av[2]))
+      leta2.append(float(av[3]))
+      leta3.append(float(av[4]))
+      leta4.append(float(av[5]))
+      leta5.append(float(av[6]))
+
       #yv = float(av[11])+float(av[12])
       ly.append(yv)
 
@@ -93,3 +105,18 @@ print "GM5+, y"
 corrval(gm5, y)
 print "M2-, y"
 corrval(m2, y)
+
+print "eta1, y"
+corrval(numpy.asarray(leta1), y)
+
+print "eta2, y"
+corrval(numpy.asarray(leta2), y)
+
+print "eta3, y"
+corrval(numpy.asarray(leta3), y)
+
+print "eta4, y"
+corrval(numpy.asarray(leta4), y)
+
+print "eta5, y"
+corrval(numpy.asarray(leta5), y)
