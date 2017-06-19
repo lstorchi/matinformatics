@@ -5,6 +5,39 @@ import matplotlib.pyplot
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import KMeans
 
+###############################################################################
+
+def corrval (a1, a2):
+
+  print "%4.2f "%(scipy.stats.pearsonr(a1, a2)[0]) + " P "
+
+  a1m = numpy.mean(a1)
+  a2m = numpy.mean(a2) 
+  a1s = numpy.std(a1)
+  a2s = numpy.std(a2)
+
+  pcmp = 0.0
+  for i in range(len(a1)):
+      pcmp += (a1[i] - a1m)*(a2[i] - a2m)
+
+  #print "P computed: ", pcmp/(len(a1)*a1s*a2s)
+
+  print "%4.2f "%(scipy.stats.spearmanr(a1, a2)[0])+ " S"
+  print "%4.2f "%(scipy.stats.kendalltau(a1, a2)[0])+ " K"
+
+###############################################################################
+
+def printcc (name, A, An):
+    print name
+    for n in An:
+        sys.stdout.write(n + " ")
+    print ""
+    if (len(A) > 3):
+        corrval(numpy.asarray(A)[:, 0], numpy.asarray(A)[:, 1])
+        print ""
+
+###############################################################################
+
 file = ""
 
 if len(sys.argv) == 2:

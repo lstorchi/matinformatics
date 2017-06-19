@@ -39,7 +39,6 @@ def printcc (name, A, An):
 
 ###############################################################################
 
-
 file = ""
 
 if len(sys.argv) == 2:
@@ -69,9 +68,13 @@ On = []
 Rn = []
 Vn = []
 
+lX = []
 name = []
 color = []
-lX = []
+
+xnum = 8
+ynum = 12
+ynump = 13
 
 initialcenter = numpy.zeros((CLUST,2))
 
@@ -81,9 +84,8 @@ for l in fp:
     line = line.replace("\n", "")
     lv = line.split(",")
 
-
-    x = float(lv[7])
-    y = float(lv[12])
+    x = float(lv[xnum])
+    y = float(lv[ynum]) + float(lv[ynump])
 
     name.append(lv[0])
     if lv[1] == "A":
@@ -163,12 +165,10 @@ for i in x:
       print ""
     print ""
             
-
 fig1, ax1 = matplotlib.pyplot.subplots()
 ax1.scatter(X[:, 0], X[:, 1], c=color, s=100)
 for i, txt in enumerate(name):
     ax1.annotate(txt, (X[i, 0], X[i, 1]))
-
 
 fig2, ax2 = matplotlib.pyplot.subplots()
 ax2.scatter(X[:, 0], X[:, 1], c=labels.astype(numpy.float), s=100)
