@@ -13,16 +13,10 @@ else:
     print "usage: ", sys.argv[0] , " file "
     exit(1)
 
-lX = []
-color = []
-name = []
-
-CLUST = 7
-
 fp = open(file)
 hdr = fp.readline()
 
-initialcenter = numpy.zeros((CLUST,3))
+CLUST = 7
 
 A = []
 E = []
@@ -31,6 +25,11 @@ I = []
 O = []
 R = []
 V = []
+name = []
+color = []
+lX = []
+
+initialcenter = numpy.zeros((CLUST,2))
 
 for l in fp:
     line = l.replace(" ", "")
@@ -40,35 +39,34 @@ for l in fp:
 
 
     x = float(lv[7])
-    y = float(lv[8])
-    z = float(lv[9])
+    y = float(lv[12])
 
-    print x, y, z
+    print x, y
 
     name.append(lv[0])
     if lv[1] == "A":
         color.append("yellow")
-        A.append((x, y, z))
+        A.append((x, y))
     elif lv[1] == "E":
         color.append("pink")
-        E.append((x, y, z))
+        E.append((x, y))
     elif lv[1] == "G":
         color.append("blue")
-        G.append((x, y, z))
+        G.append((x, y))
     elif lv[1] == "I":
         color.append("grey")
-        I.append((x, y, z))
+        I.append((x, y))
     elif lv[1] == "O":
         color.append("orange")
-        O.append((x, y, z))
+        O.append((x, y))
     elif lv[1] == "R":
         color.append("red")
-        R.append((x, y, z))
+        R.append((x, y))
     elif lv[1] == "V":
         color.append("green")
-        V.append((x, y, z))
+        V.append((x, y))
 
-    lX.append([x, y, z])
+    lX.append([x, y])
 
 fp.close()
 
@@ -83,7 +81,6 @@ initialcenter[6,:] = numpy.mean(V, axis=0)
 print initialcenter
 
 X = numpy.asarray(lX)
-#print X
 
 est = KMeans(n_clusters=CLUST, init=initialcenter)
 
@@ -102,32 +99,15 @@ for i in x:
     print ""
             
 
-fig = matplotlib.pyplot.figure(1, figsize=(4, 3))
-matplotlib.pyplot.clf()
-ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
-matplotlib.pyplot.cla()
-ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=color, s=100)
+fig1, ax1 = matplotlib.pyplot.subplots()
+ax1.scatter(X[:, 0], X[:, 1], c=color, s=100)
 for i, txt in enumerate(name):
-    ax.text(X[i,0],X[i,1],X[i, 2], txt)
-ax.w_xaxis.set_ticklabels([])
-ax.w_yaxis.set_ticklabels([])
-ax.w_zaxis.set_ticklabels([])
-ax.set_xlabel('GM2-')
-ax.set_ylabel('GM5+')
-ax.set_zlabel('M2-')
+    ax1.annotate(txt, (X[i, 0], X[i, 1]))
 
-fig = matplotlib.pyplot.figure(2, figsize=(4, 3))
-matplotlib.pyplot.clf()
-ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
-matplotlib.pyplot.cla()
-ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=labels.astype(numpy.float), s=100)
+
+fig2, ax2 = matplotlib.pyplot.subplots()
+ax2.scatter(X[:, 0], X[:, 1], c=labels.astype(numpy.float), s=100)
 for i, txt in enumerate(name):
-    ax.text(X[i,0], X[i,1], X[i, 2], txt)
-ax.w_xaxis.set_ticklabels([])
-ax.w_yaxis.set_ticklabels([])
-ax.w_zaxis.set_ticklabels([])
-ax.set_xlabel('GM2-')
-ax.set_ylabel('GM5+')
-ax.set_zlabel('M2-')
+    ax2.annotate(txt, (X[i, 0], X[i, 1]))
 
 matplotlib.pyplot.show()
