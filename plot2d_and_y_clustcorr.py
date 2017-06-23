@@ -2,6 +2,7 @@ import sys
 
 import numpy 
 import matplotlib.pyplot 
+import scipy.stats
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import KMeans
 
@@ -46,16 +47,10 @@ else:
     print "usage: ", sys.argv[0] , " file "
     exit(1)
 
-lX = []
-color = []
-name = []
-
-CLUST = 7
-
 fp = open(file)
 hdr = fp.readline()
 
-initialcenter = numpy.zeros((CLUST,3))
+CLUST = 7
 
 A = []
 E = []
@@ -65,27 +60,27 @@ O = []
 R = []
 V = []
 
-Adesw = []
-Edesw = []
-Gdesw = []
-Idesw = []
-Odesw = []
-Rdesw = []
-Vdesw = []
+An = []
+En = []
+Gn = []
+In = []
+On = []
+Rn = []
+Vn = []
 
-Adeplus = []
-Edeplus = []
-Gdeplus = []
-Ideplus = []
-Odeplus = []
-Rdeplus = []
-Vdeplus = []
+ly1 = []
+ly2 = []
 
-desw = []
-deplus = []
+lX = []
+name = []
+color = []
 
+x1num = 2
+x2num = 8 
 y1num = 12
 y2num = 13
+
+initialcenter = numpy.zeros((CLUST,2))
 
 for l in fp:
     line = l.replace(" ", "")
@@ -93,56 +88,44 @@ for l in fp:
     line = line.replace("\n", "")
     lv = line.split(",")
 
-    x = float(lv[7])
-    y = float(lv[8])
-    z = float(lv[9])
-
+    x1 = float(lv[x1num])
     y1 = float(lv[y1num])
-    y2 = float(lv[y2num])
-
-    desw.append(y1)
-    deplus.append(y1 + y2)
-
-    #print x, y, z
+    x2 = float(lv[x2num])
+    y2 = float(lv[y1num]) + float(lv[y2num])
 
     name.append(lv[0])
     if lv[1] == "A":
         color.append("yellow")
-        A.append((x, y, z))
-        Adesw.append(y1)
-        Adeplus.append(y1 + y2)
+        A.append((x1, x2))
+        An.append(lv[0])
     elif lv[1] == "E":
         color.append("pink")
-        E.append((x, y, z))
-        Edesw.append(y1)
-        Edeplus.append(y1 + y2) 
+        E.append((x1, x2))
+        En.append(lv[0])
     elif lv[1] == "G":
         color.append("blue")
-        G.append((x, y, z))
-        Gdesw.append(y1)
-        Gdeplus.append(y1 + y2) 
+        G.append((x1, x2))
+        Gn.append(lv[0])
     elif lv[1] == "I":
         color.append("grey")
-        I.append((x, y, z))
-        Idesw.append(y1)
-        Ideplus.append(y1 + y2)
+        I.append((x1, x2))
+        In.append(lv[0])
     elif lv[1] == "O":
         color.append("orange")
-        O.append((x, y, z))
-        Odesw.append(y1)
-        Odeplus.append(y1 + y2)
+        O.append((x1, x2))
+        On.append(lv[0])
     elif lv[1] == "R":
         color.append("red")
-        R.append((x, y, z))
-        Rdesw.append(y1)
-        Rdeplus.append(y1 + y2)
+        R.append((x1, x2))
+        Rn.append(lv[0])
     elif lv[1] == "V":
         color.append("green")
-        V.append((x, y, z))
-        Vdesw.append(y1)
-        Vdeplus.append(y1 + y2)
+        V.append((x1, x2))
+        Vn.append(lv[0])
 
-    lX.append([x, y, z])
+    lX.append([x1, x2])
+    ly1.append(y1)
+    ly2.append(y2)
 
 fp.close()
 
@@ -154,10 +137,9 @@ initialcenter[4,:] = numpy.mean(O, axis=0)
 initialcenter[5,:] = numpy.mean(R, axis=0)
 initialcenter[6,:] = numpy.mean(V, axis=0)
 
-print initialcenter
+#print initialcenter
 
 X = numpy.asarray(lX)
-#print X
 
 est = KMeans(n_clusters=CLUST, init=initialcenter)
 
@@ -170,42 +152,39 @@ for i in labels:
     x.add(i)
 
 for i in x:
-    clustdesw = []
-    clustdeplus = []
+    x1c = []
+    y1c = []
 
+    x2c = []
+    y2c = []
+ 
     for j in range(len(labels)):
         if labels[j] == i:
-            clustdesw.append(desw[j])
-            clustdeplus.append(deplus[j])
             sys.stdout.write ("%s "%(name[j]))
-    print ""
-            
-fig = matplotlib.pyplot.figure(1, figsize=(4, 3))
-matplotlib.pyplot.clf()
-ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
-matplotlib.pyplot.cla()
-ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=color, s=100)
-for i, txt in enumerate(name):
-    ax.text(X[i,0],X[i,1],X[i, 2], txt)
-ax.w_xaxis.set_ticklabels([])
-ax.w_yaxis.set_ticklabels([])
-ax.w_zaxis.set_ticklabels([])
-ax.set_xlabel('GM2-')
-ax.set_ylabel('GM5+')
-ax.set_zlabel('M2-')
+            x1c.append(X[j, 0])
+            x2c.append(X[j, 1])
 
-fig = matplotlib.pyplot.figure(2, figsize=(4, 3))
-matplotlib.pyplot.clf()
-ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
-matplotlib.pyplot.cla()
-ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=labels.astype(numpy.float), s=100)
+            y1c.append(ly1[j])
+            y2c.append(ly2[j])
+    print ""
+    if (len(x1c) > 3):
+      corrval(x1c, y1c)
+      print ""
+    print ""
+    if (len(x2c) > 3):
+      corrval(x2c, y2c)
+      print ""
+    print ""
+
+            
+fig1, ax1 = matplotlib.pyplot.subplots()
+ax1.scatter(X[:, 0], X[:, 1], c=color, s=100)
 for i, txt in enumerate(name):
-    ax.text(X[i,0], X[i,1], X[i, 2], txt)
-ax.w_xaxis.set_ticklabels([])
-ax.w_yaxis.set_ticklabels([])
-ax.w_zaxis.set_ticklabels([])
-ax.set_xlabel('GM2-')
-ax.set_ylabel('GM5+')
-ax.set_zlabel('M2-')
+    ax1.annotate(txt, (X[i, 0], X[i, 1]))
+
+fig2, ax2 = matplotlib.pyplot.subplots()
+ax2.scatter(X[:, 0], X[:, 1], c=labels.astype(numpy.float), s=100)
+for i, txt in enumerate(name):
+    ax2.annotate(txt, (X[i, 0], X[i, 1]))
 
 matplotlib.pyplot.show()
