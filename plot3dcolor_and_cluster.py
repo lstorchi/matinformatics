@@ -1,5 +1,6 @@
 import sys
 
+import scipy
 import numpy 
 import matplotlib.pyplot 
 from mpl_toolkits.mplot3d import Axes3D
@@ -170,14 +171,23 @@ for i in labels:
     x.add(i)
 
 for i in x:
+    x1 = []
     clustdesw = []
+
+    x2 = []
     clustdeplus = []
 
     for j in range(len(labels)):
         if labels[j] == i:
+            x1.append(lX[j][0])
             clustdesw.append(desw[j])
+
+            x2.append(lX[j][1])
             clustdeplus.append(deplus[j])
             sys.stdout.write ("%s "%(name[j]))
+    print ""
+    corrval(x1, clustdesw)
+    corrval(x2, clustdeplus)
     print ""
             
 fig = matplotlib.pyplot.figure(1, figsize=(4, 3))
