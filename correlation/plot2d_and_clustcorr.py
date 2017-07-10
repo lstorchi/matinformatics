@@ -1,30 +1,45 @@
 import sys
 
+import math 
 import numpy 
 import matplotlib.pyplot 
 import scipy.stats
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import KMeans
 
+import utils
+
 ###############################################################################
 
-def corrval (a1, a2):
+def compute_and_print_corr (x, dv, dvov, desw, de, deswpde, p):
 
-  print "%4.2f "%(scipy.stats.pearsonr(a1, a2)[0]) + " P "
+    dvP, dvS, dvK = utils.corrval(numpy.asarray(x), numpy.asarray(dv))
+    dvovP, dvovS, dvovK = utils.corrval(numpy.asarray(x), numpy.asarray(dvov))
+    deswP, deswS, deswK = utils.corrval(numpy.asarray(x), numpy.asarray(desw))
+    deP, deS, deK = utils.corrval(numpy.asarray(x), numpy.asarray(de))
+    deswpdeP, deswpdeS, deswpdeK = utils.corrval(numpy.asarray(x), numpy.asarray(deswpde))
+    xn = []
+    pn = []
+    for i in range(len(p)):
+        if not math.isnan(p[i]):
+            xn.append(x[i])
+            pn.append(p[i])
 
-  a1m = numpy.mean(a1)
-  a2m = numpy.mean(a2) 
-  a1s = numpy.std(a1)
-  a2s = numpy.std(a2)
+    pP, pS, pK = utils.corrval(numpy.asarray(xn), numpy.asarray(pn))
 
-  pcmp = 0.0
-  for i in range(len(a1)):
-      pcmp += (a1[i] - a1m)*(a2[i] - a2m)
+    sys.stdout.write(" %5.2f P , %5.2f P , "%(dvP, dvovP))
+    sys.stdout.write(" %5.2f P , %5.2f P , "%(deswP, deP))
+    sys.stdout.write(" %5.2f P , %5.2f P \n "%(deswpdeP, pP))
 
-  #print "P computed: ", pcmp/(len(a1)*a1s*a2s)
+    sys.stdout.write(" %5.2f S , %5.2f S , "%(dvS, dvovS))
+    sys.stdout.write(" %5.2f S , %5.2f S , "%(deswS, deS))
+    sys.stdout.write(" %5.2f S , %5.2f S \n "%(deswpdeS, pS))
 
-  print "%4.2f "%(scipy.stats.spearmanr(a1, a2)[0])+ " S"
-  print "%4.2f "%(scipy.stats.kendalltau(a1, a2)[0])+ " K"
+    sys.stdout.write(" %5.2f K , %5.2f K , "%(dvK, dvovK))
+    sys.stdout.write(" %5.2f K , %5.2f K , "%(deswK, deK))
+    sys.stdout.write(" %5.2f K , %5.2f K \n "%(deswpdeK, pK))
+ 
+    print ""
 
 ###############################################################################
 
@@ -39,6 +54,15 @@ def printcc (name, A, An):
 
 ###############################################################################
 
+colors_map = {"A": "#DC143C", \
+        "E" : "#FF00FF", \
+        "G" : "#7D26CD", \
+        "I" : "#4169E1", \
+        "O" : "#00BFFF", \
+        "R" : "#00C78C", \
+        "V" : "#FFFF00", \
+        "B" : "#EE7600"}
+
 file = ""
 
 if len(sys.argv) == 2:
@@ -50,93 +74,94 @@ else:
 fp = open(file)
 hdr = fp.readline()
 
-CLUST = 7
+gm2 = []
+gm5 = []
+m2 = []
+dv = []
+dvov = []
+desw = []
+de = []
+p = []
+desw_p_de = []
+names = []
+classes = []
+colors = []
 
-A = []
-E = []
-G = []
-I = []
-O = []
-R = []
-V = []
+setofclasses = set()
 
-An = []
-En = []
-Gn = []
-In = []
-On = []
-Rn = []
-Vn = []
-
-lX = []
-name = []
-color = []
-
-xnum = 8
-ynum = 12
-ynump = 13
-
-initialcenter = numpy.zeros((CLUST,2))
-
+linenum = 2
 for l in fp:
     line = l.replace(" ", "")
     line = line.replace("\t", "")
     line = line.replace("\n", "")
     lv = line.split(",")
 
-    x = float(lv[xnum])
-    y = float(lv[ynum]) + float(lv[ynump])
+    if len (lv)!= 15:
+        print "Error at line ", linenum 
+        exit(1) 
 
-    name.append(lv[0])
-    if lv[1] == "A":
-        color.append("yellow")
-        A.append((x, y))
-        An.append(lv[0])
-    elif lv[1] == "E":
-        color.append("pink")
-        E.append((x, y))
-        En.append(lv[0])
-    elif lv[1] == "G":
-        color.append("blue")
-        G.append((x, y))
-        Gn.append(lv[0])
-    elif lv[1] == "I":
-        color.append("grey")
-        I.append((x, y))
-        In.append(lv[0])
-    elif lv[1] == "O":
-        color.append("orange")
-        O.append((x, y))
-        On.append(lv[0])
-    elif lv[1] == "R":
-        color.append("red")
-        R.append((x, y))
-        Rn.append(lv[0])
-    elif lv[1] == "V":
-        color.append("green")
-        V.append((x, y))
-        Vn.append(lv[0])
+    linenum += 1
 
-    lX.append([x, y])
+    gm2.append(float(lv[7])) 
+    gm5.append(float(lv[8]))
+    m2.append(float(lv[9]))
+
+    dv.append(float(lv[10]))
+    dvov.append(float(lv[11]))
+    desw.append(float(lv[12]))
+    de.append(float(lv[13]))
+    if (utils.is_number(lv[14])):
+        p.append(float(lv[14]))
+    else:
+        p.append(float("nan"))
+
+    desw_p_de.append(float(lv[12]) + float(lv[13]))
+
+    names.append(lv[0])
+    classes.append(lv[1])
+
+    setofclasses.add(lv[1])
+
+    if not (lv[1] in colors_map.keys()):
+        print "Error at line ", linenum, \
+                " color not defined for the give key ", lv[1]
+        exit(1)
+
+    colors.append(colors_map[lv[1]])
+
 
 fp.close()
 
-initialcenter[0,:] = numpy.mean(A, axis=0)
+print "Correlation GM2-"
+print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
+compute_and_print_corr (gm2, dv, dvov, desw, de, desw_p_de, p)
+print ""
+
+print "Correlation GM5+"
+print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
+compute_and_print_corr (gm5, dv, dvov, desw, de, desw_p_de, p)
+print ""
+
+print "Correlation M2-"
+print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
+compute_and_print_corr (m2, dv, dvov, desw, de, desw_p_de, p)
+print ""
+
+
+
+
+exit(1)
+
+
 printcc ("A", A, An)
-initialcenter[1,:] = numpy.mean(E, axis=0)
 printcc ("E", E, En)
-initialcenter[2,:] = numpy.mean(G, axis=0)
 printcc ("G", G, Gn)
-initialcenter[3,:] = numpy.mean(I, axis=0)
 printcc ("I", I, In)
-initialcenter[4,:] = numpy.mean(O, axis=0)
 printcc ("O", O, On)
-initialcenter[5,:] = numpy.mean(R, axis=0)
 printcc ("R", R, Rn)
-initialcenter[6,:] = numpy.mean(V, axis=0)
 printcc ("V", V, Vn)
 
-#print initialcenter
+lX.append([x, y])
 
 X = numpy.asarray(lX)
 
