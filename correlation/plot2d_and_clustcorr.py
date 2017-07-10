@@ -11,6 +11,17 @@ import utils
 
 ###############################################################################
 
+def pltplot(x, xl, y, yl, names):
+
+    fig1, ax1 = matplotlib.pyplot.subplots()
+    ax1.scatter(x, y, c=colors, s=100)
+    matplotlib.pyplot.xlabel(xl)
+    matplotlib.pyplot.ylabel(yl)
+    for i, txt in enumerate(names):
+        ax1.annotate(txt, (x[i], y[i]))
+
+###############################################################################
+
 def compute_and_print_corr (x, dv, dvov, desw, de, deswpde, p):
 
     dvP, dvS, dvK = utils.corrval(numpy.asarray(x), numpy.asarray(dv))
@@ -147,57 +158,9 @@ print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P"
 compute_and_print_corr (m2, dv, dvov, desw, de, desw_p_de, p)
 print ""
 
+pltplot(gm2, "GM2-", dv, "DV", names)
+pltplot(gm2, "GM2-", dvov, "DV/V", names)
 
 
-
-exit(1)
-
-
-printcc ("A", A, An)
-printcc ("E", E, En)
-printcc ("G", G, Gn)
-printcc ("I", I, In)
-printcc ("O", O, On)
-printcc ("R", R, Rn)
-printcc ("V", V, Vn)
-
-lX.append([x, y])
-
-X = numpy.asarray(lX)
-
-est = KMeans(n_clusters=CLUST, init=initialcenter)
-#est = KMeans(n_clusters=CLUST)
-
-est.fit(X)
-labels = est.labels_
-
-x = set()
-
-for i in labels:
-    x.add(i)
-
-for i in x:
-    xc = []
-    yc = []
-    for j in range(len(labels)):
-        if labels[j] == i:
-            sys.stdout.write ("%s "%(name[j]))
-            xc.append(X[j, 0])
-            yc.append(X[j, 1])
-    print ""
-    if (len(xc) > 3):
-      corrval(xc, yc)
-      print ""
-    print ""
-            
-fig1, ax1 = matplotlib.pyplot.subplots()
-ax1.scatter(X[:, 0], X[:, 1], c=color, s=100)
-for i, txt in enumerate(name):
-    ax1.annotate(txt, (X[i, 0], X[i, 1]))
-
-fig2, ax2 = matplotlib.pyplot.subplots()
-ax2.scatter(X[:, 0], X[:, 1], c=labels.astype(numpy.float), s=100)
-for i, txt in enumerate(name):
-    ax2.annotate(txt, (X[i, 0], X[i, 1]))
 
 matplotlib.pyplot.show()
