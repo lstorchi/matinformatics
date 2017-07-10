@@ -185,10 +185,14 @@ for i in x:
             x2.append(lX[j][1])
             clustdeplus.append(deplus[j])
             sys.stdout.write ("%s "%(name[j]))
-    print ""
-    corrval(x1, clustdesw)
-    corrval(x2, clustdeplus)
-    print ""
+
+    if (len(x1) > 3):
+      print ""
+      print "DEsw"
+      corrval(x1, clustdesw)
+      print "DEsw + De"
+      corrval(x2, clustdeplus)
+      print ""
             
 fig = matplotlib.pyplot.figure(1, figsize=(4, 3))
 matplotlib.pyplot.clf()
