@@ -148,23 +148,72 @@ fp.close()
 print "Correlation GM2-"
 print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
 compute_and_print_corr (gm2, dv, dvov, desw, de, desw_p_de, p)
-print ""
 
 print "Correlation GM5+"
 print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
 compute_and_print_corr (gm5, dv, dvov, desw, de, desw_p_de, p)
-print ""
 
 print "Correlation M2-"
 print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
 compute_and_print_corr (m2, dv, dvov, desw, de, desw_p_de, p)
-print ""
 
 for c in setofclasses:
     print "Selected class ", c
+
+    s_gm2 = []
+    s_gm5 = []
+    s_m2 = []
+
+    s_dv = []
+    s_dvov = []
+    s_desw = []
+    s_de = []
+    s_p = []
+    s_desw_p_de = []
+    s_names = []
+
+    #not used now
+    s_classes = []
+    s_colors = []
+
     for i in range(len(classes)):
         if (classes[i] == c):
-            print i
+            s_gm2.append(gm2[i])
+            s_gm5.append(gm5[i])
+            s_m2.append(m2[i])
+
+            s_dv.append(dv[i])
+            s_dvov.append(dvov[i])
+            s_desw.append(desw[i])
+
+            s_de.append(de[i])
+            s_p.append(p[i])
+            s_desw_p_de.append(desw_p_de[i])
+
+            s_names.append(names[i])
+            s_classes.append(classes[i])
+            s_colors.append(colors[i])
+
+    if (len(s_names) >= 5):
+        sys.stdout.write("class dim %d ,"%(len(s_names) ))
+        for n in s_names:
+            sys.stdout.write("%s "%(n))
+        sys.stdout.write("\n")
+
+        print "Correlation GM2-"
+        print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
+        compute_and_print_corr (s_gm2, s_dv, s_dvov, s_desw, s_de, s_desw_p_de, s_p)
+        
+        print "Correlation GM5+"
+        print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
+        compute_and_print_corr (s_gm5, s_dv, s_dvov, s_desw, s_de, s_desw_p_de, s_p)
+        
+        print "Correlation M2-"
+        print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
+        compute_and_print_corr (s_m2, s_dv, s_dvov, s_desw, s_de, s_desw_p_de, s_p)
+ 
+
+exit(1)
 
 pltplot(gm2, "GM2-", dv, "DV", names , "GM2- vs DV")
 pltplot(gm2, "GM2-", dvov, "DV/V", names, "GM2- vs DV/V")
