@@ -11,10 +11,11 @@ import utils
 
 ###############################################################################
 
-def pltplot(x, xl, y, yl, names):
+def pltplot(x, xl, y, yl, names, title):
 
     fig1, ax1 = matplotlib.pyplot.subplots()
     ax1.scatter(x, y, c=colors, s=100)
+    fig1.suptitle(title)
     matplotlib.pyplot.xlabel(xl)
     matplotlib.pyplot.ylabel(yl)
     for i, txt in enumerate(names):
@@ -121,6 +122,7 @@ for l in fp:
     dvov.append(float(lv[11]))
     desw.append(float(lv[12]))
     de.append(float(lv[13]))
+
     if (utils.is_number(lv[14])):
         p.append(float(lv[14]))
     else:
@@ -158,9 +160,28 @@ print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P"
 compute_and_print_corr (m2, dv, dvov, desw, de, desw_p_de, p)
 print ""
 
-pltplot(gm2, "GM2-", dv, "DV", names)
-pltplot(gm2, "GM2-", dvov, "DV/V", names)
+for c in setofclasses:
+    print "Selected class ", c
+    for i in range(len(classes)):
+        if (classes[i] == c):
+            print i
 
+pltplot(gm2, "GM2-", dv, "DV", names , "GM2- vs DV")
+pltplot(gm2, "GM2-", dvov, "DV/V", names, "GM2- vs DV/V")
+pltplot(gm2, "GM2-", desw, "DESW", names, "GM2- vs DESW")
+pltplot(gm2, "GM2-", de, "DE", names, "GM2- vs DE")
+pltplot(gm2, "GM2-", desw_p_de, "DESW + DE", names, "GM2- vs DDESW + DE")
 
+pltplot(gm5, "GM5+", dv, "DV", names, "GM5+ vs DV")
+pltplot(gm5, "GM5+", dvov, "DV/V", names, "GM5+ vs DV/V")
+pltplot(gm5, "GM5+", desw, "DESW", names, "GM5+ vs DESW")
+pltplot(gm5, "GM5+", de, "DE", names, "GM5+ vs DE")
+pltplot(gm5, "GM5+", desw_p_de, "DESW + DE", names, "GM5+ vs DDESW + DE")
+
+pltplot(m2, "M2-", dv, "DV", names, "M2- vs DV")
+pltplot(m2, "M2-", dvov, "DV/V", names, "M2- vs DV/V")
+pltplot(m2, "M2-", desw, "DESW", names, "M2- vs DESW")
+pltplot(m2, "M2-", de, "DE", names, "M2- vs DE")
+pltplot(m2, "M2-", desw_p_de, "DESW + DE", names, "M2- vs DDESW + DE")
 
 matplotlib.pyplot.show()
