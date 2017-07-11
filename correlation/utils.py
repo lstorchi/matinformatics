@@ -10,6 +10,12 @@ from sklearn.cluster import KMeans
 
 def corrval (a1, a2, verbose = False):
 
+  if len(a1) == 0 or len(a2) == 0:
+      return 0.0, 0.0, 0.0
+
+  if len(a1) != len(a2):
+      return 0.0, 0.0, 0.0
+
   P = scipy.stats.pearsonr(a1, a2)[0]
   if verbose:
       print "%4.2f "%(P) + " P "

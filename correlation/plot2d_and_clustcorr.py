@@ -2,8 +2,11 @@ import sys
 
 import math 
 import numpy 
-import matplotlib.pyplot 
+import argparse
+
+
 import scipy.stats
+import matplotlib.pyplot 
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import KMeans
 
@@ -75,13 +78,19 @@ colors_map = {"A": "#DC143C", \
         "V" : "#FFFF00", \
         "B" : "#EE7600"}
 
-file = ""
+parser = argparse.ArgumentParser()
+parser.add_argument("-f","--file", help="input csv file ", \
+        required=True, type=str)
+parser.add_argument("-s","--show", help="display scatter plots", \
+        required=False, default=False, action="store_true")
 
-if len(sys.argv) == 2:
-    file = sys.argv[1]
-else:
-    print "usage: ", sys.argv[0] , " file "
+if len(sys.argv) == 1:
+    parser.print_help()
     exit(1)
+
+args = parser.parse_args()
+
+file = args.file
 
 fp = open(file)
 hdr = fp.readline()
@@ -213,24 +222,23 @@ for c in setofclasses:
         compute_and_print_corr (s_m2, s_dv, s_dvov, s_desw, s_de, s_desw_p_de, s_p)
  
 
-exit(1)
-
-pltplot(gm2, "GM2-", dv, "DV", names , "GM2- vs DV")
-pltplot(gm2, "GM2-", dvov, "DV/V", names, "GM2- vs DV/V")
-pltplot(gm2, "GM2-", desw, "DESW", names, "GM2- vs DESW")
-pltplot(gm2, "GM2-", de, "DE", names, "GM2- vs DE")
-pltplot(gm2, "GM2-", desw_p_de, "DESW + DE", names, "GM2- vs DDESW + DE")
-
-pltplot(gm5, "GM5+", dv, "DV", names, "GM5+ vs DV")
-pltplot(gm5, "GM5+", dvov, "DV/V", names, "GM5+ vs DV/V")
-pltplot(gm5, "GM5+", desw, "DESW", names, "GM5+ vs DESW")
-pltplot(gm5, "GM5+", de, "DE", names, "GM5+ vs DE")
-pltplot(gm5, "GM5+", desw_p_de, "DESW + DE", names, "GM5+ vs DDESW + DE")
-
-pltplot(m2, "M2-", dv, "DV", names, "M2- vs DV")
-pltplot(m2, "M2-", dvov, "DV/V", names, "M2- vs DV/V")
-pltplot(m2, "M2-", desw, "DESW", names, "M2- vs DESW")
-pltplot(m2, "M2-", de, "DE", names, "M2- vs DE")
-pltplot(m2, "M2-", desw_p_de, "DESW + DE", names, "M2- vs DDESW + DE")
-
-matplotlib.pyplot.show()
+if args.show:
+    pltplot(gm2, "GM2-", dv, "DV", names , "GM2- vs DV")
+    pltplot(gm2, "GM2-", dvov, "DV/V", names, "GM2- vs DV/V")
+    pltplot(gm2, "GM2-", desw, "DESW", names, "GM2- vs DESW")
+    pltplot(gm2, "GM2-", de, "DE", names, "GM2- vs DE")
+    pltplot(gm2, "GM2-", desw_p_de, "DESW + DE", names, "GM2- vs DDESW + DE")
+    
+    pltplot(gm5, "GM5+", dv, "DV", names, "GM5+ vs DV")
+    pltplot(gm5, "GM5+", dvov, "DV/V", names, "GM5+ vs DV/V")
+    pltplot(gm5, "GM5+", desw, "DESW", names, "GM5+ vs DESW")
+    pltplot(gm5, "GM5+", de, "DE", names, "GM5+ vs DE")
+    pltplot(gm5, "GM5+", desw_p_de, "DESW + DE", names, "GM5+ vs DDESW + DE")
+    
+    pltplot(m2, "M2-", dv, "DV", names, "M2- vs DV")
+    pltplot(m2, "M2-", dvov, "DV/V", names, "M2- vs DV/V")
+    pltplot(m2, "M2-", desw, "DESW", names, "M2- vs DESW")
+    pltplot(m2, "M2-", de, "DE", names, "M2- vs DE")
+    pltplot(m2, "M2-", desw_p_de, "DESW + DE", names, "M2- vs DDESW + DE")
+    
+    matplotlib.pyplot.show()
