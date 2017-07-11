@@ -4,7 +4,6 @@ import math
 import numpy 
 import argparse
 
-
 import scipy.stats
 import matplotlib.pyplot 
 from mpl_toolkits.mplot3d import Axes3D
@@ -81,8 +80,11 @@ colors_map = {"A": "#DC143C", \
 parser = argparse.ArgumentParser()
 parser.add_argument("-f","--file", help="input csv file ", \
         required=True, type=str)
-parser.add_argument("-s","--show", help="display scatter plots", \
+parser.add_argument("-s","--show", help="display all scatter plots", \
         required=False, default=False, action="store_true")
+parser.add_argument("-c","--cshow", help="display all scatter plots for a "\
+        "specific class", \
+        required=False, default="", type=str)
 
 if len(sys.argv) == 1:
     parser.print_help()
@@ -203,6 +205,55 @@ for c in setofclasses:
             s_classes.append(classes[i])
             s_colors.append(colors[i])
 
+    if args.cshow == c:
+        pltplot(s_gm2, "GM2-", s_dv, "DV", s_names , "GM2- vs DV")
+        pltplot(s_gm2, "GM2-", s_dvov, "DV/V", s_names, "GM2- vs DV/V")
+        pltplot(s_gm2, "GM2-", s_desw, "DESW", s_names, "GM2- vs DESW")
+        pltplot(s_gm2, "GM2-", s_de, "DE", s_names, "GM2- vs DE")
+        pltplot(s_gm2, "GM2-", s_desw_p_de, "DESW + DE", s_names, "GM2- vs DDESW + DE")
+
+        lp = []
+        lgm2 = []
+        for i in len(s_p):
+            if not math.is_nan(s_p[i]):
+                lp.append(s_p[i])
+                lm2.append(s_gm2[i])
+                
+        pltplot(lgm2, "M2-", lp, "P", names, "GM2- vs P")
+ 
+        pltplot(s_gm5, "GM5+", s_dv, "DV", s_names, "GM5+ vs DV")
+        pltplot(s_gm5, "GM5+", s_dvov, "DV/V", s_names, "GM5+ vs DV/V")
+        pltplot(s_gm5, "GM5+", s_desw, "DESW", s_names, "GM5+ vs DESW")
+        pltplot(s_gm5, "GM5+", s_de, "DE", s_names, "GM5+ vs DE")
+        pltplot(s_gm5, "GM5+", s_desw_p_de, "DESW + DE", s_names, "GM5+ vs DDESW + DE")
+
+        lp = []
+        lgm5 = []
+        for i in len(s_p):
+            if not math.is_nan(s_p[i]):
+                lp.append(s_p[i])
+                lgm5.append(s_gm5[i])
+                
+        pltplot(lgm5, "GM5+", lp, "P", names, "GM5+ vs P")
+        
+        pltplot(s_m2, "M2-", s_dv, "DV", s_names, "M2- vs DV")
+        pltplot(s_m2, "M2-", s_dvov, "DV/V", s_names, "M2- vs DV/V")
+        pltplot(s_m2, "M2-", s_desw, "DESW", s_names, "M2- vs DESW")
+        pltplot(s_m2, "M2-", s_de, "DE", s_names, "M2- vs DE")
+        pltplot(s_m2, "M2-", s_desw_p_de, "DESW + DE", s_names, "M2- vs DDESW + DE")
+
+        lp = []
+        lm2 = []
+        for i in len(s_p):
+            if not math.is_nan(s_p[i]):
+                lp.append(s_p[i])
+                lm2.append(s_gm5[i])
+                
+        pltplot(lm2, "M2+", lp, "P", names, "M2+ vs P")
+        
+        matplotlib.pyplot.show()
+
+
     if (len(s_names) >= 5):
         sys.stdout.write("class dim %d ,"%(len(s_names) ))
         for n in s_names:
@@ -229,16 +280,46 @@ if args.show:
     pltplot(gm2, "GM2-", de, "DE", names, "GM2- vs DE")
     pltplot(gm2, "GM2-", desw_p_de, "DESW + DE", names, "GM2- vs DDESW + DE")
     
+    lp = []
+    lgm2 = []
+    for i in len(p):
+        if not math.is_nan(p[i]):
+            lp.append(p[i])
+            lgm2.append(gm2[i])
+            
+    pltplot(lgm2, "GM2-", lp, "P", names, "GM2- vs P")
+ 
+    
     pltplot(gm5, "GM5+", dv, "DV", names, "GM5+ vs DV")
     pltplot(gm5, "GM5+", dvov, "DV/V", names, "GM5+ vs DV/V")
     pltplot(gm5, "GM5+", desw, "DESW", names, "GM5+ vs DESW")
     pltplot(gm5, "GM5+", de, "DE", names, "GM5+ vs DE")
     pltplot(gm5, "GM5+", desw_p_de, "DESW + DE", names, "GM5+ vs DDESW + DE")
+
+    lp = []
+    lgm5 = []
+    for i in len(p):
+        if not math.is_nan(p[i]):
+            lp.append(p[i])
+            lgm5.append(gm5[i])
+            
+    pltplot(lgm5, "GM5+", lp, "P", names, "GM2- vs P")
+ 
     
     pltplot(m2, "M2-", dv, "DV", names, "M2- vs DV")
     pltplot(m2, "M2-", dvov, "DV/V", names, "M2- vs DV/V")
     pltplot(m2, "M2-", desw, "DESW", names, "M2- vs DESW")
     pltplot(m2, "M2-", de, "DE", names, "M2- vs DE")
     pltplot(m2, "M2-", desw_p_de, "DESW + DE", names, "M2- vs DDESW + DE")
+
+    lp = []
+    lm2 = []
+    for i in len(p):
+        if not math.is_nan(p[i]):
+            lp.append(p[i])
+            lm2.append(m2[i])
+            
+    pltplot(lm2, "M2-", lp, "P", names, "GM2- vs P")
+ 
     
     matplotlib.pyplot.show()
