@@ -11,6 +11,8 @@ from sklearn.cluster import KMeans
 
 import utils
 
+LIMITNUMOF = 5
+
 ###############################################################################
 
 def pltplot(x, xl, y, yl, names, title):
@@ -39,7 +41,12 @@ def compute_and_print_corr (x, dv, dvov, desw, de, deswpde, p):
             xn.append(x[i])
             pn.append(p[i])
 
-    pP, pS, pK = utils.corrval(numpy.asarray(xn), numpy.asarray(pn))
+    if (len(pn) >= LIMITNUMOF):
+        pP, pS, pK = utils.corrval(numpy.asarray(xn), numpy.asarray(pn))
+    else:
+        pP = 0.0
+        pS = 0.0 
+        pK = 0.0
 
     sys.stdout.write(" %5.2f P , %5.2f P , "%(dvP, dvovP))
     sys.stdout.write(" %5.2f P , %5.2f P , "%(deswP, deP))
@@ -214,12 +221,14 @@ for c in setofclasses:
 
         lp = []
         lgm2 = []
-        for i in len(s_p):
-            if not math.is_nan(s_p[i]):
+        lnames = []
+        for i in range(len(s_p)):
+            if not math.isnan(s_p[i]):
                 lp.append(s_p[i])
-                lm2.append(s_gm2[i])
+                lgm2.append(s_gm2[i])
+                lnames.append(s_names[i])
                 
-        pltplot(lgm2, "M2-", lp, "P", names, "GM2- vs P")
+        pltplot(lgm2, "M2-", lp, "P", lnames, "GM2- vs P")
  
         pltplot(s_gm5, "GM5+", s_dv, "DV", s_names, "GM5+ vs DV")
         pltplot(s_gm5, "GM5+", s_dvov, "DV/V", s_names, "GM5+ vs DV/V")
@@ -229,12 +238,14 @@ for c in setofclasses:
 
         lp = []
         lgm5 = []
-        for i in len(s_p):
-            if not math.is_nan(s_p[i]):
+        lnames = []
+        for i in range(len(s_p)):
+            if not math.isnan(s_p[i]):
                 lp.append(s_p[i])
                 lgm5.append(s_gm5[i])
+                lnames.append(s_names[i])
                 
-        pltplot(lgm5, "GM5+", lp, "P", names, "GM5+ vs P")
+        pltplot(lgm5, "GM5+", lp, "P", lnames, "GM5+ vs P")
         
         pltplot(s_m2, "M2-", s_dv, "DV", s_names, "M2- vs DV")
         pltplot(s_m2, "M2-", s_dvov, "DV/V", s_names, "M2- vs DV/V")
@@ -244,17 +255,17 @@ for c in setofclasses:
 
         lp = []
         lm2 = []
-        for i in len(s_p):
-            if not math.is_nan(s_p[i]):
+        lnames = []
+        for i in range(len(s_p)):
+            if not math.isnan(s_p[i]):
                 lp.append(s_p[i])
                 lm2.append(s_gm5[i])
+                lnames.append(s_names[i])
                 
-        pltplot(lm2, "M2+", lp, "P", names, "M2+ vs P")
+        pltplot(lm2, "M2+", lp, "P", lnames, "M2+ vs P")
         
-        matplotlib.pyplot.show()
 
-
-    if (len(s_names) >= 5):
+    if (len(s_names) >= LIMITNUMOF):
         sys.stdout.write("class dim %d ,"%(len(s_names) ))
         for n in s_names:
             sys.stdout.write("%s "%(n))
@@ -271,7 +282,6 @@ for c in setofclasses:
         print "Correlation M2-"
         print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
         compute_and_print_corr (s_m2, s_dv, s_dvov, s_desw, s_de, s_desw_p_de, s_p)
- 
 
 if args.show:
     pltplot(gm2, "GM2-", dv, "DV", names , "GM2- vs DV")
@@ -283,7 +293,7 @@ if args.show:
     lp = []
     lgm2 = []
     for i in len(p):
-        if not math.is_nan(p[i]):
+        if not math.isnan(p[i]):
             lp.append(p[i])
             lgm2.append(gm2[i])
             
@@ -298,13 +308,14 @@ if args.show:
 
     lp = []
     lgm5 = []
+    lnames = []
     for i in len(p):
-        if not math.is_nan(p[i]):
+        if not math.isnan(p[i]):
             lp.append(p[i])
             lgm5.append(gm5[i])
+            lnames.append(names[i])
             
-    pltplot(lgm5, "GM5+", lp, "P", names, "GM2- vs P")
- 
+    pltplot(lgm5, "GM5+", lp, "P", lnames, "GM2- vs P")
     
     pltplot(m2, "M2-", dv, "DV", names, "M2- vs DV")
     pltplot(m2, "M2-", dvov, "DV/V", names, "M2- vs DV/V")
@@ -314,12 +325,14 @@ if args.show:
 
     lp = []
     lm2 = []
+    lnames = []
     for i in len(p):
-        if not math.is_nan(p[i]):
+        if not math.isnan(p[i]):
             lp.append(p[i])
             lm2.append(m2[i])
+            lnames.append(names[i])
             
-    pltplot(lm2, "M2-", lp, "P", names, "GM2- vs P")
- 
-    
+    pltplot(lm2, "M2-", lp, "P", lnames, "GM2- vs P")
+
+if args.show or args.cshow != "":
     matplotlib.pyplot.show()
