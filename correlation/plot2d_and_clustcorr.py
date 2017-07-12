@@ -11,8 +11,6 @@ from sklearn.cluster import KMeans
 
 import utils
 
-LIMITNUMOF = 5
-
 ###############################################################################
 
 def pltplot(x, xl, y, yl, names, title):
@@ -27,43 +25,6 @@ def pltplot(x, xl, y, yl, names, title):
 
 ###############################################################################
 
-def compute_and_print_corr (x, dv, dvov, desw, de, deswpde, p):
-
-    dvP, dvS, dvK = utils.corrval(numpy.asarray(x), numpy.asarray(dv))
-    dvovP, dvovS, dvovK = utils.corrval(numpy.asarray(x), numpy.asarray(dvov))
-    deswP, deswS, deswK = utils.corrval(numpy.asarray(x), numpy.asarray(desw))
-    deP, deS, deK = utils.corrval(numpy.asarray(x), numpy.asarray(de))
-    deswpdeP, deswpdeS, deswpdeK = utils.corrval(numpy.asarray(x), numpy.asarray(deswpde))
-    xn = []
-    pn = []
-    for i in range(len(p)):
-        if not math.isnan(p[i]):
-            xn.append(x[i])
-            pn.append(p[i])
-
-    if (len(pn) >= LIMITNUMOF):
-        pP, pS, pK = utils.corrval(numpy.asarray(xn), numpy.asarray(pn))
-    else:
-        pP = 0.0
-        pS = 0.0 
-        pK = 0.0
-
-    sys.stdout.write(" %5.2f P , %5.2f P , "%(dvP, dvovP))
-    sys.stdout.write(" %5.2f P , %5.2f P , "%(deswP, deP))
-    sys.stdout.write(" %5.2f P , %5.2f P \n "%(deswpdeP, pP))
-
-    sys.stdout.write(" %5.2f S , %5.2f S , "%(dvS, dvovS))
-    sys.stdout.write(" %5.2f S , %5.2f S , "%(deswS, deS))
-    sys.stdout.write(" %5.2f S , %5.2f S \n "%(deswpdeS, pS))
-
-    sys.stdout.write(" %5.2f K , %5.2f K , "%(dvK, dvovK))
-    sys.stdout.write(" %5.2f K , %5.2f K , "%(deswK, deK))
-    sys.stdout.write(" %5.2f K , %5.2f K \n "%(deswpdeK, pK))
- 
-    print ""
-
-###############################################################################
-
 def printcc (name, A, An):
     print name
     for n in An:
@@ -74,15 +35,6 @@ def printcc (name, A, An):
         print ""
 
 ###############################################################################
-
-colors_map = {"A": "#DC143C", \
-        "E" : "#FF00FF", \
-        "G" : "#7D26CD", \
-        "I" : "#4169E1", \
-        "O" : "#00BFFF", \
-        "R" : "#00C78C", \
-        "V" : "#FFFF00", \
-        "B" : "#EE7600"}
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f","--file", help="input csv file ", \
@@ -153,27 +105,27 @@ for l in fp:
 
     setofclasses.add(lv[1])
 
-    if not (lv[1] in colors_map.keys()):
+    if not (lv[1] in utils.colors_map.keys()):
         print "Error at line ", linenum, \
                 " color not defined for the give key ", lv[1]
         exit(1)
 
-    colors.append(colors_map[lv[1]])
+    colors.append(utils.colors_map[lv[1]])
 
 
 fp.close()
 
 print "Correlation GM2-"
 print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
-compute_and_print_corr (gm2, dv, dvov, desw, de, desw_p_de, p)
+utils.compute_and_print_corr (gm2, dv, dvov, desw, de, desw_p_de, p)
 
 print "Correlation GM5+"
 print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
-compute_and_print_corr (gm5, dv, dvov, desw, de, desw_p_de, p)
+utils.compute_and_print_corr (gm5, dv, dvov, desw, de, desw_p_de, p)
 
 print "Correlation M2-"
 print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
-compute_and_print_corr (m2, dv, dvov, desw, de, desw_p_de, p)
+utils.compute_and_print_corr (m2, dv, dvov, desw, de, desw_p_de, p)
 
 for c in setofclasses:
     print "Selected class ", c
@@ -265,7 +217,7 @@ for c in setofclasses:
         pltplot(lm2, "M2-", lp, "P", lnames, "M2- vs P")
         
 
-    if (len(s_names) >= LIMITNUMOF):
+    if (len(s_names) >= utils.LIMITNUMOF):
         sys.stdout.write("class dim %d ,"%(len(s_names) ))
         for n in s_names:
             sys.stdout.write("%s "%(n))
@@ -273,15 +225,15 @@ for c in setofclasses:
 
         print "Correlation GM2-"
         print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
-        compute_and_print_corr (s_gm2, s_dv, s_dvov, s_desw, s_de, s_desw_p_de, s_p)
+        utils.compute_and_print_corr (s_gm2, s_dv, s_dvov, s_desw, s_de, s_desw_p_de, s_p)
         
         print "Correlation GM5+"
         print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
-        compute_and_print_corr (s_gm5, s_dv, s_dvov, s_desw, s_de, s_desw_p_de, s_p)
+        utils.compute_and_print_corr (s_gm5, s_dv, s_dvov, s_desw, s_de, s_desw_p_de, s_p)
         
         print "Correlation M2-"
         print "       DV,      DV/V,    DESW,      DE,    DESW+DE,         P" 
-        compute_and_print_corr (s_m2, s_dv, s_dvov, s_desw, s_de, s_desw_p_de, s_p)
+        utils.compute_and_print_corr (s_m2, s_dv, s_dvov, s_desw, s_de, s_desw_p_de, s_p)
 
 if args.show:
     pltplot(gm2, "GM2-", dv, "DV", names , "GM2- vs DV")

@@ -1,10 +1,27 @@
 import sys
 
 import numpy 
+import math
 import matplotlib.pyplot 
 import scipy.stats
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import KMeans
+
+###############################################################################
+
+LIMITNUMOF = 5
+
+###############################################################################
+
+colors_map = {"A": "#DC143C", \
+        "E" : "#FF00FF", \
+        "G" : "#7D26CD", \
+        "I" : "#4169E1", \
+        "O" : "#00BFFF", \
+        "R" : "#00C78C", \
+        "V" : "#FFFF00", \
+        "B" : "#EE7600"}
+
 
 ###############################################################################
 
@@ -64,4 +81,41 @@ def filecount (fname):
 
 ###############################################################################
 
+
+def compute_and_print_corr (x, dv, dvov, desw, de, deswpde, p):
+
+    dvP, dvS, dvK = corrval(numpy.asarray(x), numpy.asarray(dv))
+    dvovP, dvovS, dvovK = corrval(numpy.asarray(x), numpy.asarray(dvov))
+    deswP, deswS, deswK = corrval(numpy.asarray(x), numpy.asarray(desw))
+    deP, deS, deK = corrval(numpy.asarray(x), numpy.asarray(de))
+    deswpdeP, deswpdeS, deswpdeK = corrval(numpy.asarray(x), numpy.asarray(deswpde))
+    xn = []
+    pn = []
+    for i in range(len(p)):
+        if not math.isnan(p[i]):
+            xn.append(x[i])
+            pn.append(p[i])
+
+    if (len(pn) >= LIMITNUMOF):
+        pP, pS, pK = corrval(numpy.asarray(xn), numpy.asarray(pn))
+    else:
+        pP = 0.0
+        pS = 0.0 
+        pK = 0.0
+
+    sys.stdout.write(" %5.2f P , %5.2f P , "%(dvP, dvovP))
+    sys.stdout.write(" %5.2f P , %5.2f P , "%(deswP, deP))
+    sys.stdout.write(" %5.2f P , %5.2f P \n "%(deswpdeP, pP))
+
+    sys.stdout.write(" %5.2f S , %5.2f S , "%(dvS, dvovS))
+    sys.stdout.write(" %5.2f S , %5.2f S , "%(deswS, deS))
+    sys.stdout.write(" %5.2f S , %5.2f S \n "%(deswpdeS, pS))
+
+    sys.stdout.write(" %5.2f K , %5.2f K , "%(dvK, dvovK))
+    sys.stdout.write(" %5.2f K , %5.2f K , "%(deswK, deK))
+    sys.stdout.write(" %5.2f K , %5.2f K \n "%(deswpdeK, pK))
+ 
+    print ""
+
+###############################################################################
 
