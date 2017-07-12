@@ -228,7 +228,7 @@ for c in setofclasses:
                 lgm2.append(s_gm2[i])
                 lnames.append(s_names[i])
                 
-        pltplot(lgm2, "M2-", lp, "P", lnames, "GM2- vs P")
+        pltplot(lgm2, "GM2-", lp, "P", lnames, "GM2- vs P")
  
         pltplot(s_gm5, "GM5+", s_dv, "DV", s_names, "GM5+ vs DV")
         pltplot(s_gm5, "GM5+", s_dvov, "DV/V", s_names, "GM5+ vs DV/V")
@@ -262,7 +262,7 @@ for c in setofclasses:
                 lm2.append(s_gm5[i])
                 lnames.append(s_names[i])
                 
-        pltplot(lm2, "M2+", lp, "P", lnames, "M2+ vs P")
+        pltplot(lm2, "M2-", lp, "P", lnames, "M2- vs P")
         
 
     if (len(s_names) >= LIMITNUMOF):
@@ -292,13 +292,14 @@ if args.show:
     
     lp = []
     lgm2 = []
-    for i in len(p):
+    lnames = []
+    for i in range(len(p)):
         if not math.isnan(p[i]):
             lp.append(p[i])
             lgm2.append(gm2[i])
-            
-    pltplot(lgm2, "GM2-", lp, "P", names, "GM2- vs P")
- 
+            lnames.append(names[i])
+
+    pltplot(lgm2, "GM2-", lp, "P", lnames, "GM2- vs P")
     
     pltplot(gm5, "GM5+", dv, "DV", names, "GM5+ vs DV")
     pltplot(gm5, "GM5+", dvov, "DV/V", names, "GM5+ vs DV/V")
@@ -309,13 +310,13 @@ if args.show:
     lp = []
     lgm5 = []
     lnames = []
-    for i in len(p):
+    for i in range(len(p)):
         if not math.isnan(p[i]):
             lp.append(p[i])
             lgm5.append(gm5[i])
             lnames.append(names[i])
             
-    pltplot(lgm5, "GM5+", lp, "P", lnames, "GM2- vs P")
+    pltplot(lgm5, "GM5+", lp, "P", lnames, "GM5+ vs P")
     
     pltplot(m2, "M2-", dv, "DV", names, "M2- vs DV")
     pltplot(m2, "M2-", dvov, "DV/V", names, "M2- vs DV/V")
@@ -326,13 +327,13 @@ if args.show:
     lp = []
     lm2 = []
     lnames = []
-    for i in len(p):
+    for i in range(len(p)):
         if not math.isnan(p[i]):
             lp.append(p[i])
             lm2.append(m2[i])
             lnames.append(names[i])
             
-    pltplot(lm2, "M2-", lp, "P", lnames, "GM2- vs P")
+    pltplot(lm2, "M2-", lp, "P", lnames, "M2- vs P")
 
 if args.show or args.cshow != "":
     matplotlib.pyplot.show()
