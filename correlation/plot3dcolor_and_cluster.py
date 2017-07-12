@@ -3,7 +3,7 @@ import sys
 import scipy
 import numpy 
 import argparse
-
+import math
 
 import matplotlib.pyplot 
 from mpl_toolkits.mplot3d import Axes3D
@@ -11,11 +11,29 @@ from sklearn.cluster import KMeans
 
 import utils
 
+###############################################################################
+
+def pltplot(x, xl, y, yl, names, title):
+
+    fig1, ax1 = matplotlib.pyplot.subplots()
+    ax1.scatter(x, y, c=colors, s=100)
+    fig1.suptitle(title)
+    matplotlib.pyplot.xlabel(xl)
+    matplotlib.pyplot.ylabel(yl)
+    for i, txt in enumerate(names):
+        ax1.annotate(txt, (x[i], y[i]))
+
+###############################################################################
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-f","--file", help="input csv file ", \
         required=True, type=str)
 parser.add_argument("-s","--show", help="display all scatter plots", \
         required=False, default=False, action="store_true")
+parser.add_argument("-c","--cshow", help="display all scatter plots for a "\
+        "specific cluster", \
+        required=False, default="", type=str)
+
 
 if len(sys.argv) == 1:
     parser.print_help()
@@ -154,6 +172,58 @@ for i in x:
             s_classes.append(classes[j])
             s_colors.append(colors[j])
 
+    if args.cshow != "":
+        if int(args.cshow) == i:
+            pltplot(s_gm2, "GM2-", s_dv, "DV", s_names , "GM2- vs DV")
+            pltplot(s_gm2, "GM2-", s_dvov, "DV/V", s_names, "GM2- vs DV/V")
+            pltplot(s_gm2, "GM2-", s_desw, "DESW", s_names, "GM2- vs DESW")
+            pltplot(s_gm2, "GM2-", s_de, "DE", s_names, "GM2- vs DE")
+            pltplot(s_gm2, "GM2-", s_desw_p_de, "DESW + DE", s_names, "GM2- vs DDESW + DE")
+            
+            lp = []
+            lgm2 = []
+            lnames = []
+            for i in range(len(s_p)):
+                if not math.isnan(s_p[i]):
+                    lp.append(s_p[i])
+                    lgm2.append(s_gm2[i])
+                    lnames.append(s_names[i])
+                    
+            pltplot(lgm2, "GM2-", lp, "P", lnames, "GM2- vs P")
+            
+            pltplot(s_gm5, "GM5+", s_dv, "DV", s_names, "GM5+ vs DV")
+            pltplot(s_gm5, "GM5+", s_dvov, "DV/V", s_names, "GM5+ vs DV/V")
+            pltplot(s_gm5, "GM5+", s_desw, "DESW", s_names, "GM5+ vs DESW")
+            pltplot(s_gm5, "GM5+", s_de, "DE", s_names, "GM5+ vs DE")
+            pltplot(s_gm5, "GM5+", s_desw_p_de, "DESW + DE", s_names, "GM5+ vs DDESW + DE")
+            
+            lp = []
+            lgm5 = []
+            lnames = []
+            for i in range(len(s_p)):
+                if not math.isnan(s_p[i]):
+                    lp.append(s_p[i])
+                    lgm5.append(s_gm5[i])
+                    lnames.append(s_names[i])
+                    
+            pltplot(lgm5, "GM5+", lp, "P", lnames, "GM5+ vs P")
+            
+            pltplot(s_m2, "M2-", s_dv, "DV", s_names, "M2- vs DV")
+            pltplot(s_m2, "M2-", s_dvov, "DV/V", s_names, "M2- vs DV/V")
+            pltplot(s_m2, "M2-", s_desw, "DESW", s_names, "M2- vs DESW")
+            pltplot(s_m2, "M2-", s_de, "DE", s_names, "M2- vs DE")
+            pltplot(s_m2, "M2-", s_desw_p_de, "DESW + DE", s_names, "M2- vs DDESW + DE")
+            
+            lp = []
+            lm2 = []
+            lnames = []
+            for i in range(len(s_p)):
+                if not math.isnan(s_p[i]):
+                    lp.append(s_p[i])
+                    lm2.append(s_gm5[i])
+                    lnames.append(s_names[i])
+                    
+            pltplot(lm2, "M2-", lp, "P", lnames, "M2- vs P")
 
     if (len(s_names) >= utils.LIMITNUMOF):
         sys.stdout.write("class dim %d ,"%(len(s_names) ))
@@ -205,5 +275,5 @@ if args.show:
     ax.set_ylabel('GM5+')
     ax.set_zlabel('M2-')
     
+if args.show or args.cshow != "":
     matplotlib.pyplot.show()
-
