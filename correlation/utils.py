@@ -4,8 +4,6 @@ import numpy
 import math
 import matplotlib.pyplot 
 import scipy.stats
-from mpl_toolkits.mplot3d import Axes3D
-from sklearn.cluster import KMeans
 
 ###############################################################################
 

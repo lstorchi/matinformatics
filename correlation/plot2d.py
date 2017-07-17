@@ -6,8 +6,6 @@ import argparse
 
 import scipy.stats
 import matplotlib.pyplot 
-from mpl_toolkits.mplot3d import Axes3D
-from sklearn.cluster import KMeans
 
 import utils
 
@@ -111,7 +109,7 @@ for l in fp:
         if utils.is_number(lv[xnum]) and utils.is_number(lv[ynum]):
             yall.append(float(lv[ynum]))
             xall.append(float(lv[xnum]))
-            names.append(lv[0])
+            names.append(lv[0]+ " ("+lv[1]+")")
             classes.append(lv[1])
             setofclasses.add(lv[1])
 
@@ -129,6 +127,8 @@ print "Using ", len(names) , " values"
 
 sys.stdout.write ("Correlation " + xname + " vs " + yname+  " ")
 utils.compute_and_print_single_corr (xall, yall)
+
+pltplot (xall, xname, yall, yname, names, colors)
 
 for c in setofclasses:
     print "Selected class ", c
