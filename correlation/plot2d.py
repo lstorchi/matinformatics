@@ -159,7 +159,7 @@ for c in setofclasses:
         utils.compute_and_print_single_corr (s_xall, s_yall)
     
     if (args.cshow == c):
-        pltplot (s_xall, xname, s_yall, yname, s_names, s_colors, " (class " + c ")")
+        pltplot (s_xall, xname, s_yall, yname, s_names, s_colors, " (class " + c + ")")
 
 
 
