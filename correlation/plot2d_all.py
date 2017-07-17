@@ -26,27 +26,6 @@ def pltplot(ax, axl, ay, ayl, anames, acolors):
 
 ###############################################################################
 
-def add_all_plots (x, xname, yall, yname, allcolors, allnames):
-
-    for i in range(len(yall)):
-
-        y = yall[i]
-
-        lx = []
-        ly = []
-        lnames = []
-        lcolors = []
-        for j in range(len(y)):
-            if not math.isnan(y[j]):
-                lx.append(x[j])
-                ly.append(y[j])
-                lnames.append(allnames[j])
-                lcolors.append(allcolors[j])
-
-        pltplot(lx, xname[i], ly, yname[i], lnames, lcolors)
- 
-###############################################################################
-
 def printcc (name, A, An):
     print name
     for n in An:
