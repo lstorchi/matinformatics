@@ -11,9 +11,9 @@ import utils
 
 ###############################################################################
 
-def pltplot(ax, axl, ay, ayl, anames, acolors):
+def pltplot(ax, axl, ay, ayl, anames, acolors, extra = ""):
 
-    title = axl + "vs " + ayl
+    title = axl + " vs " + ayl + extra
     fig1, ax1 = matplotlib.pyplot.subplots()
     ax1.scatter(ax, ay, c=acolors, s=100)
     fig1.suptitle(title)
@@ -159,7 +159,7 @@ for c in setofclasses:
         utils.compute_and_print_single_corr (s_xall, s_yall)
     
     if (args.cshow == c):
-        pltplot (s_xall, xname, s_yall, yname, s_names, s_colors)
+        pltplot (s_xall, xname, s_yall, yname, s_names, s_colors, " (class " + c ")")
 
 
 
