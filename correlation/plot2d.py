@@ -157,6 +157,11 @@ for c in setofclasses:
         
         sys.stdout.write ("Correlation " + xname + " vs " + yname+  " ")
         utils.compute_and_print_single_corr (s_xall, s_yall)
+    
+    if (args.cshow == c):
+        pltplot (s_xall, xname, s_yall, yname, s_names, s_colors)
+
+
 
 if args.cshow != "" or args.showscatterplot != "":
     matplotlib.pyplot.show()
