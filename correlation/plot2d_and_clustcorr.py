@@ -13,16 +13,38 @@ import utils
 
 ###############################################################################
 
-def pltplot(x, xl, y, yl, names, title):
+def pltplot(ax, axl, ay, ayl, anames, acolors):
 
+    title = axl + "vs " + ayl
     fig1, ax1 = matplotlib.pyplot.subplots()
-    ax1.scatter(x, y, c=colors, s=100)
+    ax1.scatter(ax, ay, c=acolors, s=100)
     fig1.suptitle(title)
-    matplotlib.pyplot.xlabel(xl)
-    matplotlib.pyplot.ylabel(yl)
-    for i, txt in enumerate(names):
-        ax1.annotate(txt, (x[i], y[i]))
+    matplotlib.pyplot.xlabel(axl)
+    matplotlib.pyplot.ylabel(ayl)
+    for i, txt in enumerate(anames):
+        ax1.annotate(txt, (ax[i], ay[i]))
 
+###############################################################################
+
+def add_all_plots (x, xname, yall, yname, allcolors, allnames):
+
+    for i in range(len(yall)):
+
+        y = yall[i]
+
+        lx = []
+        ly = []
+        lnames = []
+        lcolors = []
+        for j in range(len(y)):
+            if not math.isnan(y[j]):
+                lx.append(x[j])
+                ly.append(y[j])
+                lnames.append(allnames[j])
+                lcolors.append(allcolors[j])
+
+        pltplot(lx, xname[i], ly, yname[i], lnames, lcolors)
+ 
 ###############################################################################
 
 def printcc (name, A, An):
@@ -165,57 +187,62 @@ for c in setofclasses:
             s_colors.append(colors[i])
 
     if args.cshow == c:
-        pltplot(s_gm2, "GM2-", s_dv, "DV", s_names , "GM2- vs DV")
-        pltplot(s_gm2, "GM2-", s_dvov, "DV/V", s_names, "GM2- vs DV/V")
-        pltplot(s_gm2, "GM2-", s_desw, "DESW", s_names, "GM2- vs DESW")
-        pltplot(s_gm2, "GM2-", s_de, "DE", s_names, "GM2- vs DE")
-        pltplot(s_gm2, "GM2-", s_desw_p_de, "DESW + DE", s_names, "GM2- vs DDESW + DE")
+        pltplot(s_gm2, "GM2-", s_dv, "DV", s_names, s_colors)
+        pltplot(s_gm2, "GM2-", s_dvov, "DV/V", s_names, s_colors)
+        pltplot(s_gm2, "GM2-", s_desw, "DESW", s_names, s_colors)
+        pltplot(s_gm2, "GM2-", s_de, "DE", s_names, s_colors)
+        pltplot(s_gm2, "GM2-", s_desw_p_de, "DESW + DE", s_names, s_colors)
 
         lp = []
         lgm2 = []
         lnames = []
+        lcolors = []
         for i in range(len(s_p)):
             if not math.isnan(s_p[i]):
                 lp.append(s_p[i])
                 lgm2.append(s_gm2[i])
                 lnames.append(s_names[i])
+                lcolors.append(s_colors[i])
                 
-        pltplot(lgm2, "GM2-", lp, "P", lnames, "GM2- vs P")
+        pltplot(lgm2, "GM2-", lp, "P", lnames, lcolors)
  
-        pltplot(s_gm5, "GM5+", s_dv, "DV", s_names, "GM5+ vs DV")
-        pltplot(s_gm5, "GM5+", s_dvov, "DV/V", s_names, "GM5+ vs DV/V")
-        pltplot(s_gm5, "GM5+", s_desw, "DESW", s_names, "GM5+ vs DESW")
-        pltplot(s_gm5, "GM5+", s_de, "DE", s_names, "GM5+ vs DE")
-        pltplot(s_gm5, "GM5+", s_desw_p_de, "DESW + DE", s_names, "GM5+ vs DDESW + DE")
+        pltplot(s_gm5, "GM5+", s_dv, "DV", s_names, s_colors)
+        pltplot(s_gm5, "GM5+", s_dvov, "DV/V", s_names, s_colors)
+        pltplot(s_gm5, "GM5+", s_desw, "DESW", s_names, s_colors)
+        pltplot(s_gm5, "GM5+", s_de, "DE", s_names, s_colors)
+        pltplot(s_gm5, "GM5+", s_desw_p_de, "DESW + DE", s_names, s_colors)
 
         lp = []
         lgm5 = []
         lnames = []
+        lcolors = []
         for i in range(len(s_p)):
             if not math.isnan(s_p[i]):
                 lp.append(s_p[i])
                 lgm5.append(s_gm5[i])
                 lnames.append(s_names[i])
+                lcolors.append(s_colors[i])
                 
-        pltplot(lgm5, "GM5+", lp, "P", lnames, "GM5+ vs P")
+        pltplot(lgm5, "GM5+", lp, "P", lnames, lcolors)
         
-        pltplot(s_m2, "M2-", s_dv, "DV", s_names, "M2- vs DV")
-        pltplot(s_m2, "M2-", s_dvov, "DV/V", s_names, "M2- vs DV/V")
-        pltplot(s_m2, "M2-", s_desw, "DESW", s_names, "M2- vs DESW")
-        pltplot(s_m2, "M2-", s_de, "DE", s_names, "M2- vs DE")
-        pltplot(s_m2, "M2-", s_desw_p_de, "DESW + DE", s_names, "M2- vs DDESW + DE")
+        pltplot(s_m2, "M2-", s_dv, "DV", s_names, s_colors)
+        pltplot(s_m2, "M2-", s_dvov, "DV/V", s_names, s_colors)
+        pltplot(s_m2, "M2-", s_desw, "DESW", s_names, s_colors)
+        pltplot(s_m2, "M2-", s_de, "DE", s_names, s_colors)
+        pltplot(s_m2, "M2-", s_desw_p_de, "DESW + DE", s_names, s_colors)
 
         lp = []
         lm2 = []
         lnames = []
+        lcolors = []
         for i in range(len(s_p)):
             if not math.isnan(s_p[i]):
                 lp.append(s_p[i])
                 lm2.append(s_gm5[i])
                 lnames.append(s_names[i])
+                lcolors.append(s_colors[i])
                 
-        pltplot(lm2, "M2-", lp, "P", lnames, "M2- vs P")
-        
+        pltplot(lm2, "M2-", lp, "P", lnames, lcolors)
 
     if (len(s_names) >= utils.LIMITNUMOF):
         sys.stdout.write("class dim %d ,"%(len(s_names) ))
@@ -236,56 +263,62 @@ for c in setofclasses:
         utils.compute_and_print_corr (s_m2, s_dv, s_dvov, s_desw, s_de, s_desw_p_de, s_p)
 
 if args.show:
-    pltplot(gm2, "GM2-", dv, "DV", names , "GM2- vs DV")
-    pltplot(gm2, "GM2-", dvov, "DV/V", names, "GM2- vs DV/V")
-    pltplot(gm2, "GM2-", desw, "DESW", names, "GM2- vs DESW")
-    pltplot(gm2, "GM2-", de, "DE", names, "GM2- vs DE")
-    pltplot(gm2, "GM2-", desw_p_de, "DESW + DE", names, "GM2- vs DDESW + DE")
+    pltplot(gm2, "GM2-", dv, "DV", names, colors)
+    pltplot(gm2, "GM2-", dvov, "DV/V", names, colors)
+    pltplot(gm2, "GM2-", desw, "DESW", names, colors)
+    pltplot(gm2, "GM2-", de, "DE", names, colors)
+    pltplot(gm2, "GM2-", desw_p_de, "DESW + DE", names, colors)
     
     lp = []
     lgm2 = []
     lnames = []
+    lcolors = []
     for i in range(len(p)):
         if not math.isnan(p[i]):
             lp.append(p[i])
             lgm2.append(gm2[i])
             lnames.append(names[i])
+            lcolors.append(colors[i])
 
-    pltplot(lgm2, "GM2-", lp, "P", lnames, "GM2- vs P")
+    pltplot(lgm2, "GM2-", lp, "P", lnames)
     
-    pltplot(gm5, "GM5+", dv, "DV", names, "GM5+ vs DV")
-    pltplot(gm5, "GM5+", dvov, "DV/V", names, "GM5+ vs DV/V")
-    pltplot(gm5, "GM5+", desw, "DESW", names, "GM5+ vs DESW")
-    pltplot(gm5, "GM5+", de, "DE", names, "GM5+ vs DE")
-    pltplot(gm5, "GM5+", desw_p_de, "DESW + DE", names, "GM5+ vs DDESW + DE")
+    pltplot(gm5, "GM5+", dv, "DV", names, colors)
+    pltplot(gm5, "GM5+", dvov, "DV/V", names, colors)
+    pltplot(gm5, "GM5+", desw, "DESW", names, colors)
+    pltplot(gm5, "GM5+", de, "DE", names, colors)
+    pltplot(gm5, "GM5+", desw_p_de, "DESW + DE", names, colors)
 
     lp = []
     lgm5 = []
     lnames = []
+    lcolors = []
     for i in range(len(p)):
         if not math.isnan(p[i]):
             lp.append(p[i])
             lgm5.append(gm5[i])
             lnames.append(names[i])
+            lcolors.append(colors[i])
             
-    pltplot(lgm5, "GM5+", lp, "P", lnames, "GM5+ vs P")
+    pltplot(lgm5, "GM5+", lp, "P", lnames)
     
-    pltplot(m2, "M2-", dv, "DV", names, "M2- vs DV")
-    pltplot(m2, "M2-", dvov, "DV/V", names, "M2- vs DV/V")
-    pltplot(m2, "M2-", desw, "DESW", names, "M2- vs DESW")
-    pltplot(m2, "M2-", de, "DE", names, "M2- vs DE")
-    pltplot(m2, "M2-", desw_p_de, "DESW + DE", names, "M2- vs DDESW + DE")
+    pltplot(m2, "M2-", dv, "DV", names, colors)
+    pltplot(m2, "M2-", dvov, "DV/V", names, colors)
+    pltplot(m2, "M2-", desw, "DESW", names, colors)
+    pltplot(m2, "M2-", de, "DE", names, colors)
+    pltplot(m2, "M2-", desw_p_de, "DESW + DE", names, colors)
 
     lp = []
     lm2 = []
     lnames = []
+    lcolors = []
     for i in range(len(p)):
         if not math.isnan(p[i]):
             lp.append(p[i])
             lm2.append(m2[i])
             lnames.append(names[i])
+            lcolors.append(colors[i])
             
-    pltplot(lm2, "M2-", lp, "P", lnames, "M2- vs P")
+    pltplot(lm2, "M2-", lp, "P", lnames)
 
 if args.show or args.cshow != "":
     matplotlib.pyplot.show()
