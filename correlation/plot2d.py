@@ -161,7 +161,5 @@ for c in setofclasses:
     if (args.cshow == c):
         pltplot (s_xall, xname, s_yall, yname, s_names, s_colors, " (class " + c + ")")
 
-
-
 if args.cshow != "" or args.showscatterplot != "":
     matplotlib.pyplot.show()
