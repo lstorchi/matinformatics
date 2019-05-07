@@ -105,7 +105,7 @@ for l in fp:
 
     linenum += 1
    
-    if (lv[1] != "X"):
+    if (lv[0].find('#') < 0):
         if utils.is_number(lv[xnum]) and utils.is_number(lv[ynum]):
             yall.append(float(lv[ynum]))
             xall.append(float(lv[xnum]))
@@ -119,6 +119,8 @@ for l in fp:
                 exit(1)
 
             colors.append(utils.colors_map[lv[1]])
+    else:
+        print "Excluded " , lv[0]
 
 
 fp.close()
