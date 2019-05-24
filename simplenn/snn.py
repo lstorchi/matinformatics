@@ -3,7 +3,7 @@ import numpy
 # starting from 
 # https://towardsdatascience.com/how-to-build-your-own-neural-network-from-scratch-in-python-68998a08e4f6
 
-HIDDENLEYDIM = 10
+HIDDENLEYDIM = 4
 
 def sigmoid(x):
     return 1.0/(1+ numpy.exp(-x))

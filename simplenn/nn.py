@@ -50,8 +50,8 @@ features = features.drop("P", axis = 1)
 
 # remove all non needed 
 # features = features.drop("GM2-", axis = 1)
-features = features.drop("GM5+", axis = 1)
-features = features.drop("M2-", axis = 1)
+# features = features.drop("GM5+", axis = 1)
+# features = features.drop("M2-", axis = 1)
 features = features.drop("DV/V(% AFE-FE)", axis = 1)
 features = features.drop("DeltaE", axis = 1)
 features = features.drop("Delta", axis = 1)
@@ -83,7 +83,7 @@ y = labels.transpose()
 y.shape = (labels.shape[0],1)
 
 nn = simplenn(features, y)
-for i in range(5000):
+for i in range(1500):
     nn.feedforward()
     nn.backprop()
 
@@ -93,4 +93,4 @@ nx = numpy.array(test_features)
 nn.set_pred_input (nx)
 nn.feedforward()
 for i in range(nn.get_output().shape[0]):
-    print("%10.5f %10.5f \n"%(nn.get_output()[i], test_labels[i]))
+    print("%10.5f %10.5f"%(nn.get_output()[i], test_labels[i]))
