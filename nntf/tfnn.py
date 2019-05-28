@@ -69,7 +69,7 @@ def plot_history(history, name = ""):
            label='Train Error')
   plt.plot(hist['epoch'], hist['val_mean_absolute_error'],
            label = 'Val Error')
-  plt.ylim([0,5])
+  #plt.ylim([max(hist['val_mean_absolute_error'])])
   plt.legend()
   
   plt.figure()
@@ -79,7 +79,7 @@ def plot_history(history, name = ""):
            label='Train Error')
   plt.plot(hist['epoch'], hist['val_mean_squared_error'],
            label = 'Val Error')
-  plt.ylim([0,20])
+  #plt.ylim([max(hist['val_mean_squared_error'])])
   plt.legend()
   plt.show()
 
@@ -93,6 +93,8 @@ if __name__ == "__main__":
           required=True, type=str)
   parser.add_argument("-s","--showgraphs", help="shows graphs ", \
           required=False, default=False, action='store_true')
+  parser.add_argument("-e","--epochs", help="use an excat number of epochs  ", \
+          required=False, default=-1, type=int)
   
   if len(sys.argv) == 1:
       parser.print_help()
@@ -173,7 +175,7 @@ if __name__ == "__main__":
   EPOCHS = 1000
   
   model, history = build_seq_model (normed_train_data, 
-          train_labels, EPOCHS, True)
+          train_labels, args.epochs, (args.epochs <= 0))
   
   print (model.summary())
   
@@ -182,7 +184,7 @@ if __name__ == "__main__":
   print(hist.tail())
   
   if args.showgraphs:
-      plot_history(history, ttopredict)
+      plot_history(history, topredict)
   
   loss, mae, mse = model.evaluate(normed_test_data, test_labels, verbose=0)
   print("Testing set Mean Abs Error: %5.2f %s"%(mae, topredict))
