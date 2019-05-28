@@ -16,6 +16,40 @@ def norm(x):
 
 ###############################################################################
 
+class PrintDot(keras.callbacks.Callback):
+  def on_epoch_end(self, epoch, logs):
+    if epoch % 100 == 0: print('')
+    print('.', end='')
+
+###############################################################################
+
+def build_seq_model(train_data, train_labels,
+        totepochs):
+
+  model = keras.Sequential([
+    layers.Dense(64, activation=tf.nn.relu, 
+    input_shape=[len(train_dataset.keys())]),
+    layers.Dense(64, activation=tf.nn.relu),
+    layers.Dense(1)
+  ])
+
+  optimizer = tf.keras.optimizers.RMSprop(0.001)
+
+  model.compile(loss='mean_squared_error',
+                optimizer=optimizer,
+                metrics=['mean_absolute_error', 
+                'mean_squared_error'])
+
+  history = None 
+
+  #history = model.fit(train_data, train_labels,
+  #        epochs=totepochs, validation_split = 0.2, 
+  #        verbose=0, callbacks=[PrintDot()])
+
+  return model, history
+
+###############################################################################
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-f","--file", help="input csv file ", \
         required=True, type=str)
@@ -80,5 +114,5 @@ test_labels = test_dataset.pop('DE_sw')
 normed_train_data = norm(train_dataset)
 normed_test_data = norm(test_dataset)
 
-
+build_seq_model (normed_train_data, train_labels, 1000)
 
