@@ -11,8 +11,8 @@ import sys
 
 ###############################################################################
 
-def norm(x):
-      return (x - train_stats['mean']) / train_stats['std']
+def norm(x, train_stats):
+    return (x - train_stats['mean']) / train_stats['std']
 
 ###############################################################################
 
@@ -24,7 +24,7 @@ class PrintDot(keras.callbacks.Callback):
 ###############################################################################
 
 def build_seq_model(train_data, train_labels,
-        totepochs):
+        totepochs, earlystop=False):
 
   model = keras.Sequential([
     layers.Dense(64, activation=tf.nn.relu, 
@@ -42,17 +42,55 @@ def build_seq_model(train_data, train_labels,
 
   history = None 
 
-  #history = model.fit(train_data, train_labels,
-  #        epochs=totepochs, validation_split = 0.2, 
-  #        verbose=0, callbacks=[PrintDot()])
+  early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
+
+  if earlystop:
+      history = model.fit(train_data, train_labels, 
+              epochs=totepochs,
+              validation_split = 0.2, verbose=0, 
+              callbacks=[early_stop, PrintDot()])
+  else:
+      history = model.fit(train_data, train_labels,
+              epochs=totepochs, validation_split = 0.2, 
+              verbose=0, callbacks=[PrintDot()])
 
   return model, history
+
+###############################################################################
+
+def plot_history(history):
+  hist = pd.DataFrame(history.history)
+  hist['epoch'] = history.epoch
+  
+  plt.figure()
+  plt.xlabel('Epoch')
+  plt.ylabel('Mean Abs Error [MPG]')
+  plt.plot(hist['epoch'], hist['mean_absolute_error'],
+           label='Train Error')
+  plt.plot(hist['epoch'], hist['val_mean_absolute_error'],
+           label = 'Val Error')
+  plt.ylim([0,5])
+  plt.legend()
+  
+  plt.figure()
+  plt.xlabel('Epoch')
+  plt.ylabel('Mean Square Error [$MPG^2$]')
+  plt.plot(hist['epoch'], hist['mean_squared_error'],
+           label='Train Error')
+  plt.plot(hist['epoch'], hist['val_mean_squared_error'],
+           label = 'Val Error')
+  plt.ylim([0,20])
+  plt.legend()
+  plt.show()
+
 
 ###############################################################################
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f","--file", help="input csv file ", \
         required=True, type=str)
+parser.add_argument("-s","--showgraphs", help="shows graphs ", \
+        required=False, default=False, action='store_true')
 
 if len(sys.argv) == 1:
     parser.print_help()
@@ -98,21 +136,75 @@ train_stats = train_dataset.describe()
 train_stats = train_stats.transpose()
 print(train_stats)
 
-sns.pairplot(train_dataset[["GM2-", "ep1", "ep2", "DE_sw"]], diag_kind="kde")
-plt.show()
+topredict = "DE_sw"
+desc1 = "GM2-"
+desc2 = "ep1"
+desc3 = "ep2"
+fulllist = [desc1, desc2, desc3, topredict]
+
+
+if args.showgraphs:
+    sns.pairplot(train_dataset[fulllist], 
+            diag_kind="kde")
+    plt.show()
 
 test_stats = test_dataset.describe()
 test_stats = test_stats.transpose()
 print(test_stats)
 
-sns.pairplot(test_dataset[["GM2-", "ep1", "ep2", "DE_sw"]], diag_kind="kde")
-plt.show()
+if args.showgraphs:
+    sns.pairplot(test_dataset[fulllist], 
+            diag_kind="kde")
+    plt.show()
 
-train_labels = train_dataset.pop('DE_sw')
-test_labels = test_dataset.pop('DE_sw')
+train_labels = train_dataset.pop(topredict)
+test_labels = test_dataset.pop(topredict)
 
-normed_train_data = norm(train_dataset)
-normed_test_data = norm(test_dataset)
+train_stats = train_dataset.describe()
+train_stats = train_stats.transpose()
 
-build_seq_model (normed_train_data, train_labels, 1000)
+normed_train_data = norm(train_dataset, train_stats)
+normed_test_data = norm(test_dataset, train_stats)
 
+#print(normed_train_data)
+#print(test_dataset)
+
+EPOCHS = 1000
+
+model, history = build_seq_model (normed_train_data, 
+        train_labels, EPOCHS, True)
+
+print (model.summary())
+
+hist = pd.DataFrame(history.history)
+hist['epoch'] = history.epoch
+print(hist.tail())
+
+if args.showgraphs:
+    plot_history(history)
+
+loss, mae, mse = model.evaluate(normed_test_data, test_labels, verbose=0)
+print("Testing set Mean Abs Error: %5.2f %s"%(mae, topredict))
+
+test_predictions = model.predict(normed_test_data).flatten()
+
+plt.scatter(test_labels, test_predictions)
+plt.xlabel('True Values ['+topredict+']')
+plt.ylabel('Predictions ['+topredict+']')
+plt.axis('equal')
+plt.axis('square')
+plt.xlim([0,plt.xlim()[1]])
+plt.ylim([0,plt.ylim()[1]])
+_ = plt.plot([-100, 100], [-100, 100])
+
+plt.savefig('truevspredicted.png')
+
+error = test_predictions - test_labels
+
+plt.clf()
+plt.cla()
+plt.hist(error, bins = 25)
+plt.xlabel("Prediction Error ["+topredict+"]")
+_ = plt.ylabel("Count")
+
+plt.savefig('predictionerror.png')
