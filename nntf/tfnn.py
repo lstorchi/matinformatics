@@ -81,17 +81,51 @@ def plot_history(history, name = ""):
            label = 'Val Error')
   #plt.ylim([max(hist['val_mean_squared_error'])])
   plt.legend()
-  plt.show()
+  plt.savefig('histoty.png')
 
 
 ###############################################################################
+
+def replace_by_number (features, name):
+
+  gsset = set()
+  for c in features[name]:
+      gsset.add(c)
+
+  gsmap = {}
+  num = 0
+  for c in gsset:
+      num = num + 1
+      gsmap[c] = num
+     
+  features[name].replace(gsmap, inplace=True)
+
+###############################################################################
+
+def drop_all_but (features, alllist):
+    for name in features.head(1):
+        if not (name in alllist):
+            print (name)
+            features = features.drop(name, axis=1)
+
+
+    return features
+
+###############################################################################
+
 
 if __name__ == "__main__":
 
   parser = argparse.ArgumentParser()
   parser.add_argument("-f","--file", help="input csv file ", \
           required=True, type=str)
-  parser.add_argument("-s","--showgraphs", help="shows graphs ", \
+  parser.add_argument("-t","--topredict", help="input property to predict ", \
+          required=True, type=str)
+  parser.add_argument("-r","--descriptor", help="input descriptor to use \"name1;...\" ", \
+          required=True, type=str)
+
+ 
+  parser.add_argument("-d","--dumpgraphs", help="dump graphs ", \
           required=False, default=False, action='store_true')
   parser.add_argument("-e","--epochs", help="use an excat number of epochs  ", \
           required=False, default=-1, type=int)
@@ -112,40 +146,30 @@ if __name__ == "__main__":
       print("%5d "%(i) + name)
       i = i + 1
   
-  # Remove non numeric data 
-  features = features.drop("Name", axis = 1)
-  features = features.drop("P", axis = 1)
-  
-  # remove all non needed 
-  # features = features.drop("GM2-", axis = 1)
-  # features = features.drop("ep1", axis = 1)
-  # features = features.drop("ep2", axis = 1)
-  features = features.drop("GM5+", axis = 1)
-  features = features.drop("M2-", axis = 1)
-  features = features.drop("DV/V(% AFE-FE)", axis = 1)
-  features = features.drop("DeltaE", axis = 1)
-  features = features.drop("Delta", axis = 1)
-  features = features.drop("eta1", axis = 1)
-  features = features.drop("eta2", axis = 1)
-  features = features.drop("eta3", axis = 1)
-  features = features.drop("DV/V(% FE-PA)", axis = 1)
-  features = features.drop("ground_state", axis = 1)
-  features = features.drop("DV/V(% AFE-PA)", axis = 1)
-
   # replace class
-  #features = features.drop("Class", axis = 1)
-  
-  classset = set()
-  for c in features["Class"]:
-      classset.add(c)
+  replace_by_number (features, "Class")
 
-  classmap = {}
-  num = 0
-  for c in classset:
-      num = num + 1
-      classmap[c] = num
-     
-  features["Class"].replace(classmap, inplace=True)
+  # replace ground_state
+  replace_by_number (features, "ground_state")
+
+  fulllist = []
+
+  if not (args.topredict in features.head(1)):
+      print ("Error in topredict option")
+      exit()
+
+  fulllist.append(args.topredict)
+
+  for desc in args.descriptor.split(";"):
+       if not (desc in features.head(1)):
+           print ("Error in descriptor")
+           exit()
+
+       fulllist.append(desc)
+
+  features = drop_all_but (features, fulllist)
+
+  print (features)
 
   train_dataset = features.sample(frac=0.8,random_state=0)
   test_dataset = features.drop(train_dataset.index)
@@ -154,29 +178,22 @@ if __name__ == "__main__":
   train_stats = train_stats.transpose()
   print(train_stats)
   
-  topredict = "DE_sw"
-  desc1 = "GM2-"
-  desc2 = "ep1"
-  desc3 = "ep2"
-  desc4 = "Class"
-  fulllist = [desc1, desc2, desc3, desc4, topredict]
-  
-  if args.showgraphs:
+  if args.dumpgraphs:
       sns.pairplot(train_dataset[fulllist], 
               diag_kind="kde")
-      plt.show()
+      plt.savefig('train_dataset.png')
   
   test_stats = test_dataset.describe()
   test_stats = test_stats.transpose()
   print(test_stats)
   
-  if args.showgraphs:
+  if args.dumpgraphs:
       sns.pairplot(test_dataset[fulllist], 
               diag_kind="kde")
-      plt.show()
+      plt.savefig('test_dataset.png')
   
-  train_labels = train_dataset.pop(topredict)
-  test_labels = test_dataset.pop(topredict)
+  train_labels = train_dataset.pop(args.topredict)
+  test_labels = test_dataset.pop(args.topredict)
   
   train_stats = train_dataset.describe()
   train_stats = train_stats.transpose()
@@ -198,17 +215,19 @@ if __name__ == "__main__":
   hist['epoch'] = history.epoch
   print(hist.tail())
   
-  if args.showgraphs:
-      plot_history(history, topredict)
+  if args.dumpgraphs:
+      plot_history(history, args.topredict)
   
   loss, mae, mse = model.evaluate(normed_test_data, test_labels, verbose=0)
-  print("Testing set Mean Abs Error: %5.2f %s"%(mae, topredict))
+  print("Testing set Mean Abs Error: %5.2f %s"%(mae, args.topredict))
   
   test_predictions = model.predict(normed_test_data).flatten()
   
+  plt.clf()
+  plt.cla()
   plt.scatter(test_labels, test_predictions)
-  plt.xlabel('True Values ['+topredict+']')
-  plt.ylabel('Predictions ['+topredict+']')
+  plt.xlabel('True Values ['+args.topredict+']')
+  plt.ylabel('Predictions ['+args.topredict+']')
   plt.axis('equal')
   plt.axis('square')
   plt.xlim([0,plt.xlim()[1]])
@@ -222,7 +241,7 @@ if __name__ == "__main__":
   plt.clf()
   plt.cla()
   plt.hist(error, bins = 25)
-  plt.xlabel("Prediction Error ["+topredict+"]")
+  plt.xlabel("Prediction Error ["+args.topredict+"]")
   _ = plt.ylabel("Count")
   
   plt.savefig('predictionerror.png')
