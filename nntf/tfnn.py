@@ -114,7 +114,6 @@ if __name__ == "__main__":
   
   # Remove non numeric data 
   features = features.drop("Name", axis = 1)
-  features = features.drop("Class", axis = 1)
   features = features.drop("P", axis = 1)
   
   # remove all non needed 
@@ -132,7 +131,22 @@ if __name__ == "__main__":
   features = features.drop("DV/V(% FE-PA)", axis = 1)
   features = features.drop("ground_state", axis = 1)
   features = features.drop("DV/V(% AFE-PA)", axis = 1)
+
+  # replace class
+  #features = features.drop("Class", axis = 1)
   
+  classset = set()
+  for c in features["Class"]:
+      classset.add(c)
+
+  classmap = {}
+  num = 0
+  for c in classset:
+      num = num + 1
+      classmap[c] = num
+     
+  features["Class"].replace(classmap, inplace=True)
+
   train_dataset = features.sample(frac=0.8,random_state=0)
   test_dataset = features.drop(train_dataset.index)
   
@@ -144,7 +158,8 @@ if __name__ == "__main__":
   desc1 = "GM2-"
   desc2 = "ep1"
   desc3 = "ep2"
-  fulllist = [desc1, desc2, desc3, topredict]
+  desc4 = "Class"
+  fulllist = [desc1, desc2, desc3, desc4, topredict]
   
   if args.showgraphs:
       sns.pairplot(train_dataset[fulllist], 
