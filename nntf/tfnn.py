@@ -17,14 +17,18 @@ def norm(x, train_stats):
 ###############################################################################
 
 class PrintDot(keras.callbacks.Callback):
-  def on_epoch_end(self, epoch, logs):
-    if epoch % 100 == 0: print('')
-    print('.', end='')
+  
+    def on_epoch_end(self, epoch, logs):
+      
+        if epoch % 100 == 0: 
+            print('')
+      
+        print('.', end='')
 
 ###############################################################################
 
-def build_seq_model(train_data, train_labels,
-        totepochs, earlystop=False):
+def use_seq_model(train_data, train_labels, test_data, test_labels,
+        totepochs, topredict, earlystop=False, dumpgraphs=False):
 
   model = keras.Sequential([
     layers.Dense(64, activation=tf.nn.relu, 
@@ -54,7 +58,20 @@ def build_seq_model(train_data, train_labels,
               epochs=totepochs, validation_split = 0.2, 
               verbose=0, callbacks=[PrintDot()])
 
-  return model, history
+  #print (model.summary())
+  
+  #hist = pd.DataFrame(history.history)
+  #hist['epoch'] = history.epoch
+  #print(hist.tail())
+  
+  if dumpgraphs:
+      plot_history(history, topredict)
+  
+  loss, mae, mse = model.evaluate(test_data, test_labels, verbose=0)
+ 
+  test_predictions = model.predict(test_data).flatten()
+
+  return mae, test_predictions
 
 ###############################################################################
 
@@ -112,7 +129,6 @@ def drop_all_but (features, alllist):
     return features
 
 ###############################################################################
-
 
 if __name__ == "__main__":
 
@@ -200,28 +216,13 @@ if __name__ == "__main__":
   
   normed_train_data = norm(train_dataset, train_stats)
   normed_test_data = norm(test_dataset, train_stats)
-  
-  #print(normed_train_data)
-  #print(test_dataset)
-  
-  EPOCHS = 1000
-  
-  model, history = build_seq_model (normed_train_data, 
-          train_labels, args.epochs, (args.epochs <= 0))
-  
-  print (model.summary())
-  
-  hist = pd.DataFrame(history.history)
-  hist['epoch'] = history.epoch
-  print(hist.tail())
-  
-  if args.dumpgraphs:
-      plot_history(history, args.topredict)
-  
-  loss, mae, mse = model.evaluate(normed_test_data, test_labels, verbose=0)
-  print("Testing set Mean Abs Error: %5.2f %s"%(mae, args.topredict))
-  
-  test_predictions = model.predict(normed_test_data).flatten()
+
+  mae, test_predictions = \
+          use_seq_model (normed_train_data, train_labels, normed_test_data, 
+          test_labels, args.epochs, args.topredict, (args.epochs <= 0), 
+          args.dumpgraphs)
+
+  print("\nTesting set Mean Abs Error: %5.2f %s"%(mae, args.topredict))
   
   plt.clf()
   plt.cla()
