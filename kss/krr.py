@@ -6,6 +6,7 @@ import numpy
 from sklearn.kernel_ridge import KernelRidge
 from sklearn.metrics import mean_squared_error
 from sklearn import linear_model 
+from sklearn.metrics import mean_absolute_error
 
 import argparse
 import math
@@ -144,38 +145,47 @@ if __name__ == "__main__":
   val_labels = labels.values
 
   new_features = []
-
   for i in range(len(val_labels)):
       new_features.append((atomicdata[features.values[i][1]].EA - \
               atomicdata[features.values[i][1]].IP) / \
               atomicdata[features.values[i][0]].rp**2)
-
-
   #plt.scatter(new_features, val_labels)
   #plt.show()
 
+
+  """
   val_features = numpy.asarray(new_features)
   val_features = val_features.reshape(-1, 1)
   #print(val_features)
-
-  # Compute the rbf (gaussian) kernel between X and Y
-  clf = KernelRidge(kernel='rbf', gamma=0.80)
-  #clf = KernelRidge(kernel='linear', gamma=0.1)
-  #print(val_features.shape, val_labels.shape)
-
-  clf.fit(val_features, val_labels)
-
-  predict = clf.predict(val_features)
-
-  for i in range(len(predict)):
-      print (val_labels[i], predict[i])
-
-  rms = math.sqrt(mean_squared_error(val_labels, predict))
-
-  print ("RMSE: ", rms)
 
   reg = linear_model.LinearRegression(copy_X=True, 
           fit_intercept=True, n_jobs=None, normalize=False)
   reg.fit(val_features, val_labels)
 
   print(reg.coef_ , reg.intercept_)
+  """
+
+  # Compute the rbf (gaussian) kernel between X and Y
+  sigma = 0.1
+  clf = KernelRidge(kernel='rbf', gamma=(1.0 / sigma ** 2))
+  #clf = KernelRidge(kernel='linear', gamma=3.0e-4)
+  #print(val_features.shape, val_labels.shape)
+
+  clf.fit(val_features, val_labels)
+
+  predict = clf.predict(val_features)
+
+  maxae = 0.0
+  for i in range(len(predict)):
+      if (abs(val_labels[i] - predict[i]) > maxae):
+          maxae = abs(val_labels[i] - predict[i])
+  #    print (val_labels[i], predict[i])
+
+  rms = math.sqrt(mean_squared_error(val_labels, predict))
+  mae = mean_absolute_error(val_labels, predict)
+
+  print (" RMSE: ", rms)
+  print ("  MAE: ", mae)
+  print ("MaxAE: ", maxae)
+
+
