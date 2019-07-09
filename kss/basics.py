@@ -97,6 +97,6 @@ def gaussian_krr (train_features, train_labels, test_features, test_labels, \
 
   rms = math.sqrt(mean_squared_error(test_labels, predict))
   mae = mean_absolute_error(test_labels, predict)
-  maxea = max(absolutediff)
+  maxae = max(absolutediff)
 
-  return predict, rms, mae, maxea 
+  return predict, rms, mae, maxae
