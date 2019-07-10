@@ -90,10 +90,7 @@ def gaussian_krr (train_features, train_labels, test_features, test_labels, \
 
   predict = clf.predict(test_features)
 
-  absolutediff = []
-  for i in range(len(predict)):
-      diff = abs(test_labels[i] - predict[i])
-      absolutediff.append(diff)
+  absolutediff = [abs(x - y) for x, y in zip(test_labels, predict)]
 
   rms = math.sqrt(mean_squared_error(test_labels, predict))
   mae = mean_absolute_error(test_labels, predict)

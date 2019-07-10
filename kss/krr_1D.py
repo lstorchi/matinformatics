@@ -96,3 +96,14 @@ if __name__ == "__main__":
   print (" RMSE: ", rms)
   print ("  MAE: ", mae)
   print ("MaxAE: ", maxae)
+
+  absdiff = [abs(x - y) for x, y in zip(val_labels, predict)]
+
+  plt.plot(absdiff, 'bo')
+  #n, bins, patches = plt.hist([abs(x - y) for x, y in zip(truevalue, predict)], \
+  #        50, density=True, \
+  #        facecolor='g', alpha=0.75)
+  #plt.title('Histogram')
+  plt.grid(True)
+  plt.show()
+ 
