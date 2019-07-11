@@ -91,7 +91,7 @@ if __name__ == "__main__":
   print("Linear model: ", reg.coef_ , " ", reg.intercept_)
 
   predict, rms, mae, maxae = gaussian_krr (val_features, val_labels, val_features, val_labels, \
-        sigma = 3)
+        sigma = math.sqrt(3000), alphain = 3.0e-4)
 
   print (" RMSE: ", rms)
   print ("  MAE: ", mae)

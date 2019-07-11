@@ -76,11 +76,11 @@ if __name__ == "__main__":
   val_labels = labels.values
 
   predict, rms, mae, maxae = gaussian_krr (val_features, val_labels, \
-          val_features, val_labels, sigma = 0.1)
+          val_features, val_labels, sigma = 0.1, alphain = 3.0e-4)
 
-  print (" RMSE: ", rms)
-  print ("  MAE: ", mae)
-  print ("MaxAE: ", maxae)
+  print (" RMSE: %E"%rms)
+  print ("  MAE: %E"%mae)
+  print ("MaxAE: %E"% maxae)
 
   """
   plt.clf()
