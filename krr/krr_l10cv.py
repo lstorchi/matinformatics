@@ -57,10 +57,10 @@ if __name__ == "__main__":
   gamma = 0.1
   alpha = 0.1
   
-  #features = new_features
-  #features = features.reshape(-1, 1)
-  #sigma = math.sqrt(3000)
-  #alpha = 3.0e-4
+  features = new_features
+  features = features.reshape(-1, 1)
+  gamma = 0.001
+  alpha = 0.01
 
   labels = alldata.pop(topredict).values
 
