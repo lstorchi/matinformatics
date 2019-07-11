@@ -80,9 +80,9 @@ def read_atomic_data (filename):
 ###############################################################################
 
 def gaussian_krr (train_features, train_labels, test_features, test_labels, \
-        sigma = 0.1, alphain = 1.0):
+        gammain = 0.1, alphain = 1.0):
 
-  clf = KernelRidge(alpha = alphain, kernel='rbf', gamma=(1.0 / sigma ** 2))
+  clf = KernelRidge(alpha = alphain, kernel='rbf', gamma = gammain)
   #clf = KernelRidge(kernel='linear', gamma=3.0e-4)
   #print(val_features.shape, val_labels.shape)
 

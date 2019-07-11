@@ -54,17 +54,23 @@ if __name__ == "__main__":
   new_features = numpy.asarray(desc_1d)
  
   features = alldata.values
-  sigma = 0.1
+  gamma = 0.1
+  alpha = 0.1
   
   #features = new_features
   #features = features.reshape(-1, 1)
   #sigma = math.sqrt(3000)
+  #alpha = 3.0e-4
 
   labels = alldata.pop(topredict).values
 
   num_of_run = 150
   predict = []
   truevalue = []
+
+  mean_rms = 0.0
+  mean_mae = 0.0
+  mean_maxae = 0.0
 
   for i in range(num_of_run):
       
@@ -86,10 +92,14 @@ if __name__ == "__main__":
       #test_labels = 10.0 * numpy.random.rand(len(test_labels))
 
       act_predict, rms, mae, maxae = gaussian_krr (train_features, train_labels, \
-              test_features, test_labels, sigma )
+              test_features, test_labels, gamma, alpha )
       
       predict.extend(act_predict)
       truevalue.extend(test_labels)
+
+      mean_rms += rms
+      mean_mae += mae
+      mean_maxae += maxae
 
       #print (" RMSE: ", rms)
       #print ("  MAE: ", mae)
@@ -106,11 +116,17 @@ print (" RMSE: ", rms)
 print ("  MAE: ", mae)
 print ("MaxAE: ", maxae)
 
-#plt.plot(absdiff, 'bo')
+print ("Mean  RMSE: ", mean_rms/float(num_of_run))
+print ("Mean   MAE: ", mean_mae/float(num_of_run))
+print ("Mean MaxAE: ", mean_maxae/float(num_of_run))
+
+
+
+plt.plot(absdiff, 'bo')
 #n, bins, patches = plt.hist([abs(x - y) for x, y in zip(truevalue, predict)], \
 #        50, density=True, \
 #        facecolor='g', alpha=0.75)
 #plt.title('Histogram')
-#plt.grid(True)
-#plt.show()
+plt.grid(True)
+plt.show()
  
