@@ -22,7 +22,9 @@ if __name__ == "__main__":
           required=True, type=str)
   parser.add_argument("-d","--dumpgraphs", help="dump graphs ", \
           required=False, default=False, action='store_true')
-  
+  parser.add_argument("--features-dim", help=" use 1D , 2D or 3D desciptor / features ", \
+          required=False, default=1, type=int, dest='descdim')
+ 
   if len(sys.argv) == 1:
       parser.print_help()
       exit(1)
@@ -30,9 +32,13 @@ if __name__ == "__main__":
   args = parser.parse_args()
   
   filename = args.file
+  descdim = args.descdim
   atomicfile = args.atomicdata
-
   atomicdata = read_atomic_data(atomicfile)
+
+  if descdim not in [1, 2, 3]:
+      print ("features-dim can be 1 , 2 or 3")
+      exit(1)
 
   alldata = pd.read_excel(filename)
   print('The shape of our alldata is:', alldata.shape)
@@ -74,15 +80,30 @@ if __name__ == "__main__":
   # 1d Descriptor
   new_features = []
   for i in range(len(val_labels)):
-      new_features.append((atomicdata[alldata.values[i][1]].EA - \
+      first = (atomicdata[alldata.values[i][1]].EA - \
               atomicdata[alldata.values[i][1]].IP) / \
-              atomicdata[alldata.values[i][0]].rp**2)
+              (atomicdata[alldata.values[i][0]].rp**2)
+      second = abs(atomicdata[alldata.values[i][0]].rs - \
+              atomicdata[alldata.values[i][1]].rp) / \
+              math.exp(atomicdata[alldata.values[i][0]].rs)
+      third = abs(atomicdata[alldata.values[i][1]].rp - \
+              atomicdata[alldata.values[i][1]].rs) / \
+              math.exp(atomicdata[alldata.values[i][0]].rd)
+
+
+      if descdim == 1:
+          new_features.append(first)
+      elif descdim == 2:
+          new_features.append((first, second))
+      elif descdim == 3:
+          new_features.append((first, second, third))
 
   #plt.scatter(new_features, val_labels)
   #plt.show()
 
   val_features = numpy.asarray(new_features)
-  val_features = val_features.reshape(-1, 1)
+  if descdim == 1:
+    val_features = val_features.reshape(-1, 1)
 
   reg = linear_model.LinearRegression(copy_X=True, 
           fit_intercept=True, n_jobs=None, normalize=False)
