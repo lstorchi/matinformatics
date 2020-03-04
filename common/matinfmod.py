@@ -17,10 +17,23 @@ def get_new_feature (indatframe, formula):
         if toknum == token.NAME:
             if (tokval != "exp") and (tokval != "sqrt"):
                 variables.append(tokval)
-                print(toknum, tokval)
+                if not (tokval in indatframe.columns):
+                    print("Error ", tokval, " not in ")
+                    return None
 
-    IP = 1
-    EA = 10
-    for Z in range(1,10):
-        y = eval(code)
-        print(y)
+    todefinevars = ""
+    for vname in variables:
+        exec(vname + "_list = []")
+        todefinevars += vname + " = None\n"
+        for v in indatframe[vname].tolist():
+            exec(vname + "_list.append("+str(v)+")")
+
+    # define the needed constant 
+    exec(todefinevars)
+    for i in range(len(indatframe[variables[0]].tolist())):
+        for vname in variables:
+            exec(vname + " = " + vname + "_list["+str(i)+"]")
+        nf = eval(code)
+        print(nf)
+
+    return 
