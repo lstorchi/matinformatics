@@ -21,7 +21,14 @@ if __name__ == "__main__":
 
   atomicdata = pd.read_excel(xls, "Atomic Data")
 
-  matinfmod.get_new_feature(atomicdata, "(Z+IP)/exp(EA)")
+  try:
+      formula = "(IP + EA)/Z"
+      newf = matinfmod.get_new_feature(atomicdata, formula)
 
+      print (formula)
+      for v in newf:
+          print("%10.5f"%v)
 
+  except NameError as err:
+      print(err)
 
