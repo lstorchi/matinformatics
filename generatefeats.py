@@ -25,18 +25,39 @@ if __name__ == "__main__":
 
   atomicdata = pd.read_excel(xls, "Atomic Data")
   basicfeatureslist = args.basicfeatures.split(";")
+
+  basicfeaturesdict = {}
   for b in basicfeatureslist:
       newb = b.split("[")
-      #if len(newb) != 2:
+      if len(newb) != 2:
+           print("Error in basicfeatures format")
+           exit(1)
 
+      classe = newb[1].replace("]", "")
+      name = newb[0]
+
+      if not (name in atomicdata.columns):
+           print("Error feature not present")
+           exit(1)
+
+      if not (classe in basicfeaturesdict):
+           basicfeaturesdict[classe] = []
+           basicfeaturesdict[classe].append(name)
+      else:
+           basicfeaturesdict[classe].append(name)
 
   try:
-      formula = "(IP + EA)/Z"
-      newf = matinfmod.get_new_feature(atomicdata, formula)
+      newdataframe = {}
+      formulas = matinfmod.generate_formulas (basicfeaturesdict)
+      for formula in formulas:
+           newf = matinfmod.get_new_feature(atomicdata, formula)
 
-      #print (formula)
-      #for v in newf:
-      #    print("%10.5f"%v)
+           newdataframe[formula] = newf
+           print (formula)
+           #for v in newf:
+           #     print("%10.5f"%v)
+
+      newatomicdata = pd.DataFrame.from_dict(newdataframe)
 
   except NameError as err:
       print(err)

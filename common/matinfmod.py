@@ -4,9 +4,40 @@ import tokenize
 
 from io import StringIO
 
+def generate_formulas (features):
+
+    formulas  = []
+
+    numer = []
+    for classe in features:
+
+        dim = len(features[classe])
+        for i in range(dim):
+            for j in range(i+1,dim):
+                numer.append(features[classe][i] + \
+                        "+" + features[classe][j])
+                numer.append(features[classe][i] + \
+                        "-" + features[classe][j])
+
+    deno = []
+    for classe in features:
+
+        dim = len(features[classe])
+        for i in range(dim):
+            deno.append("sqrt(fabs("+features[classe][i]+"))")
+            deno.append("exp("+features[classe][i]+")")
+            deno.append("("+features[classe][i]+"**2)")
+            deno.append("("+features[classe][i]+"**3)")
+
+    for n in numer:
+        for d in deno:
+            formulas.append("("+n+")/("+d+")")
+
+    return formulas
+
 def get_new_feature (indatframe, formula):
 
-    from math import exp, sqrt
+    from math import exp, sqrt, fabs
 
     code = parser.expr(formula).compile()
     sio = StringIO(formula)
@@ -15,7 +46,7 @@ def get_new_feature (indatframe, formula):
     variables = []
     for toknum, tokval, _, _, _  in tokens:
         if toknum == token.NAME:
-            if (tokval != "exp") and (tokval != "sqrt"):
+            if (tokval != "exp") and (tokval != "sqrt") and (tokval != "fabs"):
                 variables.append(tokval)
                 if not (tokval in indatframe.columns):
                     raise NameError("Error ", tokval, \
