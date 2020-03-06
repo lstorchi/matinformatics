@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 
+import matplotlib
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 import argparse
 import sys
 
@@ -57,6 +61,11 @@ if __name__ == "__main__":
             
         newatomicdata = pd.DataFrame.from_dict(newdataframe)                
         newatomicdata.to_excel("newadata.xlsx")
+        
+        #plt.figure(figsize=(12,10))
+        #cor = newatomicdata.corr()
+        #sns.heatmap(cor, annot=True, cmap=plt.cm.Reds)
+        #plt.show()
         
     except NameError as err:
         print(err)
