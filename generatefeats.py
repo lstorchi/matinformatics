@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 import argparse
 import sys
@@ -52,9 +53,11 @@ if __name__ == "__main__":
             newf = matinfmod.get_new_feature(atomicdata, formula)
             
             newdataframe[formula] = newf
-            print (formula)
+        print ("Produced ", len(formulas), " new features")
             
-        newatomicdata = pd.DataFrame.from_dict(newdataframe)
+        newatomicdata = pd.DataFrame.from_dict(newdataframe)                
+        newatomicdata.to_excel("newadata.xlsx")
+        
     except NameError as err:
         print(err)
 

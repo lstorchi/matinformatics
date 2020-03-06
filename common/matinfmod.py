@@ -18,6 +18,15 @@ def generate_formulas (features):
                         "+" + features[classe][j])
                 numer.append(features[classe][i] + \
                         "-" + features[classe][j])
+                numer.append(features[classe][i] + \
+                        "**2 -" + features[classe][j])
+                numer.append(features[classe][i] + \
+                        "**2 +" + features[classe][j])
+                numer.append(features[classe][i] + \
+                        "**3 -" + features[classe][j])
+                numer.append(features[classe][i] + \
+                        "**3 +" + features[classe][j])
+
 
     deno = []
     for classe in features:
@@ -32,6 +41,10 @@ def generate_formulas (features):
     for n in numer:
         for d in deno:
             formulas.append("("+n+")/("+d+")")
+            formulas.append("("+d+")/("+n+")")
+            
+    if len(formulas) != len(set(formulas)):
+        formulas = list(set(formulas)) 
 
     return formulas
 
