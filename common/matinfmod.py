@@ -48,6 +48,13 @@ def generate_formulas (features):
 
     return formulas
 
+def generate_formulas_AB (featuresA, featuresB):
+
+    formulas  = []
+
+    return formulas
+
+
 def get_new_feature (indatframe, formula):
 
     from math import exp, sqrt, fabs
