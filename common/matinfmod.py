@@ -2,6 +2,8 @@ import token
 import parser
 import tokenize
 
+import pandas as pd
+
 from io import StringIO
 
 def generate_formulas (features):
@@ -48,11 +50,66 @@ def generate_formulas (features):
 
     return formulas
 
-def generate_formulas_AB (featuresA, featuresB):
+def generate_formulas_AB (features, atomicdata, lista, listb):
 
     formulas  = []
+    newdataframeAB = {}
+    
+    
+    for k in atomicdata.to_dict():
+        newdataframeAB[k+"_A"] = atomicdata[k].values
+        newdataframeAB[k+"_B"] = atomicdata[k].values
+    
+    featuresAB = pd.DataFrame.from_dict(newdataframeAB) 
+    
+    numer = []
+    
+    for classe in features:
+        dim = len(features[classe])
+        for i in range(dim):
+            for j in range(i+1,dim):
+                numer.append(features[classe][i] + \
+                        "_A +" + features[classe][j] + \
+                        "_B")
+                numer.append(features[classe][i] + \
+                        "_A -" + features[classe][j] + \
+                        "_B")
+                numer.append(features[classe][i] + \
+                        "_A**2 -" + features[classe][j] + \
+                        "_B")
+                numer.append(features[classe][i] + \
+                        "_A**2 +" + features[classe][j] + \
+                        "_B")
+                numer.append(features[classe][i] + \
+                        "_A**3 -" + features[classe][j] + \
+                        "_B")
+                numer.append(features[classe][i] + \
+                        "_A**3 +" + features[classe][j] + \
+                        "_B")
 
-    return formulas
+
+    deno = []
+    for classe in features:
+        dim = len(features[classe])
+        for i in range(dim):
+            deno.append("sqrt(fabs("+features[classe][i]+"_A))")
+            deno.append("exp("+features[classe][i]+"_A)")
+            deno.append("("+features[classe][i]+"_A**2)")
+            deno.append("("+features[classe][i]+"_A**3)")
+            deno.append("sqrt(fabs("+features[classe][i]+"_B))")
+            deno.append("exp("+features[classe][i]+"_B)")
+            deno.append("("+features[classe][i]+"_B**2)")
+            deno.append("("+features[classe][i]+"_B**3)")
+
+    for n in numer:
+        for d in deno:
+            formulas.append("("+n+")/("+d+")")
+            formulas.append("("+d+")/("+n+")")
+            
+    if len(formulas) != len(set(formulas)):
+        formulas = list(set(formulas)) 
+
+    return formulas, featuresAB
 
 
 def get_new_feature (indatframe, formula):

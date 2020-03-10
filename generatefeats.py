@@ -29,6 +29,10 @@ if __name__ == "__main__":
     
     atomicdata = pd.read_excel(xls, "Atomic Data")
     basicfeatureslist = args.basicfeatures.split(";")
+    materialdata = pd.read_excel(xls, "Material Data")
+    
+    lista =  materialdata["ZA"].values
+    listb =  materialdata["ZB"].values
     
     basicfeaturesdict = {}
     for b in basicfeatureslist:
@@ -52,9 +56,11 @@ if __name__ == "__main__":
     
     try:
         newdataframe = {}
-        formulas = matinfmod.generate_formulas (basicfeaturesdict)
+        formulas, atomicdataAB = matinfmod.generate_formulas_AB \
+            (basicfeaturesdict, atomicdata, lista, listb)
+            
         for formula in formulas:
-            newf = matinfmod.get_new_feature(atomicdata, formula)
+            newf = matinfmod.get_new_feature(atomicdataAB, formula)
             
             newdataframe[formula] = newf
         print ("Produced ", len(formulas), " new features")
