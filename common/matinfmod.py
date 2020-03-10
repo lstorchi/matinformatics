@@ -52,13 +52,33 @@ def generate_formulas (features):
 
 def generate_formulas_AB (features, atomicdata, lista, listb):
 
-    formulas  = []
+    formulas = []
     newdataframeAB = {}
     
+    if lista.shape != listb.shape:
+        raise NameError("Error lists shape error ")
     
+    newdataframeAB["Name"] = []
     for k in atomicdata.to_dict():
-        newdataframeAB[k+"_A"] = atomicdata[k].values
-        newdataframeAB[k+"_B"] = atomicdata[k].values
+        newdataframeAB[k+"_A"] = []
+        newdataframeAB[k+"_B"] = []
+    
+    for i in range(lista.shape[0]):
+        
+        aelmnt = atomicdata.index[atomicdata['Z'] == \
+                                  lista[i]].tolist()[0]
+        belmnt = atomicdata.index[atomicdata['Z'] == \
+                                  listb[i]].tolist()[0]
+                                  
+        newdataframeAB["Name"].append(str(aelmnt)+ \
+                                      "_"+str(belmnt))
+                                  
+        adict = atomicdata.loc[aelmnt, :].to_dict()
+        bdict = atomicdata.loc[belmnt, :].to_dict()
+        
+        for k in atomicdata.to_dict():
+            newdataframeAB[k+"_A"].append(adict[k])
+            newdataframeAB[k+"_B"].append(bdict[k])
     
     featuresAB = pd.DataFrame.from_dict(newdataframeAB) 
     
