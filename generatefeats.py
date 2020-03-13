@@ -56,14 +56,17 @@ if __name__ == "__main__":
     
     try:
         newdataframe = {}
+        print("Start generating formulas...")
         formulas, atomicdataAB = matinfmod.generate_formulas_AB \
             (basicfeaturesdict, atomicdata, lista, listb)
+        print("Generated ", len(formulas) ," formulas...")
             
+        print ("Start generating features...")
         for formula in formulas:
             newf = matinfmod.get_new_feature(atomicdataAB, formula)
             
             newdataframe[formula] = newf
-        print ("Produced ", len(formulas), " new features")
+        print ("Produced ", newdataframe.shape , " features")
             
         newatomicdata = pd.DataFrame.from_dict(newdataframe)                
         newatomicdata.to_excel("newadata.xlsx")

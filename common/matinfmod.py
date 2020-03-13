@@ -86,27 +86,27 @@ def generate_formulas_AB (features, atomicdata, lista, listb):
     
     for classe in features:
         dim = len(features[classe])
+        
+        first = []
+        second = []
         for i in range(dim):
-            for j in range(i+1,dim):
-                numer.append(features[classe][i] + \
-                        "_A +" + features[classe][j] + \
-                        "_B")
-                numer.append(features[classe][i] + \
-                        "_A -" + features[classe][j] + \
-                        "_B")
-                numer.append(features[classe][i] + \
-                        "_A**2 -" + features[classe][j] + \
-                        "_B")
-                numer.append(features[classe][i] + \
-                        "_A**2 +" + features[classe][j] + \
-                        "_B")
-                numer.append(features[classe][i] + \
-                        "_A**3 -" + features[classe][j] + \
-                        "_B")
-                numer.append(features[classe][i] + \
-                        "_A**3 +" + features[classe][j] + \
-                        "_B")
+            
+            first.append(features[classe][i] + "_A")
+            first.append(features[classe][i] + "_A**2")
+            first.append(features[classe][i] + "_A**3")
+            first.append("sqrt(fabs("+features[classe][i] + "_A))")
+            first.append("exp("+features[classe][i] + "_A)")
 
+            second.append(features[classe][i] + "_B")
+            second.append(features[classe][i] + "_B**2")
+            second.append(features[classe][i] + "_B**3")
+            second.append("sqrt(fabs("+features[classe][i] + "_B))")
+            second.append("exp("+features[classe][i] + "_B)")
+                
+        for f in first:
+            for s in second:
+                numer.append(f + " + " + s)
+                numer.append(f + " - " + s)
 
     deno = []
     for classe in features:
@@ -124,7 +124,6 @@ def generate_formulas_AB (features, atomicdata, lista, listb):
     for n in numer:
         for d in deno:
             formulas.append("("+n+")/("+d+")")
-            formulas.append("("+d+")/("+n+")")
             
     if len(formulas) != len(set(formulas)):
         formulas = list(set(formulas)) 
@@ -162,6 +161,7 @@ def get_new_feature (indatframe, formula):
     for i in range(len(indatframe[variables[0]].tolist())):
         for vname in variables:
             exec(vname + " = " + vname + "_list["+str(i)+"]")
+        
         nf = eval(code)
         returnvalues.append(nf)
 
