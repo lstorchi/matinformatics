@@ -66,9 +66,10 @@ if __name__ == "__main__":
             newf = matinfmod.get_new_feature(atomicdataAB, formula)
             
             newdataframe[formula] = newf
-        print ("Produced ", newdataframe.shape , " features")
             
-        newatomicdata = pd.DataFrame.from_dict(newdataframe)                
+        newatomicdata = pd.DataFrame.from_dict(newdataframe)      
+        print ("Produced ", newatomicdata.size , " features")
+
         newatomicdata.to_excel("newadata.xlsx")
         
         #plt.figure(figsize=(12,10))
