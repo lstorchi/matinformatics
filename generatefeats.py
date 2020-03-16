@@ -81,6 +81,7 @@ if __name__ == "__main__":
         print ("Produced ", newatomicdata.size , " features")
 
         newatomicdata.to_pickle("newadata.pkl")
+        newatomicdata.to_csv("newadata.csv")
         
         #plt.figure(figsize=(12,10))
         #cor = newatomicdata.corr()
