@@ -7,6 +7,7 @@ import seaborn as sns
 
 import argparse
 import sys
+import os
 
 sys.path.append("./common/")
 
@@ -34,6 +35,8 @@ if __name__ == "__main__":
     lista =  materialdata["ZA"].values
     listb =  materialdata["ZB"].values
     
+    #print(atomicdata.keys())
+        
     basicfeaturesdict = {}
     for b in basicfeatureslist:
         newb = b.split("[")
@@ -59,6 +62,13 @@ if __name__ == "__main__":
         print("Start generating formulas...")
         formulas, atomicdataAB = matinfmod.generate_formulas_AB \
             (basicfeaturesdict, atomicdata, lista, listb)
+        fname  = "formulaslist.txt"
+        if os.path.exists(fname):
+            os.remove(fname)
+        fp = open(fname, "w")
+        for f in formulas:
+            fp.write(f + "\n")
+        fp.close()
         print("Generated ", len(formulas) ," formulas...")
             
         print ("Start generating features...")
@@ -70,7 +80,7 @@ if __name__ == "__main__":
         newatomicdata = pd.DataFrame.from_dict(newdataframe)      
         print ("Produced ", newatomicdata.size , " features")
 
-        newatomicdata.to_excel("newadata.xlsx")
+        newatomicdata.to_pickle("newadata.pkl")
         
         #plt.figure(figsize=(12,10))
         #cor = newatomicdata.corr()

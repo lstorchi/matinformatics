@@ -87,26 +87,40 @@ def generate_formulas_AB (features, atomicdata, lista, listb):
     for classe in features:
         dim = len(features[classe])
         
-        first = []
-        second = []
+        f1 = []
+        f2 = []
+        f3 = []
+        f4 = []
+        f5 = []
         for i in range(dim):
             
-            first.append(features[classe][i] + "_A")
-            first.append(features[classe][i] + "_A**2")
-            first.append(features[classe][i] + "_A**3")
-            first.append("sqrt(fabs("+features[classe][i] + "_A))")
-            first.append("exp("+features[classe][i] + "_A)")
+            f1.append(features[classe][i] + "_A")
+            f1.append(features[classe][i] + "_B")
+            
+            f2.append(features[classe][i] + "_A**2")
+            f2.append(features[classe][i] + "_B**2")
+            
+            f3.append(features[classe][i] + "_A**3")
+            f3.append(features[classe][i] + "_B**3")
+            
+            f4.append("sqrt(fabs("+features[classe][i] + "_A))")
+            f4.append("sqrt(fabs("+features[classe][i] + "_B))")
+            
+            f5.append("exp("+features[classe][i] + "_A)")
+            f5.append("exp("+features[classe][i] + "_B)")
 
-            second.append(features[classe][i] + "_B")
-            second.append(features[classe][i] + "_B**2")
-            second.append(features[classe][i] + "_B**3")
-            second.append("sqrt(fabs("+features[classe][i] + "_B))")
-            second.append("exp("+features[classe][i] + "_B)")
-                
-        for f in first:
-            for s in second:
-                numer.append(f + " + " + s)
-                numer.append(f + " - " + s)
+        
+        ftuple = (f1, f2, f3, f4, f5)
+        
+        for i in range(len(ftuple)):
+            first = ftuple[i]
+            for j in range(i, len(ftuple)):
+                second = ftuple[j]
+                for f in first:
+                    for s in second:
+                        if f != s:
+                            numer.append(f + " + " + s)
+                            numer.append(f + " - " + s)
 
     deno = []
     for classe in features:
