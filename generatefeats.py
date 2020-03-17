@@ -24,6 +24,9 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--dumponly", \
                         help="to dump only the first N formulas",
                         required=False, type=int, default=-1)
+    parser.add_argument("-v", "--verbose", \
+                        help="verbose mode", action="store_true",
+                        required=False, default=False)
     
     args = parser.parse_args()
     
@@ -81,7 +84,33 @@ if __name__ == "__main__":
             newdataframe[formula] = newf
             
         newatomicdata = pd.DataFrame.from_dict(newdataframe)      
-        print ("Produced ", newatomicdata.size , " features")
+        print ("Produced ", newatomicdata.size , " data features")
+
+        print ("Start removing highly correlated features...")
+        corr = newatomicdata.corr(method = 'pearson').abs()
+        # Select upper triangle of correlation matrix
+        upper = corr.where(np.triu(\
+                np.ones(corr.shape), k=1).astype(np.bool))
+        to_drop = [column for column in \
+                   upper.columns if any(upper[column] > 0.95)]
+        
+        print("  Removing ", len(to_drop), " features")
+        
+        if args.verbose:
+            for f in to_drop:
+                print("    ", f)
+        
+        newatomicdata = newatomicdata.drop(newatomicdata[to_drop], axis=1)
+        print ("Produced ", newatomicdata.size , " data features")
+        
+        if (args.verbose):
+            corr = newatomicdata.corr(method = 'pearson').abs()
+            scorr = corr.unstack()
+            so = scorr.sort_values(kind="quicksort")
+        
+            for index, value in so.items():
+                if index[0] != index[1]:
+                    print (index[0], index[1], " ==> ", value)
 
         newatomicdata.to_pickle("newadata.pkl")
         newatomicdata.to_csv("newadata.csv")
