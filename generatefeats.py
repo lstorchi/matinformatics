@@ -21,6 +21,9 @@ if __name__ == "__main__":
           help="input ; separated list of basic featuresto combine \n" + \
           "   each feature has an associated type (i.e. \"IP[1];EA[1];Z[2]\"", \
           required=True, type=str)
+    parser.add_argument("-d", "--dumponly", \
+                        help="to dump only the first N formulas",
+                        required=False, type=int, default=-1)
     
     args = parser.parse_args()
     
@@ -72,9 +75,9 @@ if __name__ == "__main__":
         print("Generated ", len(formulas) ," formulas...")
             
         print ("Start generating features...")
-        for formula in formulas:
+        last = args.dumponly
+        for formula in formulas[0:last]:
             newf = matinfmod.get_new_feature(atomicdataAB, formula)
-            
             newdataframe[formula] = newf
             
         newatomicdata = pd.DataFrame.from_dict(newdataframe)      
