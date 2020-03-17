@@ -1,3 +1,4 @@
+import sys
 import token
 import parser
 import tokenize
@@ -5,6 +6,17 @@ import tokenize
 import pandas as pd
 
 from io import StringIO
+
+def progress_bar (count, total, status=''):
+
+    bar_len = 60
+    filled_len = int(round(bar_len * count / float(total)))
+
+    percents = round(100.0 * count / float(total), 1)
+    bar = '=' * filled_len + '-' * (bar_len - filled_len)
+
+    sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
+    sys.stdout.flush() 
 
 def generate_formulas (features):
 

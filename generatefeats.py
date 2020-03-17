@@ -79,9 +79,20 @@ if __name__ == "__main__":
             
         print ("Start generating features...")
         last = args.dumponly
+        i = 0
+        max = last  
+        if last < 0:
+            max = len(formulas)
+            
         for formula in formulas[0:last]:
+            if not args.verbose:
+                matinfmod.progress_bar(i, max)
+                i = i + 1
             newf = matinfmod.get_new_feature(atomicdataAB, formula)
             newdataframe[formula] = newf
+        
+        if not args.verbose:
+            print()
             
         newatomicdata = pd.DataFrame.from_dict(newdataframe)      
         print ("Produced ", newatomicdata.size , " data features")
