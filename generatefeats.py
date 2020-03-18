@@ -109,6 +109,8 @@ if __name__ == "__main__":
             
             to_drop = []
             for i in range(len(cname)):
+                if not args.verbose:
+                    matinfmod.progress_bar(i+1, len(cname))
                 f1 = cname[i]
                 for j in range(i+1,len(cname)):
                     f2 = cname[j]
@@ -120,7 +122,9 @@ if __name__ == "__main__":
                         if (corrvalue > corrlimit):
                             to_drop.append(f2)
                             break
-                    
+
+            if not args.verbose:
+                print("")
             print("  Removing ", len(to_drop), " features")
             
             if args.verbose:
