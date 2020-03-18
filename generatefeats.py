@@ -82,7 +82,7 @@ if __name__ == "__main__":
             
         print ("Start generating features...")
         last = args.dumponly
-        i = 0
+        i = 1
         max = last  
         if last < 0:
             max = len(formulas)
