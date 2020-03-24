@@ -218,6 +218,8 @@ def feature_check_lr(first, last, dataset_features, y_array):
                 regressor.fit(X_train, y_train)
                 y_pred = regressor.predict(X_test)
                 mse.append(mean_squared_error(y_test,y_pred))
+
+            progress_bar(jj + 1, last - first)
             fd['formulas'].append(keys)
             fd['index'].append(jj)
             fd['rmse'].append(float	(np.average(mse)))
