@@ -4,6 +4,11 @@ import parser
 import tokenize
 
 import pandas as pd
+import numpy as np
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.linear_model import LinearRegression
 
 from io import StringIO
 
@@ -192,3 +197,31 @@ def get_new_feature (indatframe, formula):
         returnvalues.append(nf)
 
     return  returnvalues
+
+def feature_check_lr(first, last, dataset_features, y_array):
+
+    fd = dict()
+
+    fd['formulas'] = []
+    fd['index']    = []
+    fd['rmse']     = []
+
+    for jj,keys in enumerate(dataset_features.keys()):
+        if (jj>=first) and (jj<last) :
+            X = dataset_features.iloc[:,jj:(jj+1)]
+            y = (y_array)
+            mse = []
+            for ii in range(1000):
+                X_train, X_test, y_train, y_test = \
+                        train_test_split(X, y, test_size=0.1, random_state=ii)
+                regressor = LinearRegression()
+                regressor.fit(X_train, y_train)
+                y_pred = regressor.predict(X_test)
+                mse.append(mean_squared_error(y_test,y_pred))
+            fd['formulas'].append(keys)
+            fd['index'].append(jj)
+            fd['rmse'].append(float	(np.average(mse)))
+
+    feature_rmse_dataframe = pd.DataFrame.from_dict(fd)
+
+    return feature_rmse_dataframe

@@ -1,19 +1,27 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
 import sys
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
-from sklearn.linear_model import LinearRegression
+import argparse
+import numpy as np
+import pandas as pd
 
 
-DE_array = np.array([-0.059, -0.038, -0.033, -0.022,  0.43 ,  0.506,  0.495,  0.466,
+sys.path.append("./common/")
+
+import matinfmod 
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f","--file", help="input pki file ", \
+                        required=True, type=str)
+    parser.add_argument("-o","--output", help="output csv file ", \
+                        required=False, type=str, default="feature_rmse.csv")
+    
+    args = parser.parse_args()
+    
+    filename = args.file
+
+    df = pd.read_pickle(filename)
+    
+    DE_array = np.array([-0.059, -0.038, -0.033, -0.022,  0.43 ,  0.506,  0.495,  0.466,
         1.713,  1.02 ,  0.879,  2.638, -0.146, -0.133, -0.127, -0.115,
        -0.178, -0.087, -0.055, -0.005,  0.072,  0.219,  0.212,  0.15 ,
         0.668,  0.275, -0.146, -0.165, -0.166, -0.168, -0.266, -0.369,
@@ -25,28 +33,7 @@ DE_array = np.array([-0.059, -0.038, -0.033, -0.022,  0.43 ,  0.506,  0.495,  0.
        -0.165, -0.095, -0.326, -0.35 , -0.381,  0.808,  0.45 ,  0.264,
         0.136,  0.087]).reshape(82, 1)
 
-def feature_check(first,last, datadict):
-    dataset_features = datadict
-    fd = dict()
-    fd['formulas'] = []
-    fd['index']    = []
-    fd['rmse']     = []
+    feature_rmse_dataframe = \
+            matinfmod.feature_check_lr (0, len(df.columns), df, DE_array)
 
-    for jj,keys in enumerate(dataset_features.keys()):
-        if (jj>=first)&(jj<last) :
-            X = dataset_features.iloc[:,jj:(jj+1)]
-            y = (DE_array)
-            mse = []
-            for ii in range(1000):
-                X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.1, random_state=ii)
-                regressor = LinearRegression()
-                regressor.fit(X_train, y_train)
-                y_pred = regressor.predict(X_test)
-                mse.append(mean_squared_error(y_test,y_pred))
-            fd['formulas'].append(keys)
-            fd['index'].append(jj)
-            fd['rmse'].append(float	(np.average(mse)))
-
-    feature_rmse_dataframe = pd.DataFrame.from_dict(fd)
-    feature_rmse_dataframe.to_csv(('{}-{}.csv').format(first,last))
-
+    feature_rmse_dataframe.to_csv(args.output)
