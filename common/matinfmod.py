@@ -200,6 +200,8 @@ def get_new_feature (indatframe, formula):
 
 def feature_check_lr(first, last, dataset_features, y_array):
 
+    minvalue = float("inf")
+    bestformula = ""
     fd = dict()
 
     fd['formulas'] = []
@@ -219,11 +221,16 @@ def feature_check_lr(first, last, dataset_features, y_array):
                 y_pred = regressor.predict(X_test)
                 mse.append(mean_squared_error(y_test,y_pred))
 
+            avg = float(np.average(mse))
+            if avg < minvalue:
+                minvalue = avg
+                bestformula = keys
             progress_bar(jj + 1, last - first)
             fd['formulas'].append(keys)
             fd['index'].append(jj)
-            fd['rmse'].append(float	(np.average(mse)))
+            fd['rmse'].append(avg)
 
     feature_rmse_dataframe = pd.DataFrame.from_dict(fd)
+    print("")
 
-    return feature_rmse_dataframe
+    return feature_rmse_dataframe, minvalue, bestformula
