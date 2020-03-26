@@ -2,6 +2,7 @@ import sys
 import token
 import parser
 import tokenize
+import scipy
 
 import pandas as pd
 import numpy as np
@@ -198,7 +199,7 @@ def get_new_feature (indatframe, formula):
 
     return  returnvalues
 
-def feature_check_lr(first, last, dataset_features, y_array):
+def feature_check_lr(feature_list_indexes, dataset_features, y_array):
 
     minvalue = float("inf")
     bestformula = ""
@@ -207,30 +208,35 @@ def feature_check_lr(first, last, dataset_features, y_array):
     fd['formulas'] = []
     fd['index']    = []
     fd['rmse']     = []
-
-    for jj,keys in enumerate(dataset_features.keys()):
-        if (jj>=first) and (jj<last) :
-            X = dataset_features.iloc[:,jj:(jj+1)]
-            y = (y_array)
+    fd['percoeff'] = []
+    fd['pval']     = []
+    
+    dataset_keys = dataset_features.keys()[feature_list_indexes]
+    for jj,keys in enumerate(dataset_keys):
+            X = dataset_features[keys]
+            val1, val2 = scipy.stats.pearsonr(dataset_features[keys].values, y_array.values)
+            
             mse = []
             for ii in range(1000):
-                X_train, X_test, y_train, y_test = \
-                        train_test_split(X, y, test_size=0.1, random_state=ii)
+                X_train, X_test, y_train, y_test = train_test_split(X, y_array, test_size=0.1, random_state=ii)
                 regressor = LinearRegression()
-                regressor.fit(X_train, y_train)
-                y_pred = regressor.predict(X_test)
+                regressor.fit((np.array(X_train)).reshape(-1,1), y_train)
+                y_pred = regressor.predict((np.array(X_test)).reshape(-1,1))
                 mse.append(mean_squared_error(y_test,y_pred))
 
             avg = float(np.average(mse))
             if avg < minvalue:
                 minvalue = avg
                 bestformula = keys
-            progress_bar(jj + 1, last - first)
+            progress_bar(jj + 1, len(dataset_keys))
             fd['formulas'].append(keys)
             fd['index'].append(jj)
             fd['rmse'].append(avg)
+            fd['percoeff'].append(val1)
+            fd['pval'].append(val2)
 
     feature_rmse_dataframe = pd.DataFrame.from_dict(fd)
     print("")
 
     return feature_rmse_dataframe, minvalue, bestformula
+
