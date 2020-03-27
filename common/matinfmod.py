@@ -225,18 +225,41 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array):
                 mse.append(mean_squared_error(y_test,y_pred))
 
             avg = float(np.average(mse))
+<<<<<<< HEAD
+            
+=======
             if avg < minvalue:
                 minvalue = avg
                 bestformula = keys
             progress_bar(jj + 1, len(dataset_keys))
+>>>>>>> 1317e7574efab83482fa17b09d4acdf8a5f8005c
             fd['formulas'].append(keys)
             fd['index'].append(jj)
             fd['rmse'].append(avg)
             fd['percoeff'].append(val1)
             fd['pval'].append(val2)
+<<<<<<< HEAD
+            
+=======
 
+>>>>>>> 1317e7574efab83482fa17b09d4acdf8a5f8005c
     feature_rmse_dataframe = pd.DataFrame.from_dict(fd)
-    print("")
+    fd2 = feature_rmse_dataframe.copy()
+    
+    bestformula_lr = fd2[fd2['rmse']==np.min(fd2['rmse'].values)]['formulas'].values[0]
+    minvalue_lr    = np.min(fd2['rmse'].values)
+    #--------------------------------------------------------------
+    pearson_min    = np.max(fd2['percoeff'].values)
+    bestformula_pearson = fd2[fd2['percoeff']==np.max(fd2['percoeff'].values)]['formulas'].values[0]
+    #--------------------------------------------------------------
 
+    print("")
+    
+    return feature_rmse_dataframe, ['From Linear regression :', minvalue_lr, bestformula_lr, 
+                                    'From Pearson coeff :', pearson_min, bestformula_pearson]
+
+<<<<<<< HEAD
+=======
     return feature_rmse_dataframe, minvalue, bestformula
 
+>>>>>>> 1317e7574efab83482fa17b09d4acdf8a5f8005c
