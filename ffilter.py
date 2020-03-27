@@ -33,11 +33,17 @@ if __name__ == "__main__":
        -0.165, -0.095, -0.326, -0.35 , -0.381,  0.808,  0.45 ,  0.264,
         0.136,  0.087]).reshape(82, 1)
 
-    feature_rmse_dataframe, minvalue, bestformula = \
-            matinfmod.feature_check_lr (0, len(df.columns), df, DE_array)
+    feature_rmse_dataframe, bestformula = \
+            matinfmod.feature_check_lr (range(0, len(df.columns)), df, DE_array)
 
-    print("LR resulrs: ")
-    print(" Best formula: ", bestformula)
-    print(" Min value: ", minvalue)
+    print(bestformula[0])
+    print(" Min value: ", bestformula[1])
+    print(" Best formula: ", bestformula[2])
+    print("-------------------------------")
+    print(bestformula[3])
+    print(" Min value: ", bestformula[4])
+    print(" Best formula: ", bestformula[5])
+    
+    
 
     feature_rmse_dataframe.to_csv(args.output)
