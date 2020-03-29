@@ -199,7 +199,8 @@ def get_new_feature (indatframe, formula):
 
     return  returnvalues
 
-def feature_check_lr(feature_list_indexes, dataset_features, y_array):
+def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
+        numoflr = 1000):
 
     fd = dict()
 
@@ -218,7 +219,7 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array):
                 y_array.reshape(82))
         
         mse = []
-        for ii in range(100):
+        for ii in range(numoflr):
             X_train, X_test, y_train, y_test = \
                     train_test_split(X, y_array, test_size=0.1, random_state=ii)
             regressor = LinearRegression()
