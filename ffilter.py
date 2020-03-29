@@ -14,6 +14,9 @@ if __name__ == "__main__":
                         required=True, type=str)
     parser.add_argument("-o","--output", help="output csv file ", \
                         required=False, type=str, default="feature_rmse.csv")
+    parser.add_argument("-n","--numofiterations", help="Number of LR iterations ", \
+                        required=False, type=int, default=1000)
+ 
     
     args = parser.parse_args()
     
@@ -35,7 +38,7 @@ if __name__ == "__main__":
 
     feature_rmse_dataframe = \
             matinfmod.feature_check_lr (range(0, len(df.columns)), df, \
-            DE_array)
+            DE_array, args.numofiterations)
 
     feature_rmse_dataframe.to_csv(args.output)
 
