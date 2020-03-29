@@ -201,8 +201,6 @@ def get_new_feature (indatframe, formula):
 
 def feature_check_lr(feature_list_indexes, dataset_features, y_array):
 
-    minvalue = float("inf")
-    bestformula = ""
     fd = dict()
 
     fd['formulas'] = []
@@ -213,53 +211,33 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array):
     
     dataset_keys = dataset_features.keys()[feature_list_indexes]
     for jj,keys in enumerate(dataset_keys):
-            X = dataset_features[keys]
-            val1, val2 = scipy.stats.pearsonr(dataset_features[keys].values, y_array.values)
-            
-            mse = []
-            for ii in range(1000):
-                X_train, X_test, y_train, y_test = train_test_split(X, y_array, test_size=0.1, random_state=ii)
-                regressor = LinearRegression()
-                regressor.fit((np.array(X_train)).reshape(-1,1), y_train)
-                y_pred = regressor.predict((np.array(X_test)).reshape(-1,1))
-                mse.append(mean_squared_error(y_test,y_pred))
+        X = dataset_features[keys]
 
-            avg = float(np.average(mse))
-<<<<<<< HEAD
-            
-=======
-            if avg < minvalue:
-                minvalue = avg
-                bestformula = keys
-            progress_bar(jj + 1, len(dataset_keys))
->>>>>>> 1317e7574efab83482fa17b09d4acdf8a5f8005c
-            fd['formulas'].append(keys)
-            fd['index'].append(jj)
-            fd['rmse'].append(avg)
-            fd['percoeff'].append(val1)
-            fd['pval'].append(val2)
-<<<<<<< HEAD
-            
-=======
+        val1, val2 = \
+                scipy.stats.pearsonr(dataset_features[keys].values, \
+                y_array.reshape(82))
+        
+        mse = []
+        for ii in range(100):
+            X_train, X_test, y_train, y_test = \
+                    train_test_split(X, y_array, test_size=0.1, random_state=ii)
+            regressor = LinearRegression()
+            regressor.fit((np.array(X_train)).reshape(-1,1), y_train)
+            y_pred = regressor.predict((np.array(X_test)).reshape(-1,1))
+            mse.append(mean_squared_error(y_test,y_pred))
 
->>>>>>> 1317e7574efab83482fa17b09d4acdf8a5f8005c
+        avg = float(np.average(mse))
+
+        progress_bar(jj + 1, len(dataset_keys))
+        fd['formulas'].append(keys)
+        fd['index'].append(jj)
+        fd['rmse'].append(avg)
+        fd['percoeff'].append(np.fabs(val1))
+        fd['pval'].append(val2)
+
     feature_rmse_dataframe = pd.DataFrame.from_dict(fd)
     fd2 = feature_rmse_dataframe.copy()
     
-    bestformula_lr = fd2[fd2['rmse']==np.min(fd2['rmse'].values)]['formulas'].values[0]
-    minvalue_lr    = np.min(fd2['rmse'].values)
-    #--------------------------------------------------------------
-    pearson_min    = np.max(fd2['percoeff'].values)
-    bestformula_pearson = fd2[fd2['percoeff']==np.max(fd2['percoeff'].values)]['formulas'].values[0]
-    #--------------------------------------------------------------
-
     print("")
     
-    return feature_rmse_dataframe, ['From Linear regression :', minvalue_lr, bestformula_lr, 
-                                    'From Pearson coeff :', pearson_min, bestformula_pearson]
-
-<<<<<<< HEAD
-=======
-    return feature_rmse_dataframe, minvalue, bestformula
-
->>>>>>> 1317e7574efab83482fa17b09d4acdf8a5f8005c
+    return feature_rmse_dataframe

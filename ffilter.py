@@ -33,17 +33,25 @@ if __name__ == "__main__":
        -0.165, -0.095, -0.326, -0.35 , -0.381,  0.808,  0.45 ,  0.264,
         0.136,  0.087]).reshape(82, 1)
 
-    feature_rmse_dataframe, bestformula = \
-            matinfmod.feature_check_lr (range(0, len(df.columns)), df, DE_array)
-
-    print(bestformula[0])
-    print(" Min value: ", bestformula[1])
-    print(" Best formula: ", bestformula[2])
-    print("-------------------------------")
-    print(bestformula[3])
-    print(" Min value: ", bestformula[4])
-    print(" Best formula: ", bestformula[5])
-    
-    
+    feature_rmse_dataframe = \
+            matinfmod.feature_check_lr (range(0, len(df.columns)), df, \
+            DE_array)
 
     feature_rmse_dataframe.to_csv(args.output)
+
+    minvalue_lr = np.min(feature_rmse_dataframe['rmse'].values)
+    bestformula_lr = \
+            feature_rmse_dataframe[feature_rmse_dataframe['rmse'] \
+            == minvalue_lr]['formulas'].values[0]
+
+    print(" Min LR value: ", minvalue_lr)
+    print("   Related formula: ", bestformula_lr)
+
+    pearson_max = np.max(feature_rmse_dataframe['percoeff'].values)
+    bestformula_pearson = \
+            feature_rmse_dataframe[feature_rmse_dataframe['percoeff'] \
+            == pearson_max]['formulas'].values[0]
+
+    print("")
+    print(" Max Pearson R value: ", pearson_max)
+    print("   Related formula: ", bestformula_pearson)
