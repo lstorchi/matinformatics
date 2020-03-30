@@ -36,6 +36,8 @@ if __name__ == "__main__":
        -0.165, -0.095, -0.326, -0.35 , -0.381,  0.808,  0.45 ,  0.264,
         0.136,  0.087]).reshape(82, 1)
 
+    print("I will process :", len(df.columns), " features " )
+
     feature_rmse_dataframe = \
             matinfmod.feature_check_lr (range(0, len(df.columns)), df, \
             DE_array, args.numofiterations)
