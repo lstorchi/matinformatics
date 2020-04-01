@@ -60,3 +60,12 @@ if __name__ == "__main__":
     print("")
     print(" Max Pearson R value: ", pearson_max)
     print("   Related formula: ", bestformula_pearson)
+
+    pval_min = np.min(feature_rmse_dataframe['pval'].values)
+    bestformula_pval = \
+            feature_rmse_dataframe[feature_rmse_dataframe['pval'] \
+            == pval_min]['formulas'].values[0]
+
+    print("")
+    print(" Min P-Value value: ", pval_min)
+    print("   Related formula: ", bestformula_pval)

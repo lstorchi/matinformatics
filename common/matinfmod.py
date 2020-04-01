@@ -211,11 +211,11 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
     fd['pval']     = []
     
     dataset_keys = dataset_features.keys()[feature_list_indexes]
-    for jj,keys in enumerate(dataset_keys):
-        X = dataset_features[keys]
+    for jj,keyv in enumerate(dataset_keys):
+        X = dataset_features[keyv]
 
         val1, val2 = \
-                scipy.stats.pearsonr(dataset_features[keys].values, \
+                scipy.stats.pearsonr(dataset_features[keyv].values, \
                 y_array.reshape(82))
         
         mse = []
@@ -230,7 +230,7 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
         avg = float(np.average(mse))
 
         progress_bar(jj + 1, len(dataset_keys))
-        fd['formulas'].append(keys)
+        fd['formulas'].append(keyv)
         fd['index'].append(jj)
         fd['rmse'].append(avg)
         fd['percoeff'].append(np.fabs(val1))
