@@ -55,6 +55,8 @@ if __name__ == "__main__":
 
         twoDformulas = []
 
+        print("Produce 2D formulas...")
+
         idx1 = 0
         idx2 = 0
         num1Df = len(start1dfeatures["formulas"])
@@ -69,7 +71,11 @@ if __name__ == "__main__":
 
                     if corrval < correlationlimit:
                         twoDformulas.append((f1, f2))
-                    
+
+            matinfmod.progress_bar(idx1 + 1, num1Df)
+
+        print("")
+    
         print("Produced ",len(twoDformulas), " 2D features ( max ", \
                 (num1Df*num1Df)-num1Df, " )")
 
