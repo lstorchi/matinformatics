@@ -19,11 +19,11 @@ if __name__ == "__main__":
                         required=True, type=str)
     parser.add_argument("-o","--output", help="output csv file ", \
                         required=False, type=str, default="feature_rmse.csv")
-    parser.add_argument("-n","--numofiterations", help="Number of LR iterations ", \
+    parser.add_argument("-n","--numofiterations", help="Number of LR iterations [default=1000]", \
                         required=False, type=int, default=1000)
-    parser.add_argument("-F","--numoffeatures", help="Number of features to be used ", \
+    parser.add_argument("-F","--numoffeatures", help="Number of features to be used [default=100] ", \
                         required=False, type=int, default=100)
-    parser.add_argument("-s","--sortidx", help="Sorting index ", \
+    parser.add_argument("-s","--sortidx", help="Sorting index [default=percoeff]", \
                         required=False, type=str, default="percoeff")
  
     
@@ -31,11 +31,11 @@ if __name__ == "__main__":
 
     data = pd.read_csv(args.file)
 
+    start1dN = min(args.numoffeatures, data.shape[0])
     if args.sortidx in data.columns:
-        #print(data)
         sorteddata = data.sort_values(by = args.sortidx, ascending=False)
-        #print (sorteddata)
-
+        start1dfeatures = sorteddata.head(start1dN)
+        print(start1dfeatures)
     else:
         print(args.sortidx, " not present ")
         exit(1)
