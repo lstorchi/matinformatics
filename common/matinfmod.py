@@ -255,3 +255,40 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
     print("")
     
     return feature_rmse_dataframe
+
+def feature2D_check_lr(twoDformulas, dataset_features, y_array, \
+        numoflr = 1000):
+
+    fd = dict()
+
+    fd['formulas'] = []
+    fd['rmse']     = []
+
+    jj = 0
+    for f1, f2 in twoDformulas:
+        if f1 in dataset_features.columns and \
+                f2 in dataset_features.columns:
+            Xdf = dataset_features[[f1, f2]].copy()
+            X = Xdf.values
+
+            mse = []
+            for ii in range(numoflr):
+                X_train, X_test, y_train, y_test = \
+                        train_test_split(X, y_array, test_size=0.1, random_state=ii)
+                regressor = LinearRegression()
+                regressor.fit(X_train, y_train)
+                y_pred = regressor.predict(X_test)
+                mse.append(mean_squared_error(y_test,y_pred))
+
+            avg = float(np.average(mse))
+           
+            jj += 1
+            progress_bar(jj + 1, len(twoDformulas))
+            fd['formulas'].append((f1, f2))
+            fd['rmse'].append(avg)
+
+        else:
+            return None
+    
+    
+    return pd.DataFrame.from_dict(fd)
