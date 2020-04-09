@@ -48,8 +48,8 @@ if __name__ == "__main__":
     
     DE_array = np.array(np.float64(splitted)).reshape(N, 1)
 
-    fp = open("highly_correlated_formulas.txt", "w")
-
+    fph = open("highly_correlated_formulas.txt", "w")
+    fpl = open("2D_non_correlated_formulas.txt", "w")
     start1dN = min(args.numoffeatures, data.shape[0])
     if args.sortidx in data.columns:
         sorteddata = data.sort_values(by = args.sortidx, ascending=False)
@@ -72,9 +72,10 @@ if __name__ == "__main__":
 
                     if corrval < correlationlimit:
                       twoDformulas.append((f1, f2))
-
+                      fpl.write(f1 + " and " + f2 + " inserted " + \
+                          str(corrval) + "\n")
                     else:
-                      fp.write(f1 + " and " + f2 + " are correlated " + \
+                      fph.write(f1 + " and " + f2 + " are correlated " + \
                           str(corrval) + "\n") 
 
                 idx2 += 1
@@ -83,7 +84,8 @@ if __name__ == "__main__":
             idx1 += 1
 
         print("")
-        fp.close()
+        fph.close()
+        fpl.close()
 
         num1Df = len(start1dfeatures["formulas"])
         print("Produced ",len(twoDformulas), " 2D features ( max ", \
