@@ -48,6 +48,8 @@ if __name__ == "__main__":
     
     DE_array = np.array(np.float64(splitted)).reshape(N, 1)
 
+    fp = open("highly_correlated_formulas.txt", "w")
+
     start1dN = min(args.numoffeatures, data.shape[0])
     if args.sortidx in data.columns:
         sorteddata = data.sort_values(by = args.sortidx, ascending=False)
@@ -58,44 +60,56 @@ if __name__ == "__main__":
         print("Produce 2D formulas...")
 
         idx1 = 0
-        idx2 = 0
-        num1Df = len(start1dfeatures["formulas"])
-        for idx1 in range(num1Df):
-            for idx2 in range(idx1+1, num1Df):
-                f1 = start1dfeatures["formulas"][idx1]
-                f2 = start1dfeatures["formulas"][idx2]
-                if f1 != f2:
+        for f1 in start1dfeatures["formulas"]:
+
+            idx2 = 0
+            for f2 in start1dfeatures["formulas"]:
+                if idx2 > idx1:
+                  if f1 != f2:
                     Xdf = featuresvalue[[f1, f2]].copy()
                     # check correlation
                     corrval = np.fabs(Xdf.corr().values[0,1])
 
                     if corrval < correlationlimit:
-                        twoDformulas.append((f1, f2))
+                      twoDformulas.append((f1, f2))
 
-            matinfmod.progress_bar(idx1 + 1, num1Df)
+                    else:
+                      fp.write(f1 + " and " + f2 + " are correlated " + \
+                          str(corrval) + "\n") 
+
+                idx2 += 1
+
+            matinfmod.progress_bar(idx1 + 1, start1dN)
+            idx1 += 1
 
         print("")
-    
+        fp.close()
+
+        num1Df = len(start1dfeatures["formulas"])
         print("Produced ",len(twoDformulas), " 2D features ( max ", \
                 (num1Df*num1Df)-num1Df, " )")
 
-        generatedrmse = matinfmod.feature2D_check_lr(twoDformulas, 
-                featuresvalue, DE_array, args.numofiterations)
+        if len(twoDformulas) > 0:
 
-        if generatedrmse is None:
-            print("Error in feature2D_check_lr")
-            exit(1)
-        
-        generatedrmse.to_csv(args.output)
-        
-        minvalue_lr = np.min(generatedrmse['rmse'].values)
-        bestformula_lr = \
-            generatedrmse[generatedrmse['rmse'] \
-            == minvalue_lr]['formulas'].values[0]
-
-        print("")
-        print(" Min LR value: ", minvalue_lr)
-        print("   Related formula: ", bestformula_lr)
+          generatedrmse = matinfmod.feature2D_check_lr(twoDformulas, 
+                  featuresvalue, DE_array, args.numofiterations)
+          
+          if generatedrmse is None:
+              print("Error in feature2D_check_lr")
+              exit(1)
+          
+          generatedrmse.to_csv(args.output)
+          
+          minvalue_lr = np.min(generatedrmse['rmse'].values)
+          bestformula_lr = \
+              generatedrmse[generatedrmse['rmse'] \
+              == minvalue_lr]['formulas'].values[0]
+          
+          print("")
+          print(" Min LR value: ", minvalue_lr)
+          print("   Related formula: ", bestformula_lr)
+        else:
+          print("No 2D formulas generated ")
 
     else:
         print(args.sortidx, " not present ")
