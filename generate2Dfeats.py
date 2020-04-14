@@ -4,6 +4,7 @@ import numpy as np
 #import matplotlib
 #import matplotlib.pyplot as plt
 #import seaborn as sns
+from concurrent import futures
 
 import argparse
 import sys
@@ -12,6 +13,30 @@ import os
 sys.path.append("./common/")
 
 import matinfmod 
+
+###############################################################################
+
+def checkcorr (inp):
+    
+    start1dfeatures = inp[0]
+    idx1 = inp[1]
+    f1 = inp[2]
+
+    res = {}
+    
+    idx2 = 0
+    for f2 in start1dfeatures["formulas"]:
+        if idx2 > idx1:
+            if f1 != f2:
+                Xdf = featuresvalue[[f1, f2]].copy()
+                # check correlation
+                corrval = np.fabs(Xdf.corr().values[0,1])
+                res[(f1 , f2)] = corrval
+        idx2 += 1
+
+    return res
+
+###############################################################################
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -28,7 +53,9 @@ if __name__ == "__main__":
     parser.add_argument("-o","--output", help="output csv file ", \
                         required=False, type=str, default="2Dfeature_rmse.csv")
     parser.add_argument("-l","--labels", help="Specify labels comma separated string", \
-            required=False, type=str, default=matinfmod.defaultdevalues)
+                        required=False, type=str, default=matinfmod.defaultdevalues)
+    parser.add_argument("-N","--nt", help="Specify Number of Threads to use", \
+            required=False, type=int, default=2)
  
     correlationlimit = 0.90
     
@@ -59,29 +86,36 @@ if __name__ == "__main__":
 
         print("Produce 2D formulas...")
 
+        allformulas = {}
+
+        listofinps = []
+
+        print ("Preparing input")
         idx1 = 0
         for f1 in start1dfeatures["formulas"]:
-
-            idx2 = 0
-            for f2 in start1dfeatures["formulas"]:
-                if idx2 > idx1:
-                  if f1 != f2:
-                    Xdf = featuresvalue[[f1, f2]].copy()
-                    # check correlation
-                    corrval = np.fabs(Xdf.corr().values[0,1])
-
-                    if corrval < correlationlimit:
-                      twoDformulas.append((f1, f2))
-                      fpl.write(f1 + " and " + f2 + " inserted " + \
-                          str(corrval) + "\n")
-                    else:
-                      fph.write(f1 + " and " + f2 + " are correlated " + \
-                          str(corrval) + "\n") 
-
-                idx2 += 1
-
-            matinfmod.progress_bar(idx1 + 1, start1dN)
+            listofinps.append((start1dfeatures, idx1, f1))
             idx1 += 1
+
+        print ("Running usinn ", args.nt, " threads") 
+        with futures.ThreadPoolExecutor(max_workers=args.nt) as executor:
+            results = executor.map(checkcorr, listofinps)
+
+        print ("Collecting results")
+        for res in list(results):
+            allformulas.update(res)
+
+        print ("Storing results ...")
+
+        for k in allformulas.keys():
+            corrval = allformulas[k]
+
+            if corrval < correlationlimit:
+              twoDformulas.append(k)
+              fpl.write(k[0] + " and " + k[1] + " inserted " + \
+                  str(corrval) + "\n")
+            else:
+              fph.write(k[0] + " and " + k[1] + " are correlated " + \
+                  str(corrval) + "\n") 
 
         print("")
         fph.close()
@@ -94,7 +128,7 @@ if __name__ == "__main__":
         if len(twoDformulas) > 0:
 
           generatedrmse = matinfmod.feature2D_check_lr(twoDformulas, 
-                  featuresvalue, DE_array, args.numofiterations)
+                  featuresvalue, DE_array, args.nt, args.numofiterations)
           
           if generatedrmse is None:
               print("Error in feature2D_check_lr")

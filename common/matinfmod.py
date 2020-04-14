@@ -11,6 +11,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression
 
+from concurrent import futures
+
 defaultdevalues = "-0.059, -0.038, -0.033, -0.022,  0.43 ,  0.506,  0.495,  0.466," +\
       " 1.713,  1.02 ,  0.879,  2.638, -0.146, -0.133, -0.127, -0.115," +\
       "-0.178, -0.087, -0.055, -0.005,  0.072,  0.219,  0.212,  0.15 ," +\
@@ -256,7 +258,35 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
     
     return feature_rmse_dataframe
 
-def feature2D_check_lr(twoDformulas, dataset_features, y_array, \
+
+def task_feature2D_check_lr (inps):
+
+    f1 = inps[0]
+    f2 = inps[1]
+    dataset_features = inps[2]
+    numoflr = inps[3]
+    y_array = inps[4]
+
+    avg = float("inf")
+    if f1 in dataset_features.columns and \
+            f2 in dataset_features.columns:
+        Xdf = dataset_features[[f1, f2]].copy()
+        X = Xdf.values
+    
+        mse = []
+        for ii in range(numoflr):
+            X_train, X_test, y_train, y_test = \
+                    train_test_split(X, y_array, test_size=0.1, random_state=ii)
+            regressor = LinearRegression()
+            regressor.fit(X_train, y_train)
+            y_pred = regressor.predict(X_test)
+            mse.append(mean_squared_error(y_test,y_pred))
+    
+        avg = float(np.average(mse))
+
+    return (f1, f2, avg)
+
+def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
         numoflr = 1000):
 
     fd = dict()
@@ -264,31 +294,16 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, \
     fd['formulas'] = []
     fd['rmse']     = []
 
-    jj = 0
+    inputs = []
     for f1, f2 in twoDformulas:
-        if f1 in dataset_features.columns and \
-                f2 in dataset_features.columns:
-            Xdf = dataset_features[[f1, f2]].copy()
-            X = Xdf.values
+        inputs.append((f1, f2, dataset_features,
+                numoflr, y_array))
 
-            mse = []
-            for ii in range(numoflr):
-                X_train, X_test, y_train, y_test = \
-                        train_test_split(X, y_array, test_size=0.1, random_state=ii)
-                regressor = LinearRegression()
-                regressor.fit(X_train, y_train)
-                y_pred = regressor.predict(X_test)
-                mse.append(mean_squared_error(y_test,y_pred))
+    with futures.ThreadPoolExecutor(max_workers=nt) as executor:
+        results = executor.map(task_feature2D_check_lr, inputs)
 
-            avg = float(np.average(mse))
-           
-            jj += 1
-            progress_bar(jj + 1, len(twoDformulas))
-            fd['formulas'].append((f1, f2))
-            fd['rmse'].append(avg)
+    for res in list(results):
+        fd['formulas'].append((res[0], res[1]))
+        fd['rmse'].append(res[2])
 
-        else:
-            return None
-    
-    
     return pd.DataFrame.from_dict(fd)
