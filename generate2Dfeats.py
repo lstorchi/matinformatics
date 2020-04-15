@@ -54,7 +54,7 @@ if __name__ == "__main__":
                         required=False, type=str, default="2Dfeature_rmse.csv")
     parser.add_argument("-l","--labels", help="Specify labels comma separated string", \
                         required=False, type=str, default=matinfmod.defaultdevalues)
-    parser.add_argument("-N","--nt", help="Specify Number of Threads to use", \
+    parser.add_argument("-N","--nt", help="Specify Number of Threads or Processes to use", \
             required=False, type=int, default=2)
  
     correlationlimit = 0.90
@@ -96,8 +96,9 @@ if __name__ == "__main__":
             listofinps.append((start1dfeatures, idx1, f1))
             idx1 += 1
 
-        print ("Running usinn ", args.nt, " threads") 
-        with futures.ThreadPoolExecutor(max_workers=args.nt) as executor:
+        print ("Running usinn ", args.nt, " threads/processes") 
+        #with futures.ThreadPoolExecutor(max_workers=args.nt) as executor:
+        with futures.ProcessPoolExecutor(max_workers=args.nt) as executor:
             results = executor.map(checkcorr, listofinps)
 
         print ("Collecting results")

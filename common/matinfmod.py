@@ -299,7 +299,8 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
         inputs.append((f1, f2, dataset_features,
                 numoflr, y_array))
 
-    with futures.ThreadPoolExecutor(max_workers=nt) as executor:
+    #with futures.ThreadPoolExecutor(max_workers=nt) as executor:
+    with futures.ProcessPoolExecutor(max_workers=nt) as executor:
         results = executor.map(task_feature2D_check_lr, inputs)
 
     for res in list(results):
