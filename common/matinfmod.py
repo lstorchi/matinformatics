@@ -298,6 +298,7 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
     fd['formulas'] = []
     fd['rmse']     = []
 
+    print("Preparing input for ", nt, " threads/processes")
     inputs = []
     toprint = ""
     idx = 0
@@ -319,9 +320,6 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
                 toprint = "%15d of %15d"%(idx, dim) 
         else:
             toprint = ""
-
-
-
 
     #with futures.ThreadPoolExecutor(max_workers=nt) as executor:
     with futures.ProcessPoolExecutor(max_workers=nt) as executor:
