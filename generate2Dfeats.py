@@ -34,6 +34,19 @@ def checkcorr (inp):
                 res[(f1 , f2)] = corrval
         idx2 += 1
 
+    dim = len(start1dfeatures["formulas"])
+    if idx1 == int(dim*0.10) or \
+            idx1 == int(dim*0.20) or \
+            idx1 == int(dim*0.30) or \
+            idx1 == int(dim*0.40) or \
+            idx1 == int(dim*0.50) or \
+            idx1 == int(dim*0.60) or \
+            idx1 == int(dim*0.70) or \
+            idx1 == int(dim*0.80) or \
+            idx1 == int(dim*0.90) or \
+            idx1 == int(dim*0.99):
+        print( "%15d of %15d"%(idx1, dim) )
+
     return res
 
 ###############################################################################

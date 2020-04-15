@@ -266,6 +266,7 @@ def task_feature2D_check_lr (inps):
     dataset_features = inps[2]
     numoflr = inps[3]
     y_array = inps[4]
+    toprint = inps[5]
 
     avg = float("inf")
     if f1 in dataset_features.columns and \
@@ -284,6 +285,9 @@ def task_feature2D_check_lr (inps):
     
         avg = float(np.average(mse))
 
+    if toprint != "":
+        print(toprint)
+
     return (f1, f2, avg)
 
 def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
@@ -295,9 +299,29 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
     fd['rmse']     = []
 
     inputs = []
+    toprint = ""
+    idx = 0
+    dim = len(twoDformulas)
     for f1, f2 in twoDformulas:
         inputs.append((f1, f2, dataset_features,
-                numoflr, y_array))
+                numoflr, y_array, toprint))
+        idx += 1
+        if idx == int(dim*0.10) or \
+            idx == int(dim*0.20) or \
+            idx == int(dim*0.30) or \
+            idx == int(dim*0.40) or \
+            idx == int(dim*0.50) or \
+            idx == int(dim*0.60) or \
+            idx == int(dim*0.70) or \
+            idx == int(dim*0.80) or \
+            idx == int(dim*0.90) or \
+            idx == int(dim*0.99):
+                toprint = "%15d of %15d"%(idx, dim) 
+        else:
+            toprint = ""
+
+
+
 
     #with futures.ThreadPoolExecutor(max_workers=nt) as executor:
     with futures.ProcessPoolExecutor(max_workers=nt) as executor:
