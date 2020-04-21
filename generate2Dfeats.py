@@ -54,43 +54,81 @@ def checkcorr (inp):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f","--file", help="input csv file containg features and sortidx values ", \
-                        required=True, type=str)
+            required=True, type=str)
     parser.add_argument("-k","--filepki", help="input pki file containg features values ", \
-                        required=True, type=str)
+            required=True, type=str)
     parser.add_argument("-n","--numofiterations", help="Number of LR iterations [default=1000]", \
-                        required=False, type=int, default=1000)
-    parser.add_argument("-F","--numoffeatures", help="Number of features to be used [default=100] ", \
-                        required=False, type=int, default=100)
+            required=False, type=int, default=1000)
+    parser.add_argument("-F","--numoffeatures", help="Number of features to be used [default=-1] i.e. all ", \
+            required=False, type=int, default=-1)
     parser.add_argument("-s","--sortidx", help="Sorting index [default=percoeff]", \
-                        required=False, type=str, default="percoeff")
+            required=False, type=str, default="percoeff")
     parser.add_argument("-o","--output", help="output csv file ", \
-                        required=False, type=str, default="2Dfeature_rmse.csv")
-    parser.add_argument("-l","--labels", help="Specify labels comma separated string", \
-                        required=False, type=str, default=matinfmod.defaultdevalues)
+            required=False, type=str, default="2Dfeature_rmse.csv")
     parser.add_argument("-N","--nt", help="Specify Number of Threads or Processes to use", \
             required=False, type=int, default=2)
+    parser.add_argument("-r","--range", help="Specify a range of 1D formulas to use " + \
+            "default=\"0:-1\" i.e. all", required=False, type=str, default="0:-1")
+ 
  
     correlationlimit = 0.90
     
     args = parser.parse_args()
 
-    data = pd.read_csv(args.file)
+    datain = pd.read_csv(args.file)
 
-    featuresvalue = pd.read_pickle(args.filepki)
+    featuresvaluein = pd.read_pickle(args.filepki)
+
+    print("Total 1D features ", featuresvaluein.shape[1])
 
     splitted = matinfmod.defaultdevalues.split(",")
 
-    if featuresvalue.shape[0] != len(splitted):
+    if featuresvaluein.shape[0] != len(splitted):
         print("Labels and features dimension are not compatible")
         exit(1)
 
+    srange = args.range.split(":")
+
+    if len(srange) != 2:
+        print("error in range values")
+        exit(1)
+
+    startv = int(srange[0])
+    endv = int(srange[1])
+
+    maxcolumn = featuresvaluein.shape[1]
+
+    if endv == -1:
+        endv = maxcolumn
+
+    if startv > maxcolumn or startv < 0:
+        print("error in range values ", startv)
+        exit(1)
+
+    if endv > maxcolumn or endv < 0:
+        print("error in range values ", endv)
+        exit(1)
+
+    featuresvalue = featuresvaluein.iloc[:,startv:endv]
     N = featuresvalue.shape[0]
-    
+    data  = datain.loc[datain["formulas"].isin(featuresvalue.columns)]
+    #print(datain.shape)
+    #print(data.shape)
+
+    if (data.shape[0] != featuresvalue.shape[1]):
+        print("Error in selection")
+        exit(1)
+
+    print("I will consider ", featuresvalue.shape[1] , " 1D features ")
+    print("    from ", startv+1, " to ", endv)
+
     DE_array = np.array(np.float64(splitted)).reshape(N, 1)
 
     fph = open("highly_correlated_formulas.txt", "w")
     fpl = open("2D_non_correlated_formulas.txt", "w")
-    start1dN = min(args.numoffeatures, data.shape[0])
+    start1dN = data.shape[0]
+    if args.numoffeatures != -1:
+        start1dN = min(args.numoffeatures, data.shape[0])
     if args.sortidx in data.columns:
         sorteddata = data.sort_values(by = args.sortidx, ascending=False)
         start1dfeatures = sorteddata.head(start1dN)
