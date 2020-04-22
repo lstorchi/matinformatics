@@ -105,11 +105,11 @@ if __name__ == "__main__":
         endv = maxcolumn
 
     if startv > maxcolumn or startv < 0:
-        print("error in range values ", startv)
+        print("error in range start values ", startv)
         exit(1)
 
     if endv > maxcolumn or endv < 0:
-        print("error in range values ", endv)
+        print("error in range end values ", endv)
         exit(1)
 
     N = featuresvalue.shape[0]
