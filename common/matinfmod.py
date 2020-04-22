@@ -11,6 +11,21 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression
 
+from concurrent import futures
+
+defaultdevalues = "-0.059, -0.038, -0.033, -0.022,  0.43 ,  0.506,  0.495,  0.466," +\
+      " 1.713,  1.02 ,  0.879,  2.638, -0.146, -0.133, -0.127, -0.115," +\
+      "-0.178, -0.087, -0.055, -0.005,  0.072,  0.219,  0.212,  0.15 ," +\
+      " 0.668,  0.275, -0.146, -0.165, -0.166, -0.168, -0.266, -0.369," +\
+      "-0.361, -0.35 , -0.019,  0.156,  0.152,  0.203,  0.102,  0.275," +\
+      " 0.259,  0.241,  0.433,  0.341,  0.271,  0.158,  0.202, -0.136," +\
+      "-0.161, -0.164, -0.169, -0.221, -0.369, -0.375, -0.381, -0.156," +\
+      "-0.044, -0.03 ,  0.037, -0.087,  0.07 ,  0.083,  0.113,  0.15 ," +\
+      " 0.17 ,  0.122,  0.08 ,  0.016,  0.581, -0.112, -0.152, -0.158," +\
+      "-0.165, -0.095, -0.326, -0.35 , -0.381,  0.808,  0.45 ,  0.264," +\
+      " 0.136,  0.087"
+
+
 from io import StringIO
 
 def progress_bar (count, total, status=''):
@@ -216,7 +231,7 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
 
         val1, val2 = \
                 scipy.stats.pearsonr(dataset_features[keyv].values, \
-                y_array.reshape(82))
+                y_array.reshape(dataset_features[keyv].values.shape[0]))
         
         mse = []
         for ii in range(numoflr):
@@ -242,3 +257,105 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
     print("")
     
     return feature_rmse_dataframe
+
+
+def task_feature2D_check_lr (inps):
+
+    f1 = inps[0]
+    f2 = inps[1]
+    dataset_features = inps[2]
+    numoflr = inps[3]
+    y_array = inps[4]
+    toprint = inps[5]
+
+    avg = float("inf")
+    if f1 in dataset_features.columns and \
+            f2 in dataset_features.columns:
+        Xdf = dataset_features[[f1, f2]].copy()
+        X = Xdf.values
+    
+        mse = []
+        for ii in range(numoflr):
+            X_train, X_test, y_train, y_test = \
+                    train_test_split(X, y_array, test_size=0.1, random_state=ii)
+            regressor = LinearRegression()
+            regressor.fit(X_train, y_train)
+            y_pred = regressor.predict(X_test)
+            mse.append(mean_squared_error(y_test,y_pred))
+    
+        avg = float(np.average(mse))
+
+    if toprint != "":
+        print(toprint)
+
+    return (f1, f2, avg)
+
+def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
+        numoflr = 1000, showiter=False):
+
+    fd = dict()
+
+    fd['formulas'] = []
+    fd['rmse']     = []
+
+    if nt == 1:
+
+        idx = 0
+        dim = len(twoDformulas)
+        for f1, f2 in twoDformulas:
+            Xdf = dataset_features[[f1, f2]].copy()
+            X = Xdf.values
+        
+            mse = []
+            for ii in range(numoflr):
+                X_train, X_test, y_train, y_test = \
+                        train_test_split(X, y_array, test_size=0.1, random_state=ii)
+                regressor = LinearRegression()
+                regressor.fit(X_train, y_train)
+                y_pred = regressor.predict(X_test)
+                mse.append(mean_squared_error(y_test,y_pred))
+        
+            avg = float(np.average(mse))
+
+            fd['formulas'].append((f1, f2))
+            fd['rmse'].append(avg)
+
+            idx += 1
+            if showiter:
+                print("Iter %10d of %10d"%(idx, dim))
+            else:
+                progress_bar(idx, dim)
+    else:
+
+        print("Preparing input for ", nt, " threads/processes")
+        inputs = []
+        toprint = ""
+        idx = 0
+        dim = len(twoDformulas)
+        for f1, f2 in twoDformulas:
+            inputs.append((f1, f2, dataset_features,
+                    numoflr, y_array, toprint))
+            idx += 1
+            if idx == int(dim*0.10) or \
+                idx == int(dim*0.20) or \
+                idx == int(dim*0.30) or \
+                idx == int(dim*0.40) or \
+                idx == int(dim*0.50) or \
+                idx == int(dim*0.60) or \
+                idx == int(dim*0.70) or \
+                idx == int(dim*0.80) or \
+                idx == int(dim*0.90) or \
+                idx == int(dim*0.99):
+                    toprint = "%15d of %15d"%(idx, dim) 
+            else:
+                toprint = ""
+        
+        #with futures.ThreadPoolExecutor(max_workers=nt) as executor:
+        with futures.ProcessPoolExecutor(max_workers=nt) as executor:
+            results = executor.map(task_feature2D_check_lr, inputs)
+        
+        for res in list(results):
+            fd['formulas'].append((res[0], res[1]))
+            fd['rmse'].append(res[2])
+
+    return pd.DataFrame.from_dict(fd)
