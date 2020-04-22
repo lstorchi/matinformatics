@@ -75,15 +75,14 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
 
-    datain = pd.read_csv(args.file)
+    data = pd.read_csv(args.file)
+    featuresvalue = pd.read_pickle(args.filepki)
 
-    featuresvaluein = pd.read_pickle(args.filepki)
-
-    print("Total 1D features ", featuresvaluein.shape[1])
+    print("Total 1D features ", featuresvalue.shape[1])
 
     splitted = matinfmod.defaultdevalues.split(",")
 
-    if featuresvaluein.shape[0] != len(splitted):
+    if featuresvalue.shape[0] != len(splitted):
         print("Labels and features dimension are not compatible")
         exit(1)
 
@@ -96,7 +95,7 @@ if __name__ == "__main__":
     startv = int(srange[0])
     endv = int(srange[1])
 
-    maxcolumn = featuresvaluein.shape[1]
+    maxcolumn = featuresvalue.shape[1]
 
     if endv == -1:
         endv = maxcolumn
@@ -109,18 +108,14 @@ if __name__ == "__main__":
         print("error in range values ", endv)
         exit(1)
 
-    featuresvalue = featuresvaluein.iloc[:,startv:endv]
     N = featuresvalue.shape[0]
-    data  = datain.loc[datain["formulas"].isin(featuresvalue.columns)]
-    #print(datain.shape)
-    #print(data.shape)
 
     if (data.shape[0] != featuresvalue.shape[1]):
         print("Error in selection")
         exit(1)
 
-    print("I will consider ", featuresvalue.shape[1] , " 1D features ")
-    print("    from ", startv+1, " to ", endv)
+    print("I will consider 1D features ")
+    print("    from ", startv, " to ", endv)
 
     DE_array = np.array(np.float64(splitted)).reshape(N, 1)
 
@@ -144,17 +139,20 @@ if __name__ == "__main__":
             idx1 = 0
             for f1 in start1dfeatures["formulas"]:
                 idx2 = 0
-                for f2 in start1dfeatures["formulas"]:
-                    if idx2 > idx1:
-                        if f1 != f2:
-                            Xdf = featuresvalue[[f1, f2]].copy()
-                            # check correlation
-                            corrval = np.fabs(Xdf.corr().values[0,1])
 
-                            if corrval < correlationlimit:
-                                twoDformulas.append((f1 , f2))
- 
-                    idx2 += 1
+                if (idx1 >= startv) and (idx1 < endv):
+                    for f2 in start1dfeatures["formulas"]:
+                        if idx2 > idx1:
+                            if f1 != f2:
+                                Xdf = featuresvalue[[f1, f2]].copy()
+                                # check correlation
+                                corrval = np.fabs(Xdf.corr().values[0,1])
+                    
+                                if corrval < correlationlimit:
+                                    twoDformulas.append((f1 , f2))
+                    
+                        idx2 += 1
+
                 idx1 += 1
                 matinfmod.progress_bar(idx1, dim)
         else:
