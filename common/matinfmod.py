@@ -291,7 +291,7 @@ def task_feature2D_check_lr (inps):
     return (f1, f2, avg)
 
 def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
-        numoflr = 1000):
+        numoflr = 1000, showiter=False):
 
     fd = dict()
 
@@ -321,7 +321,10 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
             fd['rmse'].append(avg)
 
             idx += 1
-            progress_bar(idx, dim)
+            if showiter:
+                print("Iter %10d of %10d"%(idx, dim))
+            else:
+                progress_bar(idx, dim)
     else:
 
         print("Preparing input for ", nt, " threads/processes")

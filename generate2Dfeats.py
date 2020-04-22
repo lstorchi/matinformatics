@@ -69,6 +69,10 @@ if __name__ == "__main__":
             required=False, type=int, default=2)
     parser.add_argument("-r","--range", help="Specify a range of 1D formulas to use " + \
             "default=\"0:-1\" i.e. all", required=False, type=str, default="0:-1")
+    parser.add_argument("-v","--verbose", help="Dump extra files", 
+            required=False, action="store_true", default=False)
+    parser.add_argument("-S","--showiter", help="Show iterations instead of progress", 
+            required=False, action="store_true", default=False)
  
  
     correlationlimit = 0.90
@@ -119,8 +123,13 @@ if __name__ == "__main__":
 
     DE_array = np.array(np.float64(splitted)).reshape(N, 1)
 
-    fph = open("highly_correlated_formulas.txt", "w")
-    fpl = open("2D_non_correlated_formulas.txt", "w")
+    fph = None
+    fpl = None 
+
+    if args.verbose:
+        fph = open("highly_correlated_formulas.txt", "w")
+        fpl = open("2D_non_correlated_formulas.txt", "w")
+
     start1dN = data.shape[0]
     if args.numoffeatures != -1:
         start1dN = min(args.numoffeatures, data.shape[0])
@@ -154,7 +163,10 @@ if __name__ == "__main__":
                         idx2 += 1
 
                 idx1 += 1
-                matinfmod.progress_bar(idx1, dim)
+                if args.showiter:
+                    print("Iter %10d of %10d"%(idx1, dim))
+                else:
+                    matinfmod.progress_bar(idx1, dim)
         else:
             allformulas = {}
             listofinps = []
@@ -181,15 +193,19 @@ if __name__ == "__main__":
             
                 if corrval < correlationlimit:
                   twoDformulas.append(k)
-                  fpl.write(k[0] + " and " + k[1] + " inserted " + \
-                      str(corrval) + "\n")
+                  if args.verbose:
+                      fpl.write(k[0] + " and " + k[1] + " inserted " + \
+                              str(corrval) + "\n")
                 else:
-                  fph.write(k[0] + " and " + k[1] + " are correlated " + \
-                      str(corrval) + "\n") 
+                  if args.verbose:
+                      fph.write(k[0] + " and " + k[1] + " are correlated " + \
+                              str(corrval) + "\n") 
             
         print("")
-        fph.close()
-        fpl.close()
+
+        if args.verbose:
+            fph.close()
+            fpl.close()
 
         num1Df = len(start1dfeatures["formulas"])
         print("Produced ",len(twoDformulas), " 2D features ( max ", \
@@ -198,13 +214,14 @@ if __name__ == "__main__":
         if len(twoDformulas) > 0:
 
           generatedrmse = matinfmod.feature2D_check_lr(twoDformulas, 
-                  featuresvalue, DE_array, args.nt, args.numofiterations)
+                  featuresvalue, DE_array, args.nt, args.numofiterations, 
+                  args.showiter)
           
           if generatedrmse is None:
               print("Error in feature2D_check_lr")
               exit(1)
           
-          generatedrmse.to_csv(args.output)
+          generatedrmse.to_csv(args.output + "_" + args.range.replace(":", "_"))
           
           minvalue_lr = np.min(generatedrmse['rmse'].values)
           bestformula_lr = \
