@@ -129,6 +129,7 @@ if __name__ == "__main__":
     start1dN = data.shape[0]
     if args.numoffeatures != -1:
         start1dN = min(args.numoffeatures, data.shape[0])
+
     if args.sortidx in data.columns:
         sorteddata = data.sort_values(by = args.sortidx, ascending=False)
         start1dfeatures = sorteddata.head(start1dN)
@@ -136,39 +137,58 @@ if __name__ == "__main__":
         twoDformulas = []
 
         print("Produce 2D formulas...")
+        dim = len(start1dfeatures["formulas"])
 
-        allformulas = {}
+        if args.nt == 1:
 
-        listofinps = []
+            idx1 = 0
+            for f1 in start1dfeatures["formulas"]:
+                idx2 = 0
+                for f2 in start1dfeatures["formulas"]:
+                    if idx2 > idx1:
+                        if f1 != f2:
+                            Xdf = featuresvalue[[f1, f2]].copy()
+                            # check correlation
+                            corrval = np.fabs(Xdf.corr().values[0,1])
 
-        print ("Preparing input")
-        idx1 = 0
-        for f1 in start1dfeatures["formulas"]:
-            listofinps.append((start1dfeatures, idx1, f1))
-            idx1 += 1
+                            if corrval < correlationlimit:
+                                twoDformulas.append((f1 , f2))
+ 
+                    idx2 += 1
+                idx1 += 1
+                matinfmod.progress_bar(idx1, dim)
+        else:
+            allformulas = {}
+            listofinps = []
 
-        print ("Running usinn ", args.nt, " threads/processes") 
-        #with futures.ThreadPoolExecutor(max_workers=args.nt) as executor:
-        with futures.ProcessPoolExecutor(max_workers=args.nt) as executor:
-            results = executor.map(checkcorr, listofinps)
+            print ("Preparing input")
+            idx1 = 0
+            for f1 in start1dfeatures["formulas"]:
+                listofinps.append((start1dfeatures, idx1, f1))
+                idx1 += 1
+           
+            print ("Running usinn ", args.nt, " threads/processes") 
+            #with futures.ThreadPoolExecutor(max_workers=args.nt) as executor:
+            with futures.ProcessPoolExecutor(max_workers=args.nt) as executor:
+                results = executor.map(checkcorr, listofinps)
+           
+            print ("Collecting results")
+            for res in list(results):
+                allformulas.update(res)
 
-        print ("Collecting results")
-        for res in list(results):
-            allformulas.update(res)
-
-        print ("Storing results ...")
-
-        for k in allformulas.keys():
-            corrval = allformulas[k]
-
-            if corrval < correlationlimit:
-              twoDformulas.append(k)
-              fpl.write(k[0] + " and " + k[1] + " inserted " + \
-                  str(corrval) + "\n")
-            else:
-              fph.write(k[0] + " and " + k[1] + " are correlated " + \
-                  str(corrval) + "\n") 
-
+            print ("Storing results ...")
+            
+            for k in allformulas.keys():
+                corrval = allformulas[k]
+            
+                if corrval < correlationlimit:
+                  twoDformulas.append(k)
+                  fpl.write(k[0] + " and " + k[1] + " inserted " + \
+                      str(corrval) + "\n")
+                else:
+                  fph.write(k[0] + " and " + k[1] + " are correlated " + \
+                      str(corrval) + "\n") 
+            
         print("")
         fph.close()
         fpl.close()

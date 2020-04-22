@@ -298,35 +298,61 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
     fd['formulas'] = []
     fd['rmse']     = []
 
-    print("Preparing input for ", nt, " threads/processes")
-    inputs = []
-    toprint = ""
-    idx = 0
-    dim = len(twoDformulas)
-    for f1, f2 in twoDformulas:
-        inputs.append((f1, f2, dataset_features,
-                numoflr, y_array, toprint))
-        idx += 1
-        if idx == int(dim*0.10) or \
-            idx == int(dim*0.20) or \
-            idx == int(dim*0.30) or \
-            idx == int(dim*0.40) or \
-            idx == int(dim*0.50) or \
-            idx == int(dim*0.60) or \
-            idx == int(dim*0.70) or \
-            idx == int(dim*0.80) or \
-            idx == int(dim*0.90) or \
-            idx == int(dim*0.99):
-                toprint = "%15d of %15d"%(idx, dim) 
-        else:
-            toprint = ""
+    if nt == 1:
 
-    #with futures.ThreadPoolExecutor(max_workers=nt) as executor:
-    with futures.ProcessPoolExecutor(max_workers=nt) as executor:
-        results = executor.map(task_feature2D_check_lr, inputs)
+        idx = 0
+        dim = len(twoDformulas)
+        for f1, f2 in twoDformulas:
+            Xdf = dataset_features[[f1, f2]].copy()
+            X = Xdf.values
+        
+            mse = []
+            for ii in range(numoflr):
+                X_train, X_test, y_train, y_test = \
+                        train_test_split(X, y_array, test_size=0.1, random_state=ii)
+                regressor = LinearRegression()
+                regressor.fit(X_train, y_train)
+                y_pred = regressor.predict(X_test)
+                mse.append(mean_squared_error(y_test,y_pred))
+        
+            avg = float(np.average(mse))
 
-    for res in list(results):
-        fd['formulas'].append((res[0], res[1]))
-        fd['rmse'].append(res[2])
+            fd['formulas'].append((f1, f2))
+            fd['rmse'].append(avg)
+
+            idx += 1
+            progress_bar(idx, dim)
+    else:
+
+        print("Preparing input for ", nt, " threads/processes")
+        inputs = []
+        toprint = ""
+        idx = 0
+        dim = len(twoDformulas)
+        for f1, f2 in twoDformulas:
+            inputs.append((f1, f2, dataset_features,
+                    numoflr, y_array, toprint))
+            idx += 1
+            if idx == int(dim*0.10) or \
+                idx == int(dim*0.20) or \
+                idx == int(dim*0.30) or \
+                idx == int(dim*0.40) or \
+                idx == int(dim*0.50) or \
+                idx == int(dim*0.60) or \
+                idx == int(dim*0.70) or \
+                idx == int(dim*0.80) or \
+                idx == int(dim*0.90) or \
+                idx == int(dim*0.99):
+                    toprint = "%15d of %15d"%(idx, dim) 
+            else:
+                toprint = ""
+        
+        #with futures.ThreadPoolExecutor(max_workers=nt) as executor:
+        with futures.ProcessPoolExecutor(max_workers=nt) as executor:
+            results = executor.map(task_feature2D_check_lr, inputs)
+        
+        for res in list(results):
+            fd['formulas'].append((res[0], res[1]))
+            fd['rmse'].append(res[2])
 
     return pd.DataFrame.from_dict(fd)
