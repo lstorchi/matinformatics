@@ -144,6 +144,7 @@ if __name__ == "__main__":
         if args.nt == 1:
 
             idx1 = 0
+            dim = endv - startv
             for f1 in start1dfeatures["formulas"]:
                 idx2 = 0
 
@@ -160,11 +161,13 @@ if __name__ == "__main__":
                     
                         idx2 += 1
 
+                    if args.showiter:
+                        print("Iter %10d of %10d"%(idx1, dim))
+                    else:
+                        matinfmod.progress_bar(idx1, dim)
+
+
                 idx1 += 1
-                if args.showiter:
-                    print("Iter %10d of %10d"%(idx1, dim))
-                else:
-                    matinfmod.progress_bar(idx1, dim)
         else:
             allformulas = {}
             listofinps = []
