@@ -10,6 +10,8 @@ import argparse
 import sys
 import os
 
+import time
+
 sys.path.append("./common/")
 
 import matinfmod 
@@ -150,6 +152,7 @@ if __name__ == "__main__":
                 idx2 = 0
 
                 if (idx1 >= startv) and (idx1 < endv):
+                    start = time.time()
                     counter += 1
                     for f2 in start1dfeatures["formulas"]:
                         if idx2 > idx1:
@@ -163,8 +166,10 @@ if __name__ == "__main__":
                     
                         idx2 += 1
 
+                    end = time.time()
+
                     if args.showiter:
-                        print("Iter %10d of %10d"%(counter, dim),flush=True)
+                        print("Iter %10d of %10d [%10.6]"%(counter, dim, (end - start)),flush=True)
                     else:
                         matinfmod.progress_bar(counter, dim)
 

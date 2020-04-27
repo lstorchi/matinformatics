@@ -3,6 +3,7 @@ import token
 import parser
 import tokenize
 import scipy
+import time 
 
 import pandas as pd
 import numpy as np
@@ -303,6 +304,8 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
         idx = 0
         dim = len(twoDformulas)
         for f1, f2 in twoDformulas:
+            start = time.time()
+
             Xdf = dataset_features[[f1, f2]].copy()
             X = Xdf.values
         
@@ -320,9 +323,12 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
             fd['formulas'].append((f1, f2))
             fd['rmse'].append(avg)
 
+            end = time.time()
+
             idx += 1
             if showiter:
-                print("Iter %10d of %10d"%(idx, dim),flush=True)
+                print("Iter %10d of %10d [%10.6f]"%(idx, dim, \
+                        (end - start)),flush=True)
             else:
                 progress_bar(idx, dim)
     else:
