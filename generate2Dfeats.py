@@ -148,6 +148,7 @@ if __name__ == "__main__":
                     if idx2 > idx1:
                         counter += 1
                     idx2 += 1
+            idx1 += 1
         print("I will need to compare %10d pairs"%(counter))
         twoDformulas = []
 
