@@ -135,9 +135,19 @@ if __name__ == "__main__":
         fpl = open("2D_non_correlated_formulas.txt", "w")
 
     if args.sortidx in data.columns:
+        print("Sorting...")
         sorteddata = data.sort_values(by = args.sortidx, ascending=False)
         start1dfeatures = sorteddata.head(start1dN)
 
+        counter = 0
+        idx1 = 0
+        for f1 in start1dfeatures["formulas"]:
+            idx2 = 0
+            if (idx1 >= startv) and (idx1 < endv):
+                for f2 in start1dfeatures["formulas"]:
+                    if idx2 > idx1:
+                        counter += 1
+        print("I will need to compare %10d pairs"%(counter))
         twoDformulas = []
 
         print("Produce 2D formulas...")
