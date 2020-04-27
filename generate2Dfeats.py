@@ -162,7 +162,7 @@ if __name__ == "__main__":
                         idx2 += 1
 
                     if args.showiter:
-                        print("Iter %10d of %10d"%(idx1, dim))
+                        print("Iter %10d of %10d"%(idx1, dim),flush=True)
                     else:
                         matinfmod.progress_bar(idx1, dim)
 

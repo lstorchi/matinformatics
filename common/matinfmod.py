@@ -322,7 +322,7 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
 
             idx += 1
             if showiter:
-                print("Iter %10d of %10d"%(idx, dim))
+                print("Iter %10d of %10d"%(idx, dim),flush=True)
             else:
                 progress_bar(idx, dim)
     else:
