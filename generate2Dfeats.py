@@ -169,7 +169,7 @@ if __name__ == "__main__":
                     end = time.time()
 
                     if args.showiter:
-                        print("Iter %10d of %10d [%10.6]"%(counter, dim, (end - start)),flush=True)
+                        print("Iter %10d of %10d [%10.6f]"%(counter, dim, (end - start)),flush=True)
                     else:
                         matinfmod.progress_bar(counter, dim)
 
