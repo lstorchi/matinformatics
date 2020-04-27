@@ -143,12 +143,14 @@ if __name__ == "__main__":
 
         if args.nt == 1:
 
+            counter = 0
             idx1 = 0
             dim = endv - startv
             for f1 in start1dfeatures["formulas"]:
                 idx2 = 0
 
                 if (idx1 >= startv) and (idx1 < endv):
+                    counter += 1
                     for f2 in start1dfeatures["formulas"]:
                         if idx2 > idx1:
                             if f1 != f2:
@@ -162,9 +164,9 @@ if __name__ == "__main__":
                         idx2 += 1
 
                     if args.showiter:
-                        print("Iter %10d of %10d"%(idx1, dim),flush=True)
+                        print("Iter %10d of %10d"%(counter, dim),flush=True)
                     else:
-                        matinfmod.progress_bar(idx1, dim)
+                        matinfmod.progress_bar(counter, dim)
 
 
                 idx1 += 1
