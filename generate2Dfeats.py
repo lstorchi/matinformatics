@@ -147,6 +147,7 @@ if __name__ == "__main__":
                 for f2 in start1dfeatures["formulas"]:
                     if idx2 > idx1:
                         counter += 1
+                    idx2 += 1
         print("I will need to compare %10d pairs"%(counter))
         twoDformulas = []
 
