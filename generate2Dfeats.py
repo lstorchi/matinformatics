@@ -99,16 +99,18 @@ if __name__ == "__main__":
     startv = int(srange[0])
     endv = int(srange[1])
 
-    maxcolumn = featuresvalue.shape[1]
+    start1dN = data.shape[0]
+    if args.numoffeatures != -1:
+        start1dN = min(args.numoffeatures, data.shape[0])
 
     if endv == -1:
-        endv = maxcolumn
+        endv = start1dN
 
-    if startv > maxcolumn or startv < 0:
+    if startv > start1dN or startv < 0:
         print("error in range start values ", startv)
         exit(1)
 
-    if endv > maxcolumn or endv < 0:
+    if endv > start1dN or endv < 0:
         print("error in range end values ", endv)
         exit(1)
 
@@ -129,10 +131,6 @@ if __name__ == "__main__":
     if args.verbose:
         fph = open("highly_correlated_formulas.txt", "w")
         fpl = open("2D_non_correlated_formulas.txt", "w")
-
-    start1dN = data.shape[0]
-    if args.numoffeatures != -1:
-        start1dN = min(args.numoffeatures, data.shape[0])
 
     if args.sortidx in data.columns:
         sorteddata = data.sort_values(by = args.sortidx, ascending=False)
@@ -177,7 +175,7 @@ if __name__ == "__main__":
                 listofinps.append((start1dfeatures, idx1, f1))
                 idx1 += 1
            
-            print ("Running usinn ", args.nt, " threads/processes") 
+            print ("Running using ", args.nt, " threads/processes") 
             #with futures.ThreadPoolExecutor(max_workers=args.nt) as executor:
             with futures.ProcessPoolExecutor(max_workers=args.nt) as executor:
                 results = executor.map(checkcorr, listofinps)
