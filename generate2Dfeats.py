@@ -76,7 +76,6 @@ if __name__ == "__main__":
     parser.add_argument("-S","--showiter", help="Show iterations instead of progress", 
             required=False, action="store_true", default=False)
  
- 
     correlationlimit = 0.90
     
     args = parser.parse_args()

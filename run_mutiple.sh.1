@@ -1,10 +1,10 @@
 
-export BASEVAL=500
-export NUMPROCS=32
-export START=0
+export BASEVAL=750
+export NUMPROCS=64
+export START=16000
 export MAXNUM=40000
 
-for i in $(seq 1 $NUMPROCS)
+for i in $(seq 33 $NUMPROCS)
 do
   export BASE=$BASEVAL
   export END=$(($START + $BASE))
