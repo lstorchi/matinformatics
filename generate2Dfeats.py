@@ -182,7 +182,7 @@ if __name__ == "__main__":
 
                     if args.showiter:
                         avgtime += (end - start)
-                        est = float(dim)(avgtime/float(counter))
+                        est = float(dim)*(avgtime/float(counter))
                         print("Iter %10d of %10d [%10.6f estimated tot. %10.6f]"%(counter, \
                                 dim, (end - start), est),flush=True)
 
