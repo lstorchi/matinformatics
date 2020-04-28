@@ -303,6 +303,7 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
 
         idx = 0
         dim = len(twoDformulas)
+        avgtime = 0.0
         for f1, f2 in twoDformulas:
             start = time.time()
 
@@ -327,8 +328,10 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
 
             idx += 1
             if showiter:
-                print("Iter %10d of %10d [%10.6f]"%(idx, dim, \
-                        (end - start)),flush=True)
+                avgtime += (end - start)
+                est = float(dim)(avgtime/float(counter))
+                print("Iter %10d of %10d [%10.6f estimated tot. %10.6f]"%(idx, dim, \
+                        (end - start), est),flush=True)
             else:
                 progress_bar(idx, dim)
     else:

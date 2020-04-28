@@ -157,6 +157,7 @@ if __name__ == "__main__":
 
         if args.nt == 1:
 
+            avgtime = 0.0
             counter = 0
             idx1 = 0
             dim = endv - startv
@@ -181,7 +182,11 @@ if __name__ == "__main__":
                     end = time.time()
 
                     if args.showiter:
-                        print("Iter %10d of %10d [%10.6f]"%(counter, dim, (end - start)),flush=True)
+                        avgtime += (end - start)
+                        est = float(dim)(avgtime/float(counter))
+                        print("Iter %10d of %10d [%10.6f estimated tot. %10.6f]"%(counter, \
+                                dim, (end - start), est),flush=True)
+
                     else:
                         matinfmod.progress_bar(counter, dim)
 
