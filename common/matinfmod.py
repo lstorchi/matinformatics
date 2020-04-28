@@ -329,7 +329,7 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
             idx += 1
             if showiter:
                 avgtime += (end - start)
-                est = (float(dim)*(avgtime/float(counter)))/3600.0
+                est = (float(dim)*(avgtime/float(idx)))/3600.0
                 print("Iter %10d of %10d [%10.6f estimated tot. %10.6f]"%(idx, dim, \
                         (end - start), est),flush=True)
             else:
