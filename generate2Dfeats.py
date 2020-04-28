@@ -151,8 +151,6 @@ if __name__ == "__main__":
         print("I will need to compare %10d pairs"%(counter), flush=True)
         twoDformulas = []
 
-        exit(1)
-
         print("Produce 2D formulas...")
         dim = len(start1dfeatures["formulas"])
 
