@@ -36,4 +36,6 @@ do
 done
 
 echo "Next start from " $END " and procs " $(( $i + 1))
+
+echo $0 " 50 " $(( $i + 1)) " 32 " $END $MAXNUM
  
