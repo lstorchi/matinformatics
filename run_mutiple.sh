@@ -1,10 +1,17 @@
+if [ $# -ne 5 ]
+then
+  echo "No arguments supplied"
+  echo "usage: " $0 " basevalue startprocnum endprocnum startidx maxidx"
+  exit
+fi
 
-export BASEVAL=300
-export NUMPROCS=32
-export START=0
-export MAXNUM=40000
+export BASEVAL=$1
+export STARTPROC=$2
+export NUMPROCS=$3
+export START=$4
+export MAXNUM=$5
 
-for i in $(seq 1 $NUMPROCS)
+for i in $(seq $STARTPROC $NUMPROCS)
 do
   export BASE=$BASEVAL
   export END=$(($START + $BASE))
