@@ -253,8 +253,8 @@ if __name__ == "__main__":
               == minvalue_lr]['formulas'].values[0]
           
           print("")
-          print(" Min LR value: ", minvalue_lr)
-          print("   Related formula: ", bestformula_lr)
+          print(bestformula_lr[0] + " " + bestformula_lr[1] + \
+                  " Min LR value %12.9f"%(minvalue_lr))
         else:
           print("No 2D formulas generated ")
 
