@@ -7,3 +7,6 @@ python3 ffilter.py -f newadata.pkl -n 50
 # generate 2D features starting from the best 1D and select the best ones
 python3 generate2Dfeats.py -f feature_rmse.csv -n 50 -k newadata.pkl --numoffeatures 1000
 
+# generate 3D features starting from the best 1D and select the best ones
+python3 generate3Dfeats.py  -f feature_rmse.csv -n 50 -k newadata.pkl --numoffeatures 10
+
