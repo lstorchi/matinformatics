@@ -31,7 +31,7 @@ if __name__ == "__main__":
     parser.add_argument("-s","--sortidx", help="Sorting index [default=percoeff]", \
             required=False, type=str, default="percoeff")
     parser.add_argument("-o","--output", help="output csv file ", \
-            required=False, type=str, default="2Dfeature_rmse.csv")
+            required=False, type=str, default="3Dfeature_rmse.csv")
     parser.add_argument("-r","--range", help="Specify a range of 1D formulas to use " + \
             "default=\"0:-1\" i.e. all", required=False, type=str, default="0:-1")
     parser.add_argument("-v","--verbose", help="Dump extra files", 
