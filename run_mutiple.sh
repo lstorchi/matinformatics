@@ -5,6 +5,8 @@ then
   exit
 fi
 
+export PROGNAME=generate2Dfeats.py
+
 export UPDATEVAL=0
 
 export BASEVAL=$1
@@ -19,13 +21,13 @@ for i in $(seq $STARTPROC $NUMPROCS)
 do
   export END=$(($START + $BASE))
   if [ $END -ge $MAXNUM ]; then
-    python3 generate2Dfeats.py -S -f feature_rmse.csv -n 20 -k newadata.pkl -N 1 -r "$START:$MAXNUM" -F $MAXNUM 1> out_$i 2> err_$i &
+    python3 $PROGNAME -S -f feature_rmse.csv -n 20 -k newadata.pkl -N 1 -r "$START:$MAXNUM" -F $MAXNUM 1> out_$i 2> err_$i &
     echo "Process " $i " will start from " $START " to " $MAXNUM " of " $MAXNUM
     echo ""
     echo "Next start from " $MAXNUM " and procs " $(( $i + 1))
     exit
   fi
-  python3 generate2Dfeats.py -S -f feature_rmse.csv -n 20 -k newadata.pkl -N 1 -r "$START:$END" -F $MAXNUM 1> out_$i 2> err_$i &
+  python3 $PROGNAME -S -f feature_rmse.csv -n 20 -k newadata.pkl -N 1 -r "$START:$END" -F $MAXNUM 1> out_$i 2> err_$i &
   echo "Process " $i " will start from " $START " to " $END " of " $MAXNUM
   echo ""
   export START=$(($START + $BASE))
