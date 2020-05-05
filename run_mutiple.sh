@@ -5,7 +5,7 @@ then
   exit
 fi
 
-export PROGNAME=generate2Dfeats.py
+export PROGNAME=generate3Dfeats.py
 
 export UPDATEVAL=0
 
