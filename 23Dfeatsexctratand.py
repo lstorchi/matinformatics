@@ -40,9 +40,15 @@ if __name__ == "__main__":
     features = []
 
     print("Reading all data")
+    
 
+    filelist = os.listdir(args.rootdir)
+    dim = len(filelist)
     if args.set3Don :
-       for filename in os.listdir(args.rootdir):
+       idx = 0
+       for filename in filelist:
+           idx += 1
+           print("%10d of %10d"%(idx, dim))
            if re.match(args.filenames, filename):
                with open(os.path.join(args.rootdir, filename), 'r') as f:
                    for line in f:
@@ -57,7 +63,10 @@ if __name__ == "__main__":
                                        f3.lstrip().rstrip()))
 
     else:
-       for filename in os.listdir(args.rootdir):
+       idx = 0
+       for filename in filelist:
+           idx += 1
+           print("%10d of %10d"%(idx,dim))
            if re.match(args.filenames, filename):
                with open(os.path.join(args.rootdir, filename), 'r') as f:
                    for line in f:
