@@ -1,12 +1,19 @@
-# generate features
-python3 generatefeats.py  -f ./data/Data.xlsx -b "IP[1];EA[1];Z[0];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -d 10
+Run using separate Data and AtomicData
 
-# select best 1D features
-python3 ffilter.py -f newadata.pkl -n 50
+  # generate features
+  python3 generatefeats.py  -f ./data/Data.xlsx -b "IP[1];EA[1];Z[0];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -d 10
 
-# generate 2D features starting from the best 1D and select the best ones
-python3 generate2Dfeats.py -f feature_rmse.csv -n 50 -k newadata.pkl --numoffeatures 1000
+  # select best 1D features
+  python3 ffilter.py -f newadata.pkl -n 50
 
-# generate 3D features starting from the best 1D and select the best ones
-python3 generate3Dfeats.py  -f feature_rmse.csv -n 50 -k newadata.pkl --numoffeatures 10
+  # generate 2D features starting from the best 1D and select the best ones
+  python3 generate2Dfeats.py -f feature_rmse.csv -n 50 -k newadata.pkl --numoffeatures 1000
 
+  # generate 3D features starting from the best 1D and select the best ones
+  python3 generate3Dfeats.py  -f feature_rmse.csv -n 50 -k newadata.pkl --numoffeatures 10
+
+  # collect output and 
+  python3 23Dfeatsexctratand.py -d ./2DFeatures/ -k newadata.pkl
+  python3 23Dfeatsexctratand.py -d ./3DFeatures/ -k newadata.pkl --set3Don
+
+Run ising a single Dataset no Atomic Data 
