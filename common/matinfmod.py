@@ -51,25 +51,34 @@ def generate_formulas (features):
     for classe in features:
 
         dim = len(features[classe])
+        
+        f1 = []
+        f2 = []
+        f3 = []
+        f4 = []
+        f5 = []
         for i in range(dim):
-            for j in range(i+1,dim):
-                numer.append(features[classe][i] + \
-                        "+" + features[classe][j])
-                numer.append(features[classe][i] + \
-                        "-" + features[classe][j])
-                numer.append(features[classe][i] + \
-                        "**2 -" + features[classe][j])
-                numer.append(features[classe][i] + \
-                        "**2 +" + features[classe][j])
-                numer.append(features[classe][i] + \
-                        "**3 -" + features[classe][j])
-                numer.append(features[classe][i] + \
-                        "**3 +" + features[classe][j])
+            
+            f1.append(features[classe][i] )
+            f2.append(features[classe][i] + "**2")
+            f3.append(features[classe][i] + "**3")
+            f4.append("sqrt(fabs("+features[classe][i] + "))")
+            f5.append("exp("+features[classe][i] + ")")
+        
+        ftuple = (f1, f2, f3, f4, f5)
 
+        for i in range(len(ftuple)):
+            first = ftuple[i]
+            for j in range(i, len(ftuple)):
+                second = ftuple[j]
+                for f in first:
+                    for s in second:
+                        if f != s:
+                            numer.append(f + " + " + s)
+                            numer.append(f + " - " + s)
 
     deno = []
     for classe in features:
-
         dim = len(features[classe])
         for i in range(dim):
             deno.append("sqrt(fabs("+features[classe][i]+"))")
@@ -80,7 +89,6 @@ def generate_formulas (features):
     for n in numer:
         for d in deno:
             formulas.append("("+n+")/("+d+")")
-            formulas.append("("+d+")/("+n+")")
             
     if len(formulas) != len(set(formulas)):
         formulas = list(set(formulas)) 

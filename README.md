@@ -1,6 +1,5 @@
 
-Just some basic test used in a cooperative work 
-related to material informatics 
+Just some basic test used in a cooperative work related to material informatics 
 
 Run using separate Data and AtomicData
 

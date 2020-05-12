@@ -54,7 +54,17 @@ if __name__ == "__main__":
             basicfeaturesdict[classe].append(name)
     
     try:
-        print("Here")
+        print("Start generating formulas...")
+        formulas = matinfmod.generate_formulas (basicfeaturesdict)
+        fname  = "formulaslist.txt"
+        if os.path.exists(fname):
+            os.remove(fname)
+        fp = open(fname, "w")
+        for f in formulas:
+            fp.write(f + "\n")
+        fp.close()
+        print("Generated ", len(formulas) ," formulas...")
+ 
     except NameError as err:
         print(err)
 
