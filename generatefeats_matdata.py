@@ -39,7 +39,9 @@ def get_top_abs_correlations(df, n=5):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f","--file", help="input xlsx file ", \
-                        required=True, type=str)
+                        required=False, default="", type=str)
+    parser.add_argument("-c","--csvfile", help="input csv file ", \
+                        required=False, default="", type=str)
     parser.add_argument("-b","--basicfeatures", \
                         help="input ; separated list of basic featuresto combine \n" + \
                         "   each feature has an associated type (i.e. \"IP[1];EA[1];Z[2]\"", \
@@ -54,13 +56,23 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
-    filename = args.file
-    
-    xls = pd.ExcelFile(filename)
-    data = pd.read_excel(xls, index_col=0)
-    basicfeatureslist = args.basicfeatures.split(";")
+    xslxfilename = args.file
+    csvfilename = args.csvfile
 
-    data = data.drop(columns=['id', "Centre_of_mass_cordinates"])
+    data = None
+    if xslxfilename != "":
+        xls = pd.ExcelFile(xslxfilename)
+        data = pd.read_excel(xls, index_col=0)
+        data = data.drop(columns=['id', "Centre_of_mass_cordinates"])
+    elif csvfilename != "":
+        data = pd.read_csv(csvfilename, index_col=0)
+        data = data.drop(columns=["Centre_of_mass_cordinates"])
+
+    if data is None:
+        print("Input gilename not specified")
+        exit(1)
+    
+    basicfeatureslist = args.basicfeatures.split(";")
 
     #for V_alpha in data["V_alpha"]:
     #   print(V_alpha)
@@ -122,18 +134,19 @@ if __name__ == "__main__":
 
         print ("Start generating features...")
         last = args.dumponly
-        i = 1
+
         max = last  
         if last < 0:
             max = len(formulas)
 
         newdataframe = {}
-            
-        for formula in formulas[0:last]:
+        
+        for idx, formula in enumerate(formulas[0:last]):
             if not args.verbose:
-                matinfmod.progress_bar(i, max)
-                i = i + 1
-            #print(formula)
+                matinfmod.progress_bar(idx+1, max)
+                #print(formula)
+            else:
+                print ("%10d of %10d"%(idx+1, max))
 
             try:
                 newf = matinfmod.get_new_feature(data, formula)
