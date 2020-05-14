@@ -153,6 +153,7 @@ if __name__ == "__main__":
                 #print(formula)
             else:
                 print ("%10d of %10d"%(idx+1, max))
+                sys.stdout.flush()
 
             try:
                 newf = matinfmod.get_new_feature(data, formula)
@@ -179,6 +180,9 @@ if __name__ == "__main__":
                 for i in range(len(cname)):
                     if not args.verbose:
                         matinfmod.progress_bar(i+1, len(cname))
+                    else:
+                        print("%10d of %1dd"%(i+1, len(cname)))
+                        sys.stdout.flush()
                     f1 = cname[i]
                     for j in range(i+1,len(cname)):
                         f2 = cname[j]
@@ -201,8 +205,6 @@ if __name__ == "__main__":
                 
                 newatomicdata = newatomicdata.drop(newatomicdata[to_drop], axis=1)
                 print ("Produced ", newatomicdata.size , " data features")
-            
-            #    Top15['Citable docs per Capita'].corr(Top15['Energy Supply per Capita'])
             else:
                 corr = newatomicdata.corr(method = 'pearson').abs()
                             
