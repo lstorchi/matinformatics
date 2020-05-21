@@ -16,6 +16,7 @@ sys.path.append("./common/")
 
 import matinfmod 
 
+###############################################################################
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -30,9 +31,7 @@ if __name__ == "__main__":
     parser.add_argument("-s","--sortidx", help="Sorting index [default=percoeff]", \
             required=False, type=str, default="percoeff")
     parser.add_argument("-o","--output", help="output csv file ", \
-            required=False, type=str, default="2Dfeature_rmse.csv")
-    parser.add_argument("-N","--nt", help="Specify Number of Threads or Processes to use", \
-            required=False, type=int, default=2)
+            required=False, type=str, default="3Dfeature_rmse.csv")
     parser.add_argument("-r","--range", help="Specify a range of 1D formulas to use " + \
             "default=\"0:-1\" i.e. all", required=False, type=str, default="0:-1")
     parser.add_argument("-v","--verbose", help="Dump extra files", 
@@ -90,13 +89,6 @@ if __name__ == "__main__":
 
     DE_array = np.array(np.float64(splitted)).reshape(N, 1)
 
-    fph = None
-    fpl = None 
-
-    if args.verbose:
-        fph = open("highly_correlated_formulas.txt", "w")
-        fpl = open("2D_non_correlated_formulas.txt", "w")
-
     if args.sortidx in data.columns:
         print("Sorting...", flush=True)
         sorteddata = data.sort_values(by = args.sortidx, ascending=False)
@@ -109,104 +101,82 @@ if __name__ == "__main__":
             if (idx1 >= startv) and (idx1 < endv):
                 for f2 in start1dfeatures["formulas"]:
                     if idx2 > idx1:
-                        counter += 1
+                        idx3 = 0
+                        for f3 in start1dfeatures["formulas"]:
+                            if idx3 > idx2:
+                                counter += 1
+                            idx3 += 1
                     idx2 += 1
             idx1 += 1
-        print("I will need to compare %10d pairs"%(counter), flush=True)
-        twoDformulas = []
+        print("I will need to compare %10d triplets"%(counter), flush=True)
+        threeDformulas = []
 
-        print("Produce 2D formulas...")
+        max3Dformula = counter
+
+        print("Produce 3D formulas...")
         dim = len(start1dfeatures["formulas"])
 
-        if args.nt == 1:
+        avgtime = 0.0
+        counter = 0
+        idx1 = 0
+        dim = endv - startv
+        for f1 in start1dfeatures["formulas"]:
+            idx2 = 0
 
-            avgtime = 0.0
-            counter = 0
-            idx1 = 0
-            dim = endv - startv
-            for f1 in start1dfeatures["formulas"]:
-                idx2 = 0
+            if (idx1 >= startv) and (idx1 < endv):
+                start = time.time()
+                counter += 1
+                for f2 in start1dfeatures["formulas"]:
+                    if idx2 > idx1:
+                        Xdf = featuresvalue[[f1, f2]].copy()
+                        corrval = np.fabs(Xdf.corr().values[0,1])
+                        
+                        if corrval < correlationlimit:
+                            idx3 = 0
+                            for f3 in start1dfeatures["formulas"]:
+                                if idx3 > idx2:
+                                    Xdf = featuresvalue[[f1, f3]].copy()
+                                    corrval = np.fabs(Xdf.corr().values[0,1])
 
-                if (idx1 >= startv) and (idx1 < endv):
-                    start = time.time()
-                    counter += 1
-                    for f2 in start1dfeatures["formulas"]:
-                        if idx2 > idx1:
-                            if f1 != f2:
-                                Xdf = featuresvalue[[f1, f2]].copy()
-                                # check correlation
-                                corrval = np.fabs(Xdf.corr().values[0,1])
-                    
-                                if corrval < correlationlimit:
-                                    twoDformulas.append((f1 , f2))
-                    
-                        idx2 += 1
+                                    if corrval < correlationlimit:
+                                        Xdf = featuresvalue[[f2, f3]].copy()
+                                        corrval1 = np.fabs(Xdf.corr().values[0,1])
 
-                    end = time.time()
+                                        if corrval1 < correlationlimit:
+                                            threeDformulas.append((f1 , f2, f3))
 
-                    if args.showiter:
-                        avgtime += (end - start)
-                        est = (float(dim)*(avgtime/float(counter)))/3600.0
-                        print("Iter %10d of %10d [%10.6f estimated tot. %10.6f hrs.]"%(counter, \
-                                dim, (end - start), est),flush=True)
+                                idx3 += 1
+                        
+                    idx2 += 1
 
-                    else:
-                        matinfmod.progress_bar(counter, dim)
+                end = time.time()
 
+                if args.showiter:
+                    avgtime += (end - start)
+                    est = (float(dim)*(avgtime/float(counter)))/3600.0
+                    print("Iter %10d of %10d [%10.6f estimated tot. %10.6f hrs.]"%(counter, \
+                            dim, (end - start), est),flush=True)
 
-                idx1 += 1
-        else:
-            allformulas = {}
-            listofinps = []
-
-            print ("Preparing input")
-            idx1 = 0
-            for f1 in start1dfeatures["formulas"]:
-                listofinps.append((start1dfeatures, idx1, f1))
-                idx1 += 1
-           
-            print ("Running using ", args.nt, " threads/processes") 
-            #with futures.ThreadPoolExecutor(max_workers=args.nt) as executor:
-            with futures.ProcessPoolExecutor(max_workers=args.nt) as executor:
-                results = executor.map(matinfmod.checkcorr, listofinps)
-           
-            print ("Collecting results")
-            for res in list(results):
-                allformulas.update(res)
-
-            print ("Storing results ...")
-            
-            for k in allformulas.keys():
-                corrval = allformulas[k]
-            
-                if corrval < correlationlimit:
-                  twoDformulas.append(k)
-                  if args.verbose:
-                      fpl.write(k[0] + " and " + k[1] + " inserted " + \
-                              str(corrval) + "\n")
                 else:
-                  if args.verbose:
-                      fph.write(k[0] + " and " + k[1] + " are correlated " + \
-                              str(corrval) + "\n") 
+                    matinfmod.progress_bar(counter, dim)
+
+
+            idx1 += 1
             
         print("")
 
-        if args.verbose:
-            fph.close()
-            fpl.close()
-
         num1Df = len(start1dfeatures["formulas"])
-        print("Produced ",len(twoDformulas), " 2D features ( max ", \
-                (num1Df*num1Df)-num1Df, " )")
+        print("Produced ",len(threeDformulas), " 3D features ( max ", \
+                max3Dformula, " )")
 
-        if len(twoDformulas) > 0:
+        if len(threeDformulas) > 0:
 
-          generatedrmse = matinfmod.feature2D_check_lr(twoDformulas, 
-                  featuresvalue, DE_array, args.nt, args.numofiterations, 
+          generatedrmse = matinfmod.feature3D_check_lr(threeDformulas, 
+                  featuresvalue, DE_array, args.numofiterations, 
                   args.showiter)
           
           if generatedrmse is None:
-              print("Error in feature2D_check_lr")
+              print("Error in feature3D_check_lr")
               exit(1)
           
           generatedrmse.to_csv(args.output + "_" + args.range.replace(":", "_"))
@@ -218,9 +188,10 @@ if __name__ == "__main__":
           
           print("")
           print("["+bestformula_lr[0] + "] [" + bestformula_lr[1] + \
+                  "] [" + bestformula_lr[2] + \
                   "] Min LR value %12.9f"%(minvalue_lr))
         else:
-          print("No 2D formulas generated ")
+          print("No 3D formulas generated ")
 
     else:
         print(args.sortidx, " not present ")

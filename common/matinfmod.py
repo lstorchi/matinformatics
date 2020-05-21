@@ -3,6 +3,7 @@ import token
 import parser
 import tokenize
 import scipy
+import time 
 
 import pandas as pd
 import numpy as np
@@ -25,6 +26,7 @@ defaultdevalues = "-0.059, -0.038, -0.033, -0.022,  0.43 ,  0.506,  0.495,  0.46
       "-0.165, -0.095, -0.326, -0.35 , -0.381,  0.808,  0.45 ,  0.264," +\
       " 0.136,  0.087"
 
+###############################################################################
 
 from io import StringIO
 
@@ -39,6 +41,8 @@ def progress_bar (count, total, status=''):
     sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
     sys.stdout.flush() 
 
+###############################################################################
+
 def generate_formulas (features):
 
     formulas  = []
@@ -47,25 +51,34 @@ def generate_formulas (features):
     for classe in features:
 
         dim = len(features[classe])
+        
+        f1 = []
+        f2 = []
+        f3 = []
+        f4 = []
+        f5 = []
         for i in range(dim):
-            for j in range(i+1,dim):
-                numer.append(features[classe][i] + \
-                        "+" + features[classe][j])
-                numer.append(features[classe][i] + \
-                        "-" + features[classe][j])
-                numer.append(features[classe][i] + \
-                        "**2 -" + features[classe][j])
-                numer.append(features[classe][i] + \
-                        "**2 +" + features[classe][j])
-                numer.append(features[classe][i] + \
-                        "**3 -" + features[classe][j])
-                numer.append(features[classe][i] + \
-                        "**3 +" + features[classe][j])
+            
+            f1.append(features[classe][i] )
+            f2.append(features[classe][i] + "**2")
+            f3.append(features[classe][i] + "**3")
+            f4.append("sqrt(fabs("+features[classe][i] + "))")
+            f5.append("exp("+features[classe][i] + ")")
+        
+        ftuple = (f1, f2, f3, f4, f5)
 
+        for i in range(len(ftuple)):
+            first = ftuple[i]
+            for j in range(i, len(ftuple)):
+                second = ftuple[j]
+                for f in first:
+                    for s in second:
+                        if f != s:
+                            numer.append(f + " + " + s)
+                            numer.append(f + " - " + s)
 
     deno = []
     for classe in features:
-
         dim = len(features[classe])
         for i in range(dim):
             deno.append("sqrt(fabs("+features[classe][i]+"))")
@@ -76,12 +89,13 @@ def generate_formulas (features):
     for n in numer:
         for d in deno:
             formulas.append("("+n+")/("+d+")")
-            formulas.append("("+d+")/("+n+")")
             
     if len(formulas) != len(set(formulas)):
         formulas = list(set(formulas)) 
 
     return formulas
+
+###############################################################################
 
 def generate_formulas_AB (features, atomicdata, lista, listb):
 
@@ -177,6 +191,7 @@ def generate_formulas_AB (features, atomicdata, lista, listb):
 
     return formulas, featuresAB
 
+###############################################################################
 
 def get_new_feature (indatframe, formula):
 
@@ -213,6 +228,8 @@ def get_new_feature (indatframe, formula):
         returnvalues.append(nf)
 
     return  returnvalues
+
+###############################################################################
 
 def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
         numoflr = 1000):
@@ -258,6 +275,7 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
     
     return feature_rmse_dataframe
 
+###############################################################################
 
 def task_feature2D_check_lr (inps):
 
@@ -290,6 +308,8 @@ def task_feature2D_check_lr (inps):
 
     return (f1, f2, avg)
 
+###############################################################################
+
 def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
         numoflr = 1000, showiter=False):
 
@@ -302,7 +322,10 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
 
         idx = 0
         dim = len(twoDformulas)
+        avgtime = 0.0
         for f1, f2 in twoDformulas:
+            start = time.time()
+
             Xdf = dataset_features[[f1, f2]].copy()
             X = Xdf.values
         
@@ -320,9 +343,14 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
             fd['formulas'].append((f1, f2))
             fd['rmse'].append(avg)
 
+            end = time.time()
+
             idx += 1
             if showiter:
-                print("Iter %10d of %10d"%(idx, dim))
+                avgtime += (end - start)
+                est = (float(dim)*(avgtime/float(idx)))/3600.0
+                print("Iter %10d of %10d [%10.6f estimated tot. %10.6f hrs.]"%(idx, dim, \
+                        (end - start), est),flush=True)
             else:
                 progress_bar(idx, dim)
     else:
@@ -359,3 +387,85 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
             fd['rmse'].append(res[2])
 
     return pd.DataFrame.from_dict(fd)
+
+###############################################################################
+
+def checkcorr (inp):
+    
+    start1dfeatures = inp[0]
+    idx1 = inp[1]
+    f1 = inp[2]
+
+    res = {}
+    
+    idx2 = 0
+    for f2 in start1dfeatures["formulas"]:
+        if idx2 > idx1:
+            if f1 != f2:
+                Xdf = featuresvalue[[f1, f2]].copy()
+                # check correlation
+                corrval = np.fabs(Xdf.corr().values[0,1])
+                res[(f1 , f2)] = corrval
+        idx2 += 1
+
+    dim = len(start1dfeatures["formulas"])
+    if idx1 == int(dim*0.10) or \
+            idx1 == int(dim*0.20) or \
+            idx1 == int(dim*0.30) or \
+            idx1 == int(dim*0.40) or \
+            idx1 == int(dim*0.50) or \
+            idx1 == int(dim*0.60) or \
+            idx1 == int(dim*0.70) or \
+            idx1 == int(dim*0.80) or \
+            idx1 == int(dim*0.90) or \
+            idx1 == int(dim*0.99):
+        print( "%15d of %15d"%(idx1, dim) )
+
+    return res
+
+###############################################################################
+
+def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
+        numoflr = 1000, showiter=False):
+
+    fd = dict()
+
+    fd['formulas'] = []
+    fd['rmse']     = []
+
+    idx = 0
+    dim = len(threeDformulas)
+    avgtime = 0.0
+    for f1, f2, f3 in threeDformulas:
+        start = time.time()
+
+        Xdf = dataset_features[[f1, f2, f3]].copy()
+        X = Xdf.values
+    
+        mse = []
+        for ii in range(numoflr):
+            X_train, X_test, y_train, y_test = \
+                    train_test_split(X, y_array, test_size=0.1, random_state=ii)
+            regressor = LinearRegression()
+            regressor.fit(X_train, y_train)
+            y_pred = regressor.predict(X_test)
+            mse.append(mean_squared_error(y_test,y_pred))
+    
+        avg = float(np.average(mse))
+
+        fd['formulas'].append((f1, f2, f3))
+        fd['rmse'].append(avg)
+
+        end = time.time()
+
+        idx += 1
+        if showiter:
+            avgtime += (end - start)
+            est = (float(dim)*(avgtime/float(idx)))/3600.0
+            print("Iter %10d of %10d [%10.6f estimated tot. %10.6f hrs.]"%(idx, dim, \
+                    (end - start), est),flush=True)
+        else:
+            progress_bar(idx, dim)
+
+    return pd.DataFrame.from_dict(fd)
+

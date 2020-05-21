@@ -10,30 +10,41 @@ import matinfmod
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f","--file", help="input pki file ", \
-                        required=True, type=str)
+            required=True, type=str)
     parser.add_argument("-o","--output", help="output csv file ", \
-                        required=False, type=str, default="feature_rmse.csv")
+            required=False, type=str, default="feature_rmse.csv")
     parser.add_argument("-n","--numofiterations", help="Number of LR iterations ", \
-                        required=False, type=int, default=1000)
+            required=False, type=int, default=1000)
     parser.add_argument("-l","--labels", help="Specify labels comma separated string", \
             required=False, type=str, default=matinfmod.defaultdevalues)
- 
+    parser.add_argument("-i","--inputlabels", help="Specify label name and file comma separated string"+\
+            "\n  \"filname.csv,labelcolumnname\"", \
+            required=False, type=str, default="")
     
     args = parser.parse_args()
     
     filename = args.file
 
     df = pd.read_pickle(filename)
-
-    splitted = matinfmod.defaultdevalues.split(",")
-
-    if df.shape[0] != len(splitted):
-        print("Labels and features dimension are not compatible")
-        exit(1)
-
     N = df.shape[0]
-    
-    DE_array = np.array(np.float64(splitted)).reshape(N, 1)
+
+    DE_Array = None
+    print(args.inputlabels)
+    if args.inputlabels == "":
+        splitted = matinfmod.defaultdevalues.split(",")
+        DE_array = np.array(np.float64(splitted)).reshape(N, 1)
+
+        if df.shape[0] != len(splitted):
+                print("Labels and features dimension are not compatible")
+                exit(1)
+    else:
+        sline = args.inputlabels.split(",")
+        if len(sline) != 2:
+            print("Error in --inputlabels option")
+            exit(1)
+        data = pd.read_csv(sline[0])
+        label = data[sline[1]]
+        DE_array = label.values
 
     print("I will process :", len(df.columns), " features " )
 
