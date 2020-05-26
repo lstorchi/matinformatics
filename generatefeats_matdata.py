@@ -58,6 +58,8 @@ if __name__ == "__main__":
     parser.add_argument("-j", "--jumpremoving", \
                         help="Do not filter the features considering the correlation", action="store_true",
                         required=False, default=False)
+    parser.add_argument("-s", "--split", \
+                        help="Split by a key [default=\"\"]", required=False, default="")
  
     
     args = parser.parse_args()
@@ -94,6 +96,32 @@ if __name__ == "__main__":
        if (value > corrlimit):
           atleastone = True
 
+    if args.split != "":
+        ssplit = args.split.split(";")
+        if (len(ssplit) != 2):
+            print("Error in split option ", args.split, " must have key;value pair")
+            exit(1)
+
+        key = ssplit[0]
+        value = ssplit[1]
+
+        if not (key in data.columns):
+            print("Error in split option ", key, " not present ")
+            exit(1)
+
+        uniqvalues  = set(data[key].values)
+
+        if not int(value) in uniqvalues:
+            print("Error value ", int(value), " not present")
+            exit(1)
+
+        print("All possible value are:")
+        for value in uniqvalues:
+            print("  ",value)
+
+        isthevalue =  data[key] == int(value)
+        data = data[isthevalue]
+        
     if atleastone:
         print("High correlationd found among basic features")
         exit(1)
@@ -154,6 +182,8 @@ if __name__ == "__main__":
             else:
                 print ("%10d of %10d"%(idx+1, max))
                 sys.stdout.flush()
+            
+            newf = None
 
             try:
                 newf = matinfmod.get_new_feature(data, formula)
@@ -162,14 +192,15 @@ if __name__ == "__main__":
             except ZeroDivisionError:
                 print("Math error in formula (division by zero)", formula)
 
-            newdataframe[formula] = newf
+            if newf is not None:
+                newdataframe[formula] = newf
         
         if not args.verbose:
             print()
             
         newatomicdata = pd.DataFrame.from_dict(newdataframe)      
         print ("Produced ", newatomicdata.size , " data features")
-        corrlimit = 0.99
+        corrlimit = 0.98
 
         if not args.jumpremoving:
             print ("Start removing highly correlated features (limit: %10.5f)"%corrlimit)
@@ -240,8 +271,9 @@ if __name__ == "__main__":
                     fp.write(f + "\n")
                 fp.close()
         
-        newatomicdata.to_pickle("newadata.pkl")
-        newatomicdata.to_csv("newadata.csv")
+        extra = args.split.replace(";", "_")
+        newatomicdata.to_pickle("newadata"+extra+".pkl")
+        newatomicdata.to_csv("newadata"+extra+".csv")
         
         #plt.figure(figsize=(12,10))
         #cor = newatomicdata.corr()
