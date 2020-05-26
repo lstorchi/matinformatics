@@ -132,6 +132,8 @@ if __name__ == "__main__":
     #plt.savefig("cooheatmap.png")
     #plt.show()
 
+    extra = args.split.replace(";", "_")
+
     basicfeaturesdict = {}
     for b in basicfeatureslist:
         newb = b.split("[")
@@ -157,7 +159,7 @@ if __name__ == "__main__":
     try:
         print("Start generating formulas...")
         formulas = matinfmod.generate_formulas (basicfeaturesdict)
-        fname  = "formulaslist.txt"
+        fname  = "formulaslist"+extra+".txt"
         if os.path.exists(fname):
             os.remove(fname)
         fp = open(fname, "w")
@@ -271,7 +273,7 @@ if __name__ == "__main__":
                     fp.write(f + "\n")
                 fp.close()
         
-        extra = args.split.replace(";", "_")
+        
         newatomicdata.to_pickle("newadata"+extra+".pkl")
         newatomicdata.to_csv("newadata"+extra+".csv")
         
