@@ -1,9 +1,10 @@
 import sys
+import math
+import time 
 import token
+import scipy
 import parser
 import tokenize
-import scipy
-import time 
 
 import pandas as pd
 import numpy as np
@@ -265,7 +266,10 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
         fd['formulas'].append(keyv)
         fd['index'].append(jj)
         fd['rmse'].append(avg)
-        fd['percoeff'].append(np.fabs(val1))
+        if (math.isnan(val1)):
+            fd['percoeff'].append(np.fabs(0.0))
+        else:
+            fd['percoeff'].append(np.fabs(val1))
         fd['pval'].append(val2)
 
     feature_rmse_dataframe = pd.DataFrame.from_dict(fd)
