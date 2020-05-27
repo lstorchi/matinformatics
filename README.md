@@ -30,4 +30,4 @@ Run ising a single Dataset no Atomic Data
 
   Label are  formation_energy_ev_natom[5];bandgap_energy_ev[5]
 
-  python3 ffilter.py -f newadata.pkl -i "./data/V_fu_added.csv,formation_energy_ev_natom"
+  python3 ffilter.py -f newadata.pkl -i "./data/V_fu_added.csv,formation_energy_ev_natom" --split "spacegroup;33"

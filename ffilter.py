@@ -11,7 +11,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f","--file", help="input pki file ", \
             required=True, type=str)
-    parser.add_argument("-o","--output", help="output csv file ", \
+    parser.add_argument("-o","--output", help="output csv file [default=feature_rmse.csv]", \
             required=False, type=str, default="feature_rmse.csv")
     parser.add_argument("-n","--numofiterations", help="Number of LR iterations ", \
             required=False, type=int, default=1000)
@@ -20,6 +20,8 @@ if __name__ == "__main__":
     parser.add_argument("-i","--inputlabels", help="Specify label name and file comma separated string"+\
             "\n  \"filname.csv,labelcolumnname\"", \
             required=False, type=str, default="")
+    parser.add_argument("-s", "--split", \
+            help="Split by a key [default=\"\"]", required=False, default="")
     
     args = parser.parse_args()
     
@@ -43,6 +45,33 @@ if __name__ == "__main__":
             print("Error in --inputlabels option")
             exit(1)
         data = pd.read_csv(sline[0])
+
+        if args.split != "":
+            ssplit = args.split.split(";")
+            if (len(ssplit) != 2):
+                print("Error in split option ", args.split, " must have key;value pair")
+                exit(1)
+ 
+            key = ssplit[0]
+            value = ssplit[1]
+ 
+            if not (key in data.columns):
+                print("Error in split option ", key, " not present ")
+                exit(1)
+ 
+            uniqvalues  = set(data[key].values)
+ 
+            if not int(value) in uniqvalues:
+                print("Error value ", int(value), " not present")
+                exit(1)
+ 
+            print("All possible value are:")
+            for value in uniqvalues:
+                print("  ",value)
+ 
+            isthevalue =  data[key] == int(value)
+            data = data[isthevalue]
+ 
         label = data[sline[1]]
         DE_array = label.values
 
