@@ -31,8 +31,11 @@ Run ising a single Dataset no Atomic Data
 
   for id in  33 194 227 167 12 206
   do
-    python3 generatefeats_matdata.py -b "percent_atom_al[2];percent_atom_ga[2];percent_atom_in[2];lattice_vector_1_ang[3];lattice_vector_2_ang[3];lattice_vector_3_ang[3];lattice_angle_alpha_degree[4];lattice_angle_beta_degree[4];lattice_angle_gamma_degree[4];avg_dist_Ga[6];avg_dist_Al[6];avg_dist_In[6];V_fu[1];Density[7]" -c ./data/V_fu_added.csv -v -r  --split "spacegroup;$id" 
+    python3 generatefeats_matdata.py -b "percent_atom_al[2];percent_atom_ga[2];percent_atom_in[2];lattice_vector_1_ang[3];lattice_vector_2_ang[3];lattice_vector_3_ang[3];lattice_angle_alpha_degree[4];lattice_angle_beta_degree[4];lattice_angle_gamma_degree[4];avg_dist_Ga[6];avg_dist_Al[6];avg_dist_In[6];V_fu[1];Density[7]" -c ./data/V_fu_added.csv -v -r  --split "spacegroup;$id" > out_"$id" &
   done
 
 
-  python3 ffilter.py -f newadata.pkl -i "./data/V_fu_added.csv,formation_energy_ev_natom" --split "spacegroup;33"
+  for id in  33 194 227 167 12 206
+  do 
+    python3 ffilter.py -f newadataspacegroup_"$id".pkl -i "./data/V_fu_added.csv,formation_energy_ev_natom" --split "spacegroup;$id" -o feature_rmse_"$id".csv > out_ff_"$id" &
+  done
