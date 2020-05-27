@@ -116,11 +116,14 @@ if __name__ == "__main__":
             exit(1)
 
         print("All possible value are:")
-        for value in uniqvalues:
-            print("  ",value)
+        for v in uniqvalues:
+            print("  ",v)
 
-        isthevalue =  data[key] == int(value)
+        isthevalue = data[key] == int(value)
         data = data[isthevalue]
+
+        print("Selected data: ")
+        print(data.shape)
         
     if atleastone:
         print("High correlationd found among basic features")
