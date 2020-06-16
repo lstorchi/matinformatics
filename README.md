@@ -19,7 +19,7 @@ Run using separate Data and AtomicData
   python3 23Dfeatsexctratand.py -d ./2DFeatures/ -k newadata.pkl
   python3 23Dfeatsexctratand.py -d ./3DFeatures/ -k newadata.pkl --set3Don
 
-Run ising a single Dataset no Atomic Data 
+Run using a single Dataset no Atomic Data 
 
   Label are  formation_energy_ev_natom[5];bandgap_energy_ev[5]
 
@@ -39,3 +39,7 @@ Run ising a single Dataset no Atomic Data
   do 
     python3 ffilter.py -f newadataspacegroup_"$id".pkl -i "./data/V_fu_added.csv,formation_energy_ev_natom" --split "spacegroup;$id" -o feature_rmse_"$id".csv > out_ff_"$id" &
   done
+
+Running using our data (three atoms):
+
+
