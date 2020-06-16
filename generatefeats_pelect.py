@@ -40,8 +40,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f","--file", help="input xlsx file ", \
                         required=False, default="", type=str)
-    parser.add_argument("-c","--csvfile", help="input csv file ", \
-                        required=False, default="", type=str)
     parser.add_argument("-b","--basicfeatures", \
                         help="input ; separated list of basic featuresto combine \n" + \
                         "   each feature has an associated type (i.e. \"IP[1];EA[1];Z[2]\"", \
@@ -65,20 +63,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     xslxfilename = args.file
-    csvfilename = args.csvfile
 
-    data = None
-    if xslxfilename != "":
-        xls = pd.ExcelFile(xslxfilename)
-        data = pd.read_excel(xls, index_col=0)
-        data = data.drop(columns=['id', "Centre_of_mass_cordinates"])
-    elif csvfilename != "":
-        data = pd.read_csv(csvfilename, index_col=0)
-        data = data.drop(columns=["Centre_of_mass_cordinates"])
-
-    if data is None:
-        print("Input gilename not specified")
-        exit(1)
+    xls = pd.ExcelFile(xslxfilename)
+    data = pd.read_excel(xls)
+    data = data.drop(columns=['id', "Centre_of_mass_cordinates"])
     
     basicfeatureslist = args.basicfeatures.split(";")
 
