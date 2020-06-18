@@ -134,8 +134,22 @@ if __name__ == "__main__":
             if not args.verbose:
                 matinfmod.progress_bar(i, max)
                 i = i + 1
-            newf = matinfmod.get_new_feature(atomicdataABC, formula)
-            newdataframe[formula] = newf
+
+            newf = None
+
+            try:
+                newf = matinfmod.get_new_feature(atomicdataABC, formula)
+            except OverflowError:
+                if args.verbose:
+                    print("Math error in formula (overflow)", formula)
+            except ZeroDivisionError:
+                if args.verbose:
+                    print("Math error in formula (division by zero)", formula)
+
+            if newf is not None:
+                newdataframe[formula] = newf
+                if args.verbose:
+                    print("Add formula: ", formula)
         
         if not args.verbose:
             print()

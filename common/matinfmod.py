@@ -261,7 +261,7 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc):
             
             f4.append("sqrt(fabs("+features[classe][i] + "_A))")
             f4.append("sqrt(fabs("+features[classe][i] + "_B))")
-            f4.append("sqrt(fabs("+features[classe][i] + "_C)")
+            f4.append("sqrt(fabs("+features[classe][i] + "_C))")
             
             f5.append("exp("+features[classe][i] + "_A)")
             f5.append("exp("+features[classe][i] + "_B)")
