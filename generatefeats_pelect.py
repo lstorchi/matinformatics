@@ -107,3 +107,121 @@ if __name__ == "__main__":
             basicfeaturesdict[classe].append(name)
         else:
             basicfeaturesdict[classe].append(name)
+
+    try:
+        newdataframe = {}
+        print("Start generating formulas...")
+        formulas, atomicdataABC = matinfmod.generate_formulas_ABC \
+            (basicfeaturesdict, atomicdata, np.asarray(lista), \
+            np.asarray(listb), np.asarray(listc))
+        fname  = "formulaslist.txt"
+        if os.path.exists(fname):
+            os.remove(fname)
+        fp = open(fname, "w")
+        for f in formulas:
+            fp.write(f + "\n")
+        fp.close()
+        print("Generated ", len(formulas) ," formulas...")
+            
+        print ("Start generating features...")
+        last = args.dumponly
+        i = 1
+        max = last  
+        if last < 0:
+            max = len(formulas)
+            
+        for formula in formulas[0:last]:
+            if not args.verbose:
+                matinfmod.progress_bar(i, max)
+                i = i + 1
+            newf = matinfmod.get_new_feature(atomicdataABC, formula)
+            newdataframe[formula] = newf
+        
+        if not args.verbose:
+            print()
+            
+        newatomicdata = pd.DataFrame.from_dict(newdataframe)      
+        print ("Produced ", newatomicdata.size , " data features")
+
+        corrlimit = 0.99
+
+        if not args.jumpremoving:
+            print ("Start removing highly correlated features (limit: %10.5f)"%corrlimit)
+            if args.reducemem:
+                cname = list(newatomicdata.columns)
+                
+                to_drop = []
+                for i in range(len(cname)):
+                    if not args.verbose:
+                        matinfmod.progress_bar(i+1, len(cname))
+                    f1 = cname[i]
+                    for j in range(i+1,len(cname)):
+                        f2 = cname[j]
+                        if not (f2 in to_drop):
+                            corrvalue = abs(newatomicdata[f1].corr(newatomicdata[f2], \
+                                                           method='pearson'))
+                        
+                            #print(f1, f2, corrvalue)
+                            if (corrvalue > corrlimit):
+                                to_drop.append(f2)
+                                break
+            
+                if not args.verbose:
+                    print("")
+                print("  Removing ", len(to_drop), " features")
+                
+                if args.verbose:
+                    for f in to_drop:
+                        print("    ", f)
+                
+                newatomicdata = newatomicdata.drop(newatomicdata[to_drop], axis=1)
+                print ("Produced ", newatomicdata.size , " data features")
+            
+            #    Top15['Citable docs per Capita'].corr(Top15['Energy Supply per Capita'])
+            else:
+                corr = newatomicdata.corr(method = 'pearson').abs()
+                            
+                # Select upper triangle of correlation matrix
+                upper = corr.where(np.triu(\
+                    np.ones(corr.shape), k=1).astype(np.bool))
+                to_drop = [column for column in \
+                    upper.columns if any(upper[column] > corrlimit)]
+            
+                print("  Removing ", len(to_drop), " features")
+            
+                if args.verbose:
+                    for f in to_drop:
+                        print("    ", f)
+            
+                newatomicdata = newatomicdata.drop(newatomicdata[to_drop], axis=1)
+                print ("Produced ", newatomicdata.size , " data features")
+        
+                #if (args.verbose):
+                #    corr = newatomicdata.corr(method = 'pearson').abs()
+                #    scorr = corr.unstack()
+                #    so = scorr.sort_values(kind="quicksort")
+                
+                #    for index, value in so.items():
+                #        if index[0] != index[1]:
+                #            print (index[0], index[1], " ==> ", value)
+                
+                fname = "finalformulalist.txt"
+                if os.path.exists(fname):
+                    os.remove(fname)
+                fp = open(fname, "w")
+                for f in newatomicdata:
+                    fp.write(f + "\n")
+                fp.close()
+        
+        newatomicdata.to_pickle("newadata.pkl")
+        newatomicdata.to_csv("newadata.csv")
+        
+        #plt.figure(figsize=(12,10))
+        #cor = newatomicdata.corr()
+        #sns.heatmap(cor, annot=True, cmap=plt.cm.Reds)
+        #plt.show()
+        
+    except NameError as err:
+        print(err)
+
+
