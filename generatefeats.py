@@ -48,8 +48,6 @@ if __name__ == "__main__":
     lista =  materialdata["ZA"].values
     listb =  materialdata["ZB"].values
 
-    print(lista)
-    
     #print(atomicdata.keys())
         
     basicfeaturesdict = {}
