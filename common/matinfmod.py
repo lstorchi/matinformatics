@@ -352,10 +352,70 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
                                 numer.append(f + " - " + s)
                                 deno.append(f + " + " + s)
                                 deno.append(f + " + " + s)
-    for n in numer:
-        for d in deno:
-            if d != n:
-                formulas.append("("+n+")/("+d+")")
+    elif method == 3:
+        for classe in features:
+            dim = len(features[classe])
+        
+            f1 = []
+            f2 = []
+            f3 = []
+            for i in range(dim):
+            
+                f1.append(features[classe][i] + "_A")
+                f1.append(features[classe][i] + "_A**2")
+                f1.append(features[classe][i] + "_A**3")
+                f1.append("sqrt(fabs("+features[classe][i] + "_A))")
+                f1.append("exp("+features[classe][i] + "_A)")
+
+                f2.append(features[classe][i] + "_B")
+                f2.append(features[classe][i] + "_B**2")
+                f2.append(features[classe][i] + "_B**3")
+                f2.append("sqrt(fabs("+features[classe][i] + "_B))")
+                f2.append("exp("+features[classe][i] + "_B)")
+            
+                f3.append(features[classe][i] + "_C")
+                f3.append(features[classe][i] + "_C**2")
+                f3.append(features[classe][i] + "_C**3")
+                f3.append("sqrt(fabs("+features[classe][i] + "_C))")
+                f3.append("exp("+features[classe][i] + "_C)")
+
+        
+            ftuple = (f1, f2, f3)
+        
+            for i in range(len(ftuple)):
+                first = ftuple[i]
+                for j in range(i+1, len(ftuple)):
+                    second = ftuple[j]
+                    for k in range(j+1, len(ftuple)):
+                        third = ftuple[k]
+                        for f in first:
+                            for s in second:
+                                for t in third:
+                                    if f != s and t != f and t != s:
+                                        n = f + " + " + s
+                                        d = t
+                                        formulas.append("("+n+")/("+d+")")
+                                        n = f + " - " + s
+                                        d = t
+                                        formulas.append("("+n+")/("+d+")")
+                                        n = s + " + " + t
+                                        d = f
+                                        formulas.append("("+n+")/("+d+")")
+                                        n = s + " - " + t
+                                        d = f
+                                        formulas.append("("+n+")/("+d+")")
+                                        n = f + " + " + t
+                                        d = s
+                                        formulas.append("("+n+")/("+d+")")
+                                        n = f + " - " + t
+                                        d = s
+                                        formulas.append("("+n+")/("+d+")")
+                                        
+    if method != 3:
+        for n in numer:
+            for d in deno:
+                if d != n:
+                    formulas.append("("+n+")/("+d+")")
             
     if len(formulas) != len(set(formulas)):
         formulas = list(set(formulas)) 
