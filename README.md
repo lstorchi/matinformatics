@@ -44,6 +44,7 @@ Running using our data (three atoms):
 
   # to generate 1D features
   python generatefeats_pelect.py -f ./data/param.xlsx -b "rs[1];rp[1];EA[2];IP[2]"
+  python generatefeats_pelect.py -f ./data/param.xlsx -b "rs[1];rp[1];EA[2];IP[2]" -m 2 -v -r 
 
   # select best 1D features
   python3 ffilter.py -f newadata.pkl -n 50
