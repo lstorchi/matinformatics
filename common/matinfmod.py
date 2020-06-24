@@ -194,7 +194,8 @@ def generate_formulas_AB (features, atomicdata, lista, listb):
 
 ###############################################################################
 
-def generate_formulas_ABC (features, atomicdata, lista, listb, listc):
+def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
+    method = 1):
 
     formulas = []
     newdataframeABC = {}
@@ -212,6 +213,16 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc):
         newdataframeABC[k+"_C"] = []
     
     for i in range(lista.shape[0]):
+        print("Looking for ", lista[i], listb[i], listc[i])
+
+        if lista[i] not in atomicdata['Name'].values:
+            print("Cannot find \""+lista[i]+"\" in the list" )
+                
+        if listb[i] not in atomicdata['Name'].values:
+            print("Cannot find \""+listb[i]+"\" in the list" )
+        
+        if listc[i] not in atomicdata['Name'].values:
+            print("Cannot find \""+listc[i]+"\" in the list" )
                 
         aelmnt = atomicdata.index[atomicdata['Name'] == \
                                   lista[i]].tolist()[0]
@@ -236,70 +247,115 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc):
     featuresABC = pd.DataFrame.from_dict(newdataframeABC) 
     
     numer = []
-    
-    for classe in features:
-        dim = len(features[classe])
-        
-        f1 = []
-        f2 = []
-        f3 = []
-        f4 = []
-        f5 = []
-        for i in range(dim):
-            
-            f1.append(features[classe][i] + "_A")
-            f1.append(features[classe][i] + "_B")
-            f1.append(features[classe][i] + "_C")
-
-            f2.append(features[classe][i] + "_A**2")
-            f2.append(features[classe][i] + "_B**2")
-            f2.append(features[classe][i] + "_C**2")
-            
-            f3.append(features[classe][i] + "_A**3")
-            f3.append(features[classe][i] + "_B**3")
-            f3.append(features[classe][i] + "_C**3")
-            
-            f4.append("sqrt(fabs("+features[classe][i] + "_A))")
-            f4.append("sqrt(fabs("+features[classe][i] + "_B))")
-            f4.append("sqrt(fabs("+features[classe][i] + "_C))")
-            
-            f5.append("exp("+features[classe][i] + "_A)")
-            f5.append("exp("+features[classe][i] + "_B)")
-            f5.append("exp("+features[classe][i] + "_C)")
-
-        
-        ftuple = (f1, f2, f3, f4, f5)
-        
-        for i in range(len(ftuple)):
-            first = ftuple[i]
-            for j in range(i, len(ftuple)):
-                second = ftuple[j]
-                for f in first:
-                    for s in second:
-                        if f != s:
-                            numer.append(f + " + " + s)
-                            numer.append(f + " - " + s)
-
     deno = []
-    for classe in features:
-        dim = len(features[classe])
-        for i in range(dim):
-            deno.append("sqrt(fabs("+features[classe][i]+"_A))")
-            deno.append("exp("+features[classe][i]+"_A)")
-            deno.append("("+features[classe][i]+"_A**2)")
-            deno.append("("+features[classe][i]+"_A**3)")
-            deno.append("sqrt(fabs("+features[classe][i]+"_B))")
-            deno.append("exp("+features[classe][i]+"_B)")
-            deno.append("("+features[classe][i]+"_B**2)")
-            deno.append("("+features[classe][i]+"_B**3)")
-            deno.append("sqrt(fabs("+features[classe][i]+"_C))")
-            deno.append("exp("+features[classe][i]+"_C)")
-            deno.append("("+features[classe][i]+"_C**2)")
-            deno.append("("+features[classe][i]+"_C**3)")
 
+    if method == 1:
+        for classe in features:
+            dim = len(features[classe])
+        
+            f1 = []
+            f2 = []
+            f3 = []
+            f4 = []
+            f5 = []
+            for i in range(dim):
+            
+                f1.append(features[classe][i] + "_A")
+                f1.append(features[classe][i] + "_B")
+                f1.append(features[classe][i] + "_C")
+
+                f2.append(features[classe][i] + "_A**2")
+                f2.append(features[classe][i] + "_B**2")
+                f2.append(features[classe][i] + "_C**2")
+            
+                f3.append(features[classe][i] + "_A**3")
+                f3.append(features[classe][i] + "_B**3")
+                f3.append(features[classe][i] + "_C**3")
+            
+                f4.append("sqrt(fabs("+features[classe][i] + "_A))")
+                f4.append("sqrt(fabs("+features[classe][i] + "_B))")
+                f4.append("sqrt(fabs("+features[classe][i] + "_C))")
+            
+                f5.append("exp("+features[classe][i] + "_A)")
+                f5.append("exp("+features[classe][i] + "_B)")
+                f5.append("exp("+features[classe][i] + "_C)")
+        
+            ftuple = (f1, f2, f3, f4, f5)
+        
+            for i in range(len(ftuple)):
+                first = ftuple[i]
+                for j in range(i, len(ftuple)):
+                    second = ftuple[j]
+                    for f in first:
+                        for s in second:
+                            if f != s:
+                                numer.append(f + " + " + s)
+                                numer.append(f + " - " + s)
+
+        for classe in features:
+            dim = len(features[classe])
+            for i in range(dim):
+                deno.append("sqrt(fabs("+features[classe][i]+"_A))")
+                deno.append("exp("+features[classe][i]+"_A)")
+                deno.append("("+features[classe][i]+"_A**2)")
+                deno.append("("+features[classe][i]+"_A**3)")
+                deno.append("sqrt(fabs("+features[classe][i]+"_B))")
+                deno.append("exp("+features[classe][i]+"_B)")
+                deno.append("("+features[classe][i]+"_B**2)")
+                deno.append("("+features[classe][i]+"_B**3)")
+                deno.append("sqrt(fabs("+features[classe][i]+"_C))")
+                deno.append("exp("+features[classe][i]+"_C)")
+                deno.append("("+features[classe][i]+"_C**2)")
+                deno.append("("+features[classe][i]+"_C**3)")
+    elif method == 2:
+        for classe in features:
+            dim = len(features[classe])
+        
+            f1 = []
+            f2 = []
+            f3 = []
+            f4 = []
+            f5 = []
+            for i in range(dim):
+            
+                f1.append(features[classe][i] + "_A")
+                f1.append(features[classe][i] + "_B")
+                f1.append(features[classe][i] + "_C")
+
+                f2.append(features[classe][i] + "_A**2")
+                f2.append(features[classe][i] + "_B**2")
+                f2.append(features[classe][i] + "_C**2")
+            
+                f3.append(features[classe][i] + "_A**3")
+                f3.append(features[classe][i] + "_B**3")
+                f3.append(features[classe][i] + "_C**3")
+            
+                f4.append("sqrt(fabs("+features[classe][i] + "_A))")
+                f4.append("sqrt(fabs("+features[classe][i] + "_B))")
+                f4.append("sqrt(fabs("+features[classe][i] + "_C))")
+            
+                f5.append("exp("+features[classe][i] + "_A)")
+                f5.append("exp("+features[classe][i] + "_B)")
+                f5.append("exp("+features[classe][i] + "_C)")
+
+        
+            ftuple = (f1, f2, f3, f4, f5)
+        
+            for i in range(len(ftuple)):
+                first = ftuple[i]
+                for j in range(i, len(ftuple)):
+                    second = ftuple[j]
+                    for f in first:
+                        for s in second:
+                            if f != s:
+                                numer.append(f + " + " + s)
+                                numer.append(f + " - " + s)
+                                deno.append(f + " + " + s)
+                                deno.append(f + " + " + s)
     for n in numer:
         for d in deno:
-            formulas.append("("+n+")/("+d+")")
+            if d != n:
+                formulas.append("("+n+")/("+d+")")
             
     if len(formulas) != len(set(formulas)):
         formulas = list(set(formulas)) 

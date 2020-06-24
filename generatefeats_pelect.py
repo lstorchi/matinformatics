@@ -61,8 +61,10 @@ if __name__ == "__main__":
                         required=False, default=False)
     parser.add_argument("-s", "--split", \
                         help="Split by a key [default=\"\"]", required=False, default="")
- 
-    
+    parser.add_argument("-m", "--method", \
+                        help="Method used to generate the features [default=1]", required=False, default=1,
+                        type=int)
+
     args = parser.parse_args()
     
     xslxfilename = args.file
@@ -113,7 +115,7 @@ if __name__ == "__main__":
         print("Start generating formulas...")
         formulas, atomicdataABC = matinfmod.generate_formulas_ABC \
             (basicfeaturesdict, atomicdata, np.asarray(lista), \
-            np.asarray(listb), np.asarray(listc))
+            np.asarray(listb), np.asarray(listc), args.method)
         fname  = "formulaslist.txt"
         if os.path.exists(fname):
             os.remove(fname)
