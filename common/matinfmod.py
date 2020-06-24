@@ -392,29 +392,27 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
                             for s in second:
                                 for t in third:
                                     if f != s and t != f and t != s:
-                                        n = f + " + " + s
-                                        d = t
-                                        formulas.append("("+n+")/("+d+")")
-                                        n = f + " - " + s
-                                        d = t
-                                        formulas.append("("+n+")/("+d+")")
-                                        n = s + " + " + t
-                                        d = f
-                                        formulas.append("("+n+")/("+d+")")
-                                        n = s + " - " + t
-                                        d = f
-                                        formulas.append("("+n+")/("+d+")")
-                                        n = f + " + " + t
-                                        d = s
-                                        formulas.append("("+n+")/("+d+")")
-                                        n = f + " - " + t
-                                        d = s
-                                        formulas.append("("+n+")/("+d+")")
-                                        
-    if method != 3:
-        for n in numer:
-            for d in deno:
-                if d != n:
+                                        numer.append(f + " + " + s)
+                                        numer.append(f + " - " + s)
+                                        numer.append(f + " + " + t)
+                                        numer.append(f + " - " + t)
+                                        numer.append(s + " + " + t)
+                                        numer.append(s + " - " + t)
+                                        deno.append(f)
+                                        deno.append(s)
+                                        deno.append(t)
+
+
+    print("Deal with ", len(numer), " numer and ", len(deno), " denom")                                   
+    for n in numer:
+        for d in deno:
+            if d != n:
+                if method == 3:
+                    for tof in ["_A", "_B", "_C"]:
+                        if d.find(tof) >= 0:
+                            if n.find(tof) < 0:
+                                formulas.append("("+n+")/("+d+")")
+                else:
                     formulas.append("("+n+")/("+d+")")
             
     if len(formulas) != len(set(formulas)):
