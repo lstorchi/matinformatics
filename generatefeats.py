@@ -44,6 +44,12 @@ if __name__ == "__main__":
     atomicdata = pd.read_excel(xls, "Atomic Data")
     basicfeatureslist = args.basicfeatures.split(";")
     materialdata = pd.read_excel(xls, "Material Data")
+
+    if (len(basicfeatureslist) <= 1):
+        print("Basic features thata can be used:")
+        for basicf in atomicdata.columns:
+            print("  \""+basicf+"\"")
+        exit(1)
     
     lista =  materialdata["ZA"].values
     listb =  materialdata["ZB"].values
@@ -95,8 +101,15 @@ if __name__ == "__main__":
             if not args.verbose:
                 matinfmod.progress_bar(i, max)
                 i = i + 1
-            newf = matinfmod.get_new_feature(atomicdataAB, formula)
-            newdataframe[formula] = newf
+
+            newf = None
+            try:
+                newf = matinfmod.get_new_feature(atomicdataAB, formula)
+            except ZeroDivisionError as zd:
+                print("Cannot add ", formula)
+            
+            if newf != None:
+                newdataframe[formula] = newf
         
         if not args.verbose:
             print()
