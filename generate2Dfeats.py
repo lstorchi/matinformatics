@@ -32,7 +32,7 @@ if __name__ == "__main__":
     parser.add_argument("-o","--output", help="output csv file ", \
             required=False, type=str, default="2Dfeature_rmse.csv")
     parser.add_argument("-N","--nt", help="Specify Number of Threads or Processes to use", \
-            required=False, type=int, default=2)
+            required=False, type=int, default=1)
     parser.add_argument("-r","--range", help="Specify a range of 1D formulas to use " + \
             "default=\"0:-1\" i.e. all", required=False, type=str, default="0:-1")
     parser.add_argument("-v","--verbose", help="Dump extra files", 

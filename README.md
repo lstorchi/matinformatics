@@ -61,6 +61,24 @@ Last Run using new  data:
   python3 ffilter.py -f newadata.pkl -n 50
   
   # 2D features on several machines
+  for name in lista machine names:
+  do
+      scp  newadata.pkl newadata.csv feature_rmse.csv feature_rmse.csv formulaslist.txt $machinename:matinformatics/
+  done
 
+  # in the script set PROGNAME=generate2Dfeats.py, if we want to scan up to 10000and use 5 processors
+  # the script wil suggest the next run
+
+  ./run_mutiple.sh 5000 0 3 0 100000
+
+  # in this case will suggest ./run_mutiple.sh 5000 4 3 20000 100000 but I can decrease 
+  # the number of process to be used depending on the machine selected:
+  ./run_mutiple.sh 5000 4 6 20000 100000
+
+  # and so for the next one I can increase also the number of pairs per processor:
+  ./run_mutiple.sh 6000 11 8 55000 100000
+
+  # after I can check the estimated time and adjust:
+  ./checktime.sh 
   
 
