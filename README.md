@@ -51,6 +51,16 @@ Running using our data (three atoms):
 
 Last Run using new  data:
 
-python3 generatefeats.py -f ./data/NewData.xlsx  -b "Z[1];atomic_hfomo[2];atomic_lfumo[2];atomic_ea_by_energy_difference[3];atomic_ip_by_energy_difference[3];atomic_rs_max[4];atomic_rp_max[4]" -j -v
-python3 generatefeats.py -f ./data/NewData.xlsx  -b "Z[1];atomic_hfomo[2];atomic_lfumo[2];atomic_ea_by_half_charged_homo[3];atomic_ip_by_half_charged_homo[3];atomic_rs_max[4];atomic_rp_max[4]" -j -v 
-python3 generatefeats.py -f ./data/NewData.xlsx  -b "Z[1];atomic_hpomo[2];atomic_lpumo[2];atomic_ea_by_energy_difference[3];atomic_ip_by_energy_difference[3];atomic_rs_max[4];atomic_rp_max[4]" -j -v 
+  python3 generatefeats.py -f ./data/NewData.xlsx  -b "Z[1];atomic_hfomo[2];atomic_lfumo[2];atomic_ea_by_energy_difference[3];atomic_ip_by_energy_difference[3];atomic_rs_max[4];atomic_rp_max[4]" -j -v
+  python3 generatefeats.py -f ./data/NewData.xlsx  -b "Z[1];atomic_hfomo[2];atomic_lfumo[2];atomic_ea_by_half_charged_homo[3];atomic_ip_by_half_charged_homo[3];atomic_rs_max[4];atomic_rp_max[4]" -j -v 
+  python3 generatefeats.py -f ./data/NewData.xlsx  -b "Z[1];atomic_hpomo[2];atomic_lpumo[2];atomic_ea_by_energy_difference[3];atomic_ip_by_energy_difference[3];atomic_rs_max[4];atomic_rp_max[4]" -j -v 
+
+  # full production using a set:
+
+  python3 generatefeats.py -f ./data/NewData.xlsx  -b "Z[1];atomic_hpomo[2];atomic_lpumo[2];atomic_ea_by_energy_difference[3];atomic_ip_by_energy_difference[3];atomic_rs_max[4];atomic_rp_max[4]" -j -v
+  python3 ffilter.py -f newadata.pkl -n 50
+  
+  # 2D features on several machines
+
+  
+
