@@ -66,9 +66,8 @@ Last Run using new  data:
       scp  newadata.pkl newadata.csv feature_rmse.csv feature_rmse.csv formulaslist.txt $machinename:matinformatics/
   done
 
-  # in the script set PROGNAME=generate2Dfeats.py, if we want to scan up to 10000and use 5 processors
+  # in the script ./run_mutiple.sh set PROGNAME=generate2Dfeats.py, if we want to scan up to 10000 and use 3 processors
   # the script wil suggest the next run
-
   ./run_mutiple.sh 100 0 3 0 10000
 
   # in this case will suggest ./run_mutiple.sh 5000 4 3 20000 100000 but I can decrease 
@@ -83,5 +82,19 @@ Last Run using new  data:
 
   # then collect all out_* err_* and 2Dfeature_rmse.csv_* in a singlke machine and dir and run  
   python3 23Dfeatsexctratand.py -d ./2DFeatures/ -k newadata.pkl
+
+  # 3D features on several machines
+  for name in lista machine names:
+  do
+      scp  newadata.pkl newadata.csv feature_rmse.csv feature_rmse.csv formulaslist.txt $machinename:matinformatics/
+  done
+
+  # in the script ./run_mutiple.sh set PROGNAME=generate3Dfeats.py, if we want to scan up to 10000 and use 3 processors
+  # the script wil suggest the next run
+  ./run_mutiple.sh 100 0 3 0 10000
+ 
+  # and after we can proceed as for the 2D features
+
+
   
 
