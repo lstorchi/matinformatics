@@ -69,7 +69,7 @@ Last Run using new  data:
   # in the script set PROGNAME=generate2Dfeats.py, if we want to scan up to 10000and use 5 processors
   # the script wil suggest the next run
 
-  ./run_mutiple.sh 5000 0 3 0 100000
+  ./run_mutiple.sh 100 0 3 0 10000
 
   # in this case will suggest ./run_mutiple.sh 5000 4 3 20000 100000 but I can decrease 
   # the number of process to be used depending on the machine selected:
@@ -80,5 +80,8 @@ Last Run using new  data:
 
   # after I can check the estimated time and adjust:
   ./checktime.sh 
+
+  # then collect all out_* err_* and 2Dfeature_rmse.csv_* in a singlke machine and dir and run  
+  python3 23Dfeatsexctratand.py -d ./2DFeatures/ -k newadata.pkl
   
 
