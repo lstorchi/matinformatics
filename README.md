@@ -80,7 +80,7 @@ Last Run using new  data:
   # after I can check the estimated time and adjust:
   ./checktime.sh 
 
-  # then collect all out_* err_* and 2Dfeature_rmse.csv_* in a singlke machine and dir and run  
+  # then collect all out_* err_* and 2Dfeature_rmse.csv_* in a single machine and dir and run  
   python3 23Dfeatsexctratand.py -d ./2DFeatures/ -k newadata.pkl
 
   # 3D features on several machines
@@ -93,8 +93,6 @@ Last Run using new  data:
   # the script wil suggest the next run
   ./run_mutiple.sh 100 0 3 0 10000
  
-  # and after we can proceed as for the 2D features
-
-
-  
-
+  # and after we can proceed as for the 2D features, collecting all out_* err_* and 2Dfeature_rmse.csv_* in a single 
+  # machine and dir and run
+  python3 23Dfeatsexctratand.py -d ./3DFeatures/ -k newadata.pkl --set3Don
