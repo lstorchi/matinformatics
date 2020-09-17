@@ -33,7 +33,9 @@ if __name__ == "__main__":
     parser.add_argument("-j", "--jumpremoving", \
                         help="Do not filter the features considering the correlation", action="store_true",
                         required=False, default=False)
- 
+    parser.add_argument("-m", "--method", \
+                        help="Method used to generate the features [default=1]", required=False, default=1,
+                        type=int)
     
     args = parser.parse_args()
     
@@ -80,7 +82,7 @@ if __name__ == "__main__":
         newdataframe = {}
         print("Start generating formulas...")
         formulas, atomicdataAB = matinfmod.generate_formulas_AB \
-            (basicfeaturesdict, atomicdata, lista, listb)
+            (basicfeaturesdict, atomicdata, lista, listb, args.method)
         fname  = "formulaslist.txt"
         if os.path.exists(fname):
             os.remove(fname)
