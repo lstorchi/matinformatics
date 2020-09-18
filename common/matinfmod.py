@@ -263,6 +263,55 @@ def generate_formulas_AB (features, atomicdata, lista, listb, method = 1):
             for idxd, d in enumerate(deno):
                 if numertype[idxn] != denotype[idxd]:
                     formulas.append("("+n+")/("+d+")")
+    
+    elif method == 3:
+
+        numer = []
+        numertype = []
+        
+        for classe in features:
+            dim = len(features[classe])
+            
+            f1 = []
+            f2 = []
+            f3 = []
+            f4 = []
+            f5 = []
+            for i in range(dim):
+                
+                f1.append(features[classe][i] + "_A")
+                f1.append(features[classe][i] + "_B")
+                
+                f2.append(features[classe][i] + "_A**2")
+                f2.append(features[classe][i] + "_B**2")
+                
+                f3.append(features[classe][i] + "_A**3")
+                f3.append(features[classe][i] + "_B**3")
+                
+                f4.append("sqrt(fabs("+features[classe][i] + "_A))")
+                f4.append("sqrt(fabs("+features[classe][i] + "_B))")
+                
+                f5.append("exp("+features[classe][i] + "_A)")
+                f5.append("exp("+features[classe][i] + "_B)")
+    
+            
+            ftuple = (f1, f2, f3, f4, f5)
+            
+            for i in range(len(ftuple)):
+                first = ftuple[i]
+                for j in range(i, len(ftuple)):
+                    second = ftuple[j]
+                    for f in first:
+                        for s in second:
+                            if f != s:
+                                numer.append(f + " + " + s)
+                                numertype.append(classe)
+                                numer.append(f + " - " + s)
+                                numertype.append(classe)
+
+        for idxn in range(len(numer)):
+            for idxd in range(idxn+1, len(numer)):
+                formulas.append("("+numer[idxn]+")/("+numer[idxd]+")")
             
     if len(formulas) != len(set(formulas)):
         formulas = list(set(formulas)) 
