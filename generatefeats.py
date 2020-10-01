@@ -6,6 +6,7 @@ import numpy as np
 #import seaborn as sns
 
 import argparse
+import math
 import sys
 import os
 
@@ -36,6 +37,9 @@ if __name__ == "__main__":
     parser.add_argument("-m", "--method", \
                         help="Method used to generate the features [default=1]", required=False, default=1,
                         type=int)
+    parser.add_argument("--variancefilter", \
+                        help="Remove all the formula with small variance [default=0.0 no filter]", required=False, default=0.0,
+                        type=float)
     
     args = parser.parse_args()
     
@@ -108,10 +112,17 @@ if __name__ == "__main__":
             try:
                 newf = matinfmod.get_new_feature(atomicdataAB, formula)
             except ZeroDivisionError as zd:
-                print("Cannot add ", formula)
+                newf = None
+                print("Cannot add ", formula, file=sys.stderr)
             
             if newf != None:
-                newdataframe[formula] = newf
+                avg = np.mean(newf)
+                std = np.std(newf)
+                if (math.fabs(std/avg) < args.variancefilter):
+                    print("Mean and stdev %40s %20.8f %20.8f [%10.8f]"%(formula, avg, std, std/avg), \
+                        file=sys.stderr)
+                else:
+                    newdataframe[formula] = newf
         
         if not args.verbose:
             print()

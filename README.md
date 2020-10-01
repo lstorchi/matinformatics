@@ -96,3 +96,8 @@ Last Run using new  data:
   # and after we can proceed as for the 2D features, collecting all out_* err_* and 2Dfeature_rmse.csv_* in a single 
   # machine and dir and run
   python3 23Dfeatsexctratand.py -d ./3DFeatures/ -k newadata.pkl --set3Don
+
+Final run :
+
+  $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 1 --variancefilter=0.05 2> stderr.data
+  $ python3 ffilter.py -f newadata.pkl -n 50
