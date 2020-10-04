@@ -101,3 +101,14 @@ Final run :
 
   $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 1 --variancefilter=0.05 2> stderr.data
   $ python3 ffilter.py -f newadata.pkl -n 50
+
+  $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 2 --variancefilter=0.05 2> stderr.data
+  $ python3 ffilter.py -f newadata.pkl -n 50
+
+  $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 3 --variancefilter=0.05 2> stderr.data
+  $ python3 ffilter.py -f newadata.pkl -n 50
+
+
+
+  $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 2 --variancefilter=0.05 2> stderr.data
+  $ python3 ffilter.py -f newadata.pkl -n 50
