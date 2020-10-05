@@ -101,14 +101,38 @@ Final run :
 
   $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 1 --variancefilter=0.05 2> stderr.data
   $ python3 ffilter.py -f newadata.pkl -n 50
+  $ python3 checksingleformula.py -f ./OAD_gen_1/newadata.pkl --formula "...." -n 1000
 
   $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 2 --variancefilter=0.05 2> stderr.data
   $ python3 ffilter.py -f newadata.pkl -n 50
+  $ python3 checksingleformula.py -f ./OAD_gen_2/newadata.pkl --formula "...." -n 1000
 
   $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 3 --variancefilter=0.05 2> stderr.data
   $ python3 ffilter.py -f newadata.pkl -n 50
+  $ python3 checksingleformula.py -f ./OAD_gen_3/newadata.pkl --formula "...." -n 1000
+
+
+  # 2D features on several machines
+  for name in lista machine names:
+  do
+      scp  newadata.pkl newadata.csv feature_rmse.csv feature_rmse.csv formulaslist.txt $machinename:matinformatics/
+  done
+
+  # in the script ./run_mutiple.sh set PROGNAME=generate2Dfeats.py, if we want to scan up to 10000 and use 3 processors
+  # the script wil suggest the next run
+  ./run_mutiple.sh 100 0 3 0 10000
+
+  # in this case will suggest ./run_mutiple.sh 5000 4 3 20000 100000 but I can decrease 
+  # the number of process to be used depending on the machine selected:
+  ./run_mutiple.sh 5000 4 6 20000 100000
+
+  # and so for the next one I can increase also the number of pairs per processor:
+  ./run_mutiple.sh 6000 11 8 55000 100000
+
+  # after I can check the estimated time and adjust:
+  ./checktime.sh 
 
 
 
-  $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 2 --variancefilter=0.05 2> stderr.data
-  $ python3 ffilter.py -f newadata.pkl -n 50
+
+
