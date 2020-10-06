@@ -132,6 +132,23 @@ Final run :
   # after I can check the estimated time and adjust:
   ./checktime.sh 
 
+  # specifically I used
+  ./run_mutiple.sh 100 0 1 0 5000
+  ./run_mutiple.sh 100 2 6 200 5000
+  ./run_mutiple.sh 200 9 8 900 5000
+  ./run_mutiple.sh 200 18 8 2700 5000
+  ./run_mutiple.sh 50 27 3 4500 5000
+  ./run_mutiple.sh 50 31 3 4700 5000
+  ./run_mutiple.sh 50 35 3 4900 5000
+
+  # then collect all out_* err_* and 2Dfeature_rmse.csv_* in a single machine and dir and run  
+  python3 23Dfeatsexctratand.py -d ./2DFeatures/ -k newadata.pkl
+
+  # similarly I run the 3D after modifying the run_mutiple.sh script, specifically I used
+  
+
+
+
 
 
 
