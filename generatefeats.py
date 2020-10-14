@@ -130,7 +130,7 @@ if __name__ == "__main__":
         newatomicdata = pd.DataFrame.from_dict(newdataframe)      
         print ("Produced ", newatomicdata.size , " data features")
 
-        corrlimit = 0.99
+        corrlimit = 0.90
 
         if not args.jumpremoving:
             print ("Start removing highly correlated features (limit: %10.5f)"%corrlimit)
