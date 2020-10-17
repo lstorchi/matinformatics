@@ -48,7 +48,7 @@ if __name__ == "__main__":
        idx = 0
        for filename in filelist:
            idx += 1
-           print("%10d of %10d"%(idx, dim))
+           print("%10d of %10d %s"%(idx, dim, filename))
            if re.match(args.filenames, filename):
                with open(os.path.join(args.rootdir, filename), 'r') as f:
                    for line in f:
