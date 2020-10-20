@@ -10,6 +10,8 @@ import math
 import sys
 import os
 
+from mendeleev import element
+
 sys.path.append("./common/")
 
 import matinfmod 
@@ -40,6 +42,9 @@ if __name__ == "__main__":
     parser.add_argument("--variancefilter", \
                         help="Remove all the formula with small variance [default=0.0 no filter]", required=False, default=0.0,
                         type=float)
+    parser.add_argument("--useatomname", \
+                        help="Use atom name instead of Z", required=False, default="",
+                        type=str)
     
     args = parser.parse_args()
     
@@ -56,6 +61,16 @@ if __name__ == "__main__":
         for basicf in atomicdata.columns:
             print("  \""+basicf+"\"")
         exit(1)
+
+    if args.useatomname != "":
+        atomicsymbols = atomicdata[args.useatomname].values
+        zlist = []
+        for a in atomicsymbols:
+            z = element(a).atomic_number
+            print(a, " Z= ", z )
+            zlist.append(z)
+        atomicdata["Z"] = zlist
+        
     
     lista =  materialdata["ZA"].values
     listb =  materialdata["ZB"].values

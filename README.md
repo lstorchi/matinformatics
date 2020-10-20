@@ -145,10 +145,32 @@ Final run :
   python3 23Dfeatsexctratand.py -d ./2DFeatures/ -k newadata.pkl
 
   # similarly I run the 3D after modifying the run_mutiple.sh script, specifically I used
-  
+  # specifically I used
+  ./run_mutiple.sh 10 0 1 0 1000
+  ./run_mutiple.sh 15 2 5 20 1000
+  ./run_mutiple.sh 30 8 7 110 1000
+  ./run_mutiple.sh 50 16 8 350 1000
+  ./run_mutiple.sh 20 25 3 800 1000
+  ./run_mutiple.sh 20 29 3 880 1000
+  ./run_mutiple.sh 15 33 3 960 1000
+
+  # collect all data in a single machine and 
+  python3 23Dfeatsexctratand.py -d ./3DFeatures/ -k newadata.pkl --set3Don
 
 
+  # using new atomic DataSet
 
+  $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 1 --variancefilter=0.05 2> stderr.data
+  $ python3 ffilter.py -f newadata.pkl -n 50
+  $ python3 checksingleformula.py -f ./OAD_gen_1/newadata.pkl --formula "...." -n 1000
+
+  $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 2 --variancefilter=0.05 2> stderr.data
+  $ python3 ffilter.py -f newadata.pkl -n 50
+  $ python3 checksingleformula.py -f ./OAD_gen_2/newadata.pkl --formula "...." -n 1000
+
+  $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 3 --variancefilter=0.05 2> stderr.data
+  $ python3 ffilter.py -f newadata.pkl -n 50
+  $ python3 checksingleformula.py -f ./OAD_gen_3/newadata.pkl --formula "...." -n 1000
 
 
 
