@@ -796,34 +796,42 @@ def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
     avgtime = 0.0
     for f1, f2, f3 in threeDformulas:
         start = time.time()
+        print(f1, f2, f3)
 
-        Xdf = dataset_features[[f1, f2, f3]].copy()
-        X = Xdf.values
+        Xdf = None
+        try:
+            Xdf = dataset_features[[f1, f2, f3]].copy()
+
+            X = Xdf.values
     
-        mse = []
-        for ii in range(numoflr):
-            X_train, X_test, y_train, y_test = \
-                    train_test_split(X, y_array, test_size=0.1, random_state=ii)
-            regressor = LinearRegression()
-            regressor.fit(X_train, y_train)
-            y_pred = regressor.predict(X_test)
-            mse.append(mean_squared_error(y_test,y_pred))
-    
-        avg = float(np.average(mse))
+            mse = []
+            for ii in range(numoflr):
+                X_train, X_test, y_train, y_test = \
+                        train_test_split(X, y_array, test_size=0.1, random_state=ii)
+                regressor = LinearRegression()
+                regressor.fit(X_train, y_train)
+                y_pred = regressor.predict(X_test)
+                mse.append(mean_squared_error(y_test,y_pred))
+            
+            avg = float(np.average(mse))
+            
+            fd['formulas'].append((f1, f2, f3))
+            fd['rmse'].append(avg)
+            
+            end = time.time()
+            
+            idx += 1
+            if showiter:
+                avgtime += (end - start)
+                est = (float(dim)*(avgtime/float(idx)))/3600.0
+                print("Iter %10d of %10d [%10.6f estimated tot. %10.6f hrs.]"%(idx, dim, \
+                        (end - start), est),flush=True)
+            else:
+                progress_bar(idx, dim)
+        except KeyError as ki:
+            print(f1, "\n", f2, "\n", f3, "\nKey Error") 
+        
 
-        fd['formulas'].append((f1, f2, f3))
-        fd['rmse'].append(avg)
-
-        end = time.time()
-
-        idx += 1
-        if showiter:
-            avgtime += (end - start)
-            est = (float(dim)*(avgtime/float(idx)))/3600.0
-            print("Iter %10d of %10d [%10.6f estimated tot. %10.6f hrs.]"%(idx, dim, \
-                    (end - start), est),flush=True)
-        else:
-            progress_bar(idx, dim)
 
     return pd.DataFrame.from_dict(fd)
 
