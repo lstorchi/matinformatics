@@ -823,7 +823,7 @@ def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
             
             if showiter:
                 avgtime += (end - start)
-                est = (float(dim)*(avgtime/float(idx)))/3600.0
+                est = (float(dim)*(avgtime/float(idx+1)))/3600.0
                 fname = ""
                 if len(goodfiles) != 0:
                     fname = goodfiles[idx]
