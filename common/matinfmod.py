@@ -828,7 +828,7 @@ def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
             else:
                 progress_bar(idx, dim)
         except KeyError as ki:
-            print(f1, "\n", f2, "\n", f3, "\nKey Error") 
+            print("\"",f1, "\"\n\"", f2, "\"\n", f3, "\"\nKey Error") 
         
 
 
