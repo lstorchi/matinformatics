@@ -707,8 +707,11 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
             if showiter:
                 avgtime += (end - start)
                 est = (float(dim)*(avgtime/float(idx)))/3600.0
-                print("Iter %10d of %10d [%10.6f estimated tot. %10.6f hrs.]"%(idx, dim, \
-                        (end - start), est),flush=True)
+                fname = ""
+                if len(goodfiles) != 0:
+                    fname = goodfiles[idx-1]
+                print("Iter %10d of %10d [%10.6f estimated tot. %10.6f hrs.] %s"%(idx, dim, \
+                        (end - start), est, fname),flush=True)
             else:
                 progress_bar(idx, dim)
     else:
