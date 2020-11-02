@@ -796,7 +796,6 @@ def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
     avgtime = 0.0
     for f1, f2, f3 in threeDformulas:
         start = time.time()
-        print(f1, f2, f3)
 
         Xdf = None
         try:
