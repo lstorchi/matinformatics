@@ -801,7 +801,7 @@ def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
         try:
             Xdf = dataset_features[[f1, f2, f3]].copy()
 
-            print("\""+f1+"\"\n\""+f2+"\"\n\""+f3+"\"\nKey Error") 
+            print("\""+f1+"\"\n\""+f2+"\"\n\""+f3+"\"\nKey Found") 
 
             X = Xdf.values
     
