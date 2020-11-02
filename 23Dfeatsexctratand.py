@@ -41,6 +41,8 @@ if __name__ == "__main__":
     features = []
 
     print("Reading all data")
+
+    goodfiles = []
     
 
     filelist = os.listdir(args.rootdir)
@@ -62,6 +64,7 @@ if __name__ == "__main__":
        
                                features.append((f1.lstrip().rstrip(), f2.lstrip().rstrip(), \
                                        f3.lstrip().rstrip()))
+                               goodfiles.append(filename)
 
     else:
        idx = 0
@@ -79,12 +82,14 @@ if __name__ == "__main__":
                                f2 = "("+sline[1].split("Min LR", 1)[0]
        
                                features.append((f1.lstrip().rstrip(), f2.lstrip().rstrip()))
+                               goodfiles.append(filename)
                            elif line.find("] [") >= 0:
                                sline = line.split("] [")
                                f1 = sline[0].replace("[", "")
                                f2 = sline[1].replace("]", "").split("Min LR", 1)[0]
        
                                features.append((f1.lstrip().rstrip(), f2.lstrip().rstrip()))
+                               goodfiles.append(filename)
 
 
     featuresvalue = pd.read_pickle(args.filepki)
@@ -98,11 +103,11 @@ if __name__ == "__main__":
     if args.set3Don :
         generatedrmse = matinfmod.feature3D_check_lr(features, 
                   featuresvalue, DE_array, args.numofiterations, 
-                  True)
+                  True, goodfiles)
     else:
         generatedrmse = matinfmod.feature2D_check_lr(features, 
                   featuresvalue, DE_array, 1, args.numofiterations, 
-                  True)
+                  True, goodfiles)
  
 
     minvalue_lr = np.min(generatedrmse['rmse'].values)

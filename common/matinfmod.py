@@ -669,7 +669,7 @@ def task_feature2D_check_lr (inps):
 ###############################################################################
 
 def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
-        numoflr = 1000, showiter=False):
+        numoflr = 1000, showiter=False, goodfiles=[]):
 
     fd = dict()
 
@@ -784,24 +784,23 @@ def checkcorr (inp):
 ###############################################################################
 
 def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
-        numoflr = 1000, showiter=False):
+        numoflr = 1000, showiter=False, goodfiles=[]):
 
     fd = dict()
 
     fd['formulas'] = []
     fd['rmse']     = []
 
-    idx = 0
     dim = len(threeDformulas)
     avgtime = 0.0
-    for f1, f2, f3 in threeDformulas:
+    for idx, f1, f2, f3 in enumerate(threeDformulas):
         start = time.time()
 
         Xdf = None
         try:
             Xdf = dataset_features[[f1, f2, f3]].copy()
 
-            print("\""+f1+"\"\n\""+f2+"\"\n\""+f3+"\"\nKey Found") 
+            #print("\""+f1+"\"\n\""+f2+"\"\n\""+f3+"\"\nKey Found") 
 
             X = Xdf.values
     
@@ -821,14 +820,17 @@ def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
             
             end = time.time()
             
-            idx += 1
             if showiter:
                 avgtime += (end - start)
                 est = (float(dim)*(avgtime/float(idx)))/3600.0
-                print("Iter %10d of %10d [%10.6f estimated tot. %10.6f hrs.]"%(idx, dim, \
-                        (end - start), est),flush=True)
+                fname = ""
+                if len(goodfiles) != 0:
+                    fname = goodfiles[idx]
+                print("Iter %10d of %10d [%10.6f estimated tot. %10.6f hrs.] %s"%(idx+1, dim, \
+                        (end - start), est, fname),flush=True)
             else:
                 progress_bar(idx, dim)
+
         except KeyError as ki:
             print("\""+f1+"\"\n\""+f2+"\"\n\""+f3+"\"\nKey Error") 
         
