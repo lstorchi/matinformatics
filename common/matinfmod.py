@@ -791,9 +791,10 @@ def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
     fd['formulas'] = []
     fd['rmse']     = []
 
+    idx = 0
     dim = len(threeDformulas)
     avgtime = 0.0
-    for idx, f1, f2, f3 in enumerate(threeDformulas):
+    for f1, f2, f3 in threeDformulas:
         start = time.time()
 
         Xdf = None
@@ -834,6 +835,7 @@ def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
         except KeyError as ki:
             print("\""+f1+"\"\n\""+f2+"\"\n\""+f3+"\"\nKey Error") 
         
+        idx += 1
 
 
     return pd.DataFrame.from_dict(fd)
