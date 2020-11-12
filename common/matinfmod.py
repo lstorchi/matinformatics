@@ -337,24 +337,25 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
         newdataframeABC[k+"_A"] = []
         newdataframeABC[k+"_B"] = []
         newdataframeABC[k+"_C"] = []
-    
+
+    labelofatnm = "A"    
     for i in range(lista.shape[0]):
         print("Looking for ", lista[i], listb[i], listc[i])
 
-        if lista[i] not in atomicdata['Name'].values:
+        if lista[i] not in atomicdata[labelofatnm].values:
             print("Cannot find \""+lista[i]+"\" in the list" )
                 
-        if listb[i] not in atomicdata['Name'].values:
+        if listb[i] not in atomicdata[labelofatnm].values:
             print("Cannot find \""+listb[i]+"\" in the list" )
         
-        if listc[i] not in atomicdata['Name'].values:
+        if listc[i] not in atomicdata[labelofatnm].values:
             print("Cannot find \""+listc[i]+"\" in the list" )
                 
-        aelmnt = atomicdata.index[atomicdata['Name'] == \
+        aelmnt = atomicdata.index[atomicdata[labelofatnm] == \
                                   lista[i]].tolist()[0]
-        belmnt = atomicdata.index[atomicdata['Name'] == \
+        belmnt = atomicdata.index[atomicdata[labelofatnm] == \
                                   listb[i]].tolist()[0]
-        celmnt = atomicdata.index[atomicdata['Name'] == \
+        celmnt = atomicdata.index[atomicdata[labelofatnm] == \
                                   listc[i]].tolist()[0]
                                         
         newdataframeABC["Name"].append(str(aelmnt)+ \

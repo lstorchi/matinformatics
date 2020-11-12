@@ -37,6 +37,9 @@ def get_top_abs_correlations(df, n=5):
     return au_corr[0:n]
 
 if __name__ == "__main__":
+
+    ylabel = "Delta"
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-f","--file", help="input xlsx file ", \
                         required=False, default="", type=str)
@@ -61,6 +64,8 @@ if __name__ == "__main__":
                         required=False, default=False)
     parser.add_argument("-s", "--split", \
                         help="Split by a key [default=\"\"]", required=False, default="")
+    parser.add_argument("-y", "--yvalues", \
+                        help="Y label name to be used [default=\"" + ylabel + "\"]", required=False, default="")
     parser.add_argument("-m", "--method", \
                         help="Method used to generate the features [default=1]", required=False, default=1,
                         type=int)
@@ -70,24 +75,16 @@ if __name__ == "__main__":
     xslxfilename = args.file
 
     xls = pd.ExcelFile(xslxfilename)
-    data = pd.read_excel(xls, "param")
+    data = pd.read_excel(xls, "MaterialData")
 
-    y = data["Delta"].values
+    y = data[ylabel].values
     
-    atomicdata = pd.read_excel(xls, "atomicdata")
-    lista = []
-    listb = []
-    listc = []
+    atomicdata = pd.read_excel(xls, "AtomicData")
 
-    for atoms in data["Name"].values:
-        satoms = atoms.split(" ")
-        if len(satoms) != 3:
-            print("error in number of files")
-            exit(1)
+    lista = [x.replace(" ", "") for x in  data["A"].values]
+    listb = [x.replace(" ", "") for x in  data["B"].values]
+    listc = [x.replace(" ", "") for x in  data["C"].values]
 
-        lista.append(satoms[0])
-        listb.append(satoms[1])
-        listc.append(satoms[2])
 
     basicfeatureslist = args.basicfeatures.split(";")
     basicfeaturesdict = {}

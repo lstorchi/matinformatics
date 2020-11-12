@@ -160,17 +160,19 @@ Final run :
 
   # using new atomic DataSet
 
-  $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 1 --variancefilter=0.05 2> stderr.data
+  $ python3 generatefeats.py  -f ./data/NAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 1 --variancefilter=0.05 --useatomname "A" 2> stderr
   $ python3 ffilter.py -f newadata.pkl -n 50
-  $ python3 checksingleformula.py -f ./OAD_gen_1/newadata.pkl --formula "...." -n 1000
+  $ python3 checksingleformula.py -f ./NAD_gen_1/newadata.pkl --formula "...." -n 1000
 
-  $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 2 --variancefilter=0.05 2> stderr.data
+  $ python3 generatefeats.py  -f ./data/NAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 2 --variancefilter=0.05 --useatomname "A" 2> stderr
   $ python3 ffilter.py -f newadata.pkl -n 50
-  $ python3 checksingleformula.py -f ./OAD_gen_2/newadata.pkl --formula "...." -n 1000
+  $ python3 checksingleformula.py -f ./NAD_gen_2/newadata.pkl --formula "...." -n 1000
 
-  $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 3 --variancefilter=0.05 2> stderr.data
+  $ python3 generatefeats.py  -f ./data/NAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 3 --variancefilter=0.05 --useatomname "A" 2> stderr
   $ python3 ffilter.py -f newadata.pkl -n 50
-  $ python3 checksingleformula.py -f ./OAD_gen_3/newadata.pkl --formula "...." -n 1000
+  $ python3 checksingleformula.py -f ./NAD_gen_3/newadata.pkl --formula "...." -n 1000
+
+
 
 
 
