@@ -158,7 +158,7 @@ Final run :
   python3 23Dfeatsexctratand.py -d ./3DFeatures/ -k newadata.pkl --set3Don
 
 
-  # using new atomic DataSet
+# using new atomic DataSet
 
   $ python3 generatefeats.py  -f ./data/NAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 1 --variancefilter=0.05 --useatomname "A" 2> stderr
   $ python3 ffilter.py -f newadata.pkl -n 50
@@ -173,10 +173,17 @@ Final run :
   $ python3 checksingleformula.py -f ./NAD_gen_3/newadata.pkl --formula "...." -n 1000
 
 
-  # For the new data
+# For the new data
   python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 1
+  python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.csv,Delta"
+  python3 checksingleformula.py -f  ./FENAD_gen_1/Delta/newadata.pki -i "./data/FENAD.csv,Delta" -n 1000  --formula "..."
+
+
   python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 2
+  python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.csv,Delta"
+
   python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 3
+  python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.csv,Delta"
 
 
 
