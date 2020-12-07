@@ -173,7 +173,7 @@ Final run :
   $ python3 checksingleformula.py -f ./NAD_gen_3/newadata.pkl --formula "...." -n 1000
 
 
-# For the new data
+# For the new data need to consider also the variancefilter maybe
   python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 1
   python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.csv,Delta"
   python3 checksingleformula.py -f  ./FENAD_gen_1/Delta/newadata.pki -i "./data/FENAD.csv,Delta" -n 1000  --formula "..."
@@ -181,6 +181,7 @@ Final run :
 
   python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 2
   python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.csv,Delta"
+  python3 checksingleformula.py -f ./FENAD_gen_2/Delta/newadata.pkl --formula "..." -i "./data/FENAD.csv,Delta" -n 1000
 
   python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 3
   python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.csv,Delta"
