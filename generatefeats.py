@@ -138,9 +138,8 @@ if __name__ == "__main__":
                         file=sys.stderr)
                 else:
                     newdataframe[formula] = newf
-        
-        if not args.verbose:
-            print()
+                    if not args.verbose:
+                        print()
             
         newatomicdata = pd.DataFrame.from_dict(newdataframe)      
         print ("Produced ", newatomicdata.size , " data features")
