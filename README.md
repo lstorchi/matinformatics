@@ -174,15 +174,24 @@ Final run :
 
 
 # For the new data need to consider also the variancefilter maybe
-  python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 1
+
+  python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 1 -l "PE-AFE"
   python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.csv,PE-AFE"
   python3 checksingleformula.py -f  ./FENAD_gen_1/PEAFE/newadata.pki -i "./data/FENAD.csv,PE-AFE" -n 1000  --formula "..."
 
-  python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 2
+  python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 1 -l "FE-AFE"
+  python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.csv,FE-AFE"
+  python3 checksingleformula.py -f  ./FENAD_gen_1/PEAFE/newadata.pki -i "./data/FENAD.csv,FE-AFE" -n 1000  --formula "..."
+
+ 
+
+
+
+  python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 2 -l "PE-AFE"
   python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.csv,PE-AFE"
   python3 checksingleformula.py -f ./FENAD_gen_2/PEAFE/newadata.pkl --formula "..." -i "./data/FENAD.csv,PE-AFE" -n 1000
 
-  python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 3
+  python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 3 -l "PE-AFE"
   python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.csv,PE-AFE"
   python3 checksingleformula.py -f ./FENAD_gen_3/PEAFE/newadata.pkl --formula "..." -i "./data/FENAD.csv,PE-AFE" -n 1000
 

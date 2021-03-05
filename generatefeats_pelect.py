@@ -74,6 +74,8 @@ if __name__ == "__main__":
                         type=float)
 
     args = parser.parse_args()
+
+    ylabel = args.labelname
     
     xslxfilename = args.file
 
@@ -82,7 +84,7 @@ if __name__ == "__main__":
 
     y = data[ylabel].values
     
-    atomicdata = pd.read_excel(xls, "AtomicData")
+    atomicdata = pd.read_excel(xls, "NAD AtomicData")
 
     lista = [x.replace(" ", "") for x in  data["A"].values]
     listb = [x.replace(" ", "") for x in  data["B"].values]
