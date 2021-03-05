@@ -27,6 +27,34 @@ defaultdevalues = "-0.059, -0.038, -0.033, -0.022,  0.43 ,  0.506,  0.495,  0.46
       "-0.165, -0.095, -0.326, -0.35 , -0.381,  0.808,  0.45 ,  0.264," +\
       " 0.136,  0.087"
 
+#from sklearn.utils import check_arrays
+
+###############################################################################
+
+def mean_absolute_percentage_error(y_true, y_pred):
+    
+    #y_true, y_pred = check_arrays(y_true, y_pred)
+
+    v_med = np.mean(y_true)
+
+    allv = []
+    for i in range(y_true.shape[0]):
+        v_pred = y_pred[i]
+        v_true = y_true[i]
+
+        v = 0.0
+        if v_true == 0.0 and v_pred != 0.0:
+            v = mat.fabs((v_med - v_pred)/v_med)
+        elif v_true == 0.0 and v_pred == 0.0:
+            v = 0.0
+        else:
+            v = math.fabs((v_true - v_pred)/v_true)
+            #print(v, v_true, v_pred)
+
+        allv.append(v)
+
+    return np.mean(allv) * 100
+
 ###############################################################################
 
 from io import StringIO
@@ -597,6 +625,7 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
     fd['rmse']     = []
     fd['percoeff'] = []
     fd['pval']     = []
+    fd['mape']     = []
     
     dataset_keys = dataset_features.keys()[feature_list_indexes]
     for jj,keyv in enumerate(dataset_keys):
@@ -607,6 +636,7 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
                 y_array.reshape(dataset_features[keyv].values.shape[0]))
         
         mse = []
+        mape = []
         for ii in range(numoflr):
             X_train, X_test, y_train, y_test = \
                     train_test_split(X, y_array, test_size=0.1, random_state=ii)
@@ -615,16 +645,21 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
             y_pred = regressor.predict((np.array(X_test)).reshape(-1,1))
             mse.append(mean_squared_error(y_test,y_pred))
 
+            mape.append(mean_absolute_percentage_error(y_test, y_pred))
+
         avg = float(np.average(mse))
 
         progress_bar(jj + 1, len(dataset_keys))
         fd['formulas'].append(keyv)
         fd['index'].append(jj)
         fd['rmse'].append(avg)
+        fd['mape'].append(np.average(mape))
+
         if (math.isnan(val1)):
             fd['percoeff'].append(np.fabs(0.0))
         else:
             fd['percoeff'].append(np.fabs(val1))
+
         fd['pval'].append(val2)
 
     feature_rmse_dataframe = pd.DataFrame.from_dict(fd)

@@ -7,6 +7,7 @@ sys.path.append("./common/")
 
 import matinfmod 
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f","--file", help="input pki file ", \
@@ -100,5 +101,11 @@ if __name__ == "__main__":
                feature_rmse_dataframe[feature_rmse_dataframe['pval'] \
                == pval_min]['formulas'].values[0]
        print("P-Value value: ", pval_min)
+       mape_min = np.min(feature_rmse_dataframe['mape'].values)
+       bestformula_pval = \
+               feature_rmse_dataframe[feature_rmse_dataframe['mape'] \
+               == mape_min]['formulas'].values[0]
+       print("MAPE value: ", mape_min)
+ 
     else:
        print(args.formula, " not present ")
