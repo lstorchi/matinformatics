@@ -71,14 +71,14 @@ if __name__ == "__main__":
                         type=int)
     parser.add_argument("--variancefilter", \
                         help="Remove all the formula with small variance [default=0.0 no filter]", required=False, default=0.0,
-                        type=float
+                        type=float)
 
     args = parser.parse_args()
     
     xslxfilename = args.file
 
     xls = pd.ExcelFile(xslxfilename)
-    data = pd.read_excel(xls, "MaterialData")
+    data = pd.read_excel(xls, "revised_list")
 
     y = data[ylabel].values
     
