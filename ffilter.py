@@ -15,8 +15,6 @@ if __name__ == "__main__":
             required=False, type=str, default="feature_rmse.csv")
     parser.add_argument("-n","--numofiterations", help="Number of LR iterations ", \
             required=False, type=int, default=1000)
-    parser.add_argument("-l","--labels", help="Specify labels comma separated string", \
-            required=False, type=str, default=matinfmod.defaultdevalues)
     parser.add_argument("-i","--inputlabels", help="Specify label name and file comma separated string"+\
             "\n  \"filname.csv,labelcolumnname\"", \
             required=False, type=str, default="")
