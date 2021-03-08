@@ -55,7 +55,7 @@ if __name__ == "__main__":
                         required=False, default=False)
     parser.add_argument("-l", "--labelname", \
                         help="set the label to be used default=Delta",
-                        required=False, default="Delta", type=str)
+                        required=False, default=ylabel, type=str)
     parser.add_argument("-r", "--reducemem", \
                         help="use less memory for correlation", action="store_true",
                         required=False, default=False)
@@ -64,8 +64,6 @@ if __name__ == "__main__":
                         required=False, default=False)
     parser.add_argument("-s", "--split", \
                         help="Split by a key [default=\"\"]", required=False, default="")
-    parser.add_argument("-y", "--yvalues", \
-                        help="Y label name to be used [default=\"" + ylabel + "\"]", required=False, default="")
     parser.add_argument("-m", "--method", \
                         help="Method used to generate the features [default=1]", required=False, default=1,
                         type=int)
