@@ -462,6 +462,7 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
                 deno.append("exp("+features[classe][i]+"_C)")
                 deno.append("("+features[classe][i]+"_C**2)")
                 deno.append("("+features[classe][i]+"_C**3)")
+
     elif method == 2:
         for classe in features:
             dim = len(features[classe])
@@ -507,6 +508,7 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
                                 numer.append(f + " - " + s)
                                 deno.append(f + " + " + s)
                                 deno.append(f + " + " + s)
+
     elif method == 3:
         for classe in features:
             dim = len(features[classe])
@@ -563,10 +565,17 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
         for d in deno:
             if d != n:
                 if method == 3:
+
+                    atomfound = 0
                     for tof in ["_A", "_B", "_C"]:
                         if d.find(tof) >= 0:
-                            if n.find(tof) < 0:
-                                formulas.append("("+n+")/("+d+")")
+                            atomfound += 1
+                        else:
+                            if n.find(tof) >= 0:
+                                atomfound += 1
+                    
+                    if atomfound == 3:
+                        formulas.append("("+n+")/("+d+")")
                 else:
                     formulas.append("("+n+")/("+d+")")
             
