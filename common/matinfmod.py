@@ -44,7 +44,7 @@ def mean_absolute_percentage_error(y_true, y_pred):
 
         v = 0.0
         if v_true == 0.0 and v_pred != 0.0:
-            v = mat.fabs((v_med - v_pred)/v_med)
+            v = math.fabs((v_med - v_pred)/v_med)
         elif v_true == 0.0 and v_pred == 0.0:
             v = 0.0
         else:
