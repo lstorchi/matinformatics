@@ -404,7 +404,7 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
     numer = []
     deno = []
 
-    if method == 1:
+    if method == 1 or method == 3:
         for classe in features:
             dim = len(features[classe])
         
@@ -439,7 +439,7 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
         
             for i in range(len(ftuple)):
                 first = ftuple[i]
-                for j in range(i, len(ftuple)):
+                for j in range(i+1, len(ftuple)):
                     second = ftuple[j]
                     for f in first:
                         for s in second:
@@ -499,7 +499,7 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
         
             for i in range(len(ftuple)):
                 first = ftuple[i]
-                for j in range(i, len(ftuple)):
+                for j in range(i+1, len(ftuple)):
                     second = ftuple[j]
                     for f in first:
                         for s in second:
@@ -509,7 +509,7 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
                                 deno.append(f + " + " + s)
                                 deno.append(f + " + " + s)
 
-    elif method == 3:
+    elif method == 4: # not used 
         for classe in features:
             dim = len(features[classe])
         
@@ -564,7 +564,7 @@ def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
     for n in numer:
         for d in deno:
             if d != n:
-                if method == 3:
+                if method == 3 or method == 4:
 
                     atomfound = 0
                     for tof in ["_A", "_B", "_C"]:
