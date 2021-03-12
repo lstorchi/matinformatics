@@ -183,4 +183,7 @@ Final run :
   python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.csv,FE-AFE"
   python3 checksingleformula.py -f  ./FENAD_gen_1/PEAFE/newadata.pkl -i "./data/FENAD.csv,FE-AFE" -n 1000  --formula "..."
 
+# After last update
 
+  python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 3 -l "PE-AFE" --sheetnames "list_compatible_OAD,OAD AtomcData"
+  python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.xlsx,PE-AFE,list_compatible_OAD"

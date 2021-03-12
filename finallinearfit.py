@@ -11,13 +11,17 @@ sys.path.append("./common/")
 import matinfmod 
 
 fname = "./FENAD_gen_1/PEAFE/newadata.pkl"
+formula = "(EA_B - sqrt(fabs(IP_C)))/(exp(rs_A))"
+excelfile = "./data/FENAD.xlsx"
+sheetname = "list_compatible_OAD"
+labelnam = "PE-AFE"
 
 df = pd.read_pickle(fname)
 
-x = df["(EA_B - sqrt(fabs(IP_C)))/(exp(rs_A))"].values
+x = df[formula].values
 
-data = pd.read_csv("./data/FENAD.csv")
-y = data["PE-AFE"].values
+data = pd.read_excel(excelfile, sheetname)
+y = data[labelname].values
 labels = data["Name"]
 
 print(y.shape, x.shape)
