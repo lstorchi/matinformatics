@@ -53,6 +53,8 @@ if __name__ == "__main__":
     parser.add_argument("-v", "--verbose", \
                         help="verbose mode", action="store_true",
                         required=False, default=False)
+    parser.add_argument("--sheetnames", help="Specify sheetnames , comma seprated, matirialdata,atomicdata", \
+                        required=True, default="", type=str)
     parser.add_argument("-l", "--labelname", \
                         help="set the label to be used default=Delta",
                         required=False, default=ylabel, type=str)
@@ -77,12 +79,21 @@ if __name__ == "__main__":
     
     xslxfilename = args.file
 
+    sheetnames = args.sheetnames 
+
+    if len(sheetnames.split(",") != 2):
+        print("Error in sheetnames option")
+        exit(1)
+    
+    matialsheetname = sheetnames.split(",")[0]
+    atomicdatasheetname = sheetnames.split(",")[1]
+
     xls = pd.ExcelFile(xslxfilename)
-    data = pd.read_excel(xls, "revised_list")
+    data = pd.read_excel(xls, matialsheetname)
 
     y = data[ylabel].values
     
-    atomicdata = pd.read_excel(xls, "NAD AtomicData")
+    atomicdata = pd.read_excel(xls, atomicdatasheetname)
 
     lista = [x.replace(" ", "") for x in  data["A"].values]
     listb = [x.replace(" ", "") for x in  data["B"].values]

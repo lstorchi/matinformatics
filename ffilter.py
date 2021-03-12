@@ -15,8 +15,8 @@ if __name__ == "__main__":
             required=False, type=str, default="feature_rmse.csv")
     parser.add_argument("-n","--numofiterations", help="Number of LR iterations ", \
             required=False, type=int, default=1000)
-    parser.add_argument("-i","--inputlabels", help="Specify label name and file comma separated string"+\
-            "\n  \"filname.csv,labelcolumnname\"", \
+    parser.add_argument("-i","--inputlabels", help="Specify label name, file and sheetname comma separated string"+\
+            "\n  \"filname.xlsx,labelcolumnname,sheetname\"", \
             required=False, type=str, default="")
     parser.add_argument("-s", "--split", \
             help="Split by a key [default=\"\"]", required=False, default="")
@@ -39,10 +39,11 @@ if __name__ == "__main__":
                 exit(1)
     else:
         sline = args.inputlabels.split(",")
-        if len(sline) != 2:
+        if len(sline) != 3:
             print("Error in --inputlabels option")
             exit(1)
-        data = pd.read_csv(sline[0])
+        
+        data = pd.read_excel(sline[0], sline[2])
 
         if args.split != "":
             ssplit = args.split.split(";")
