@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     sheetnames = args.sheetnames 
 
-    if len(sheetnames.split(",") != 2):
+    if len(sheetnames.split(",")) != 2:
         print("Error in sheetnames option")
         exit(1)
     
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         name = newb[0]
         
         if not (name in atomicdata.columns):
-            print("Error feature not present")
+            print("Error feature ", name," not present")
             exit(1)
             
         if not (classe in basicfeaturesdict):
