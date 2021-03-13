@@ -10,11 +10,11 @@ sys.path.append("./common/")
 
 import matinfmod 
 
-fname = "./FENAD_gen_1/PEAFE/newadata.pkl"
-formula = "(EA_B - sqrt(fabs(IP_C)))/(exp(rs_A))"
+fname = "./FENAD_gen_1/list_compatible_OAD/PEAFE/newadata.pkl"
+formula = "(rs_A**3 - exp(rp_B))/((EA_B**3))"
 excelfile = "./data/FENAD.xlsx"
 sheetname = "list_compatible_OAD"
-labelnam = "PE-AFE"
+labelname = "PE-AFE"
 
 df = pd.read_pickle(fname)
 
@@ -54,5 +54,11 @@ for x,y in zip(y_pred,y):
 
 #plt.xticks(())
 #plt.yticks(())
+
+plt.title(sheetname + " " + str(regressor.coef_) + \
+        " * " + formula + " + " + str(regressor.intercept_))
+
+plt.xlabel("Predicted values " + labelname)
+plt.ylabel("Real values " + labelname)
 
 plt.show()
