@@ -77,6 +77,9 @@ if __name__ == "__main__":
         label = data[sline[1]]
         DE_array = label.values
 
+    fname = "finalselectedformulas.txt"
+    fp = open(fname, "w")
+
     print("I will process :", len(df.columns), " features " )
 
     feature_rmse_dataframe = \
@@ -93,6 +96,8 @@ if __name__ == "__main__":
     print(" Min LR value: ", minvalue_lr)
     print("   Related formula: ", bestformula_lr)
 
+    fp.write(bestformula_lr + "\n")
+
     pearson_max = np.max(feature_rmse_dataframe['percoeff'].values)
     bestformula_pearson = \
             feature_rmse_dataframe[feature_rmse_dataframe['percoeff'] \
@@ -102,6 +107,8 @@ if __name__ == "__main__":
     print(" Max Pearson R value: ", pearson_max)
     print("   Related formula: ", bestformula_pearson)
 
+    fp.write(bestformula_lr + "\n")
+
     pval_min = np.min(feature_rmse_dataframe['pval'].values)
     bestformula_pval = \
             feature_rmse_dataframe[feature_rmse_dataframe['pval'] \
@@ -110,3 +117,7 @@ if __name__ == "__main__":
     print("")
     print(" Min P-Value value: ", pval_min)
     print("   Related formula: ", bestformula_pval)
+
+    fp.write(bestformula_pval + "\n")
+
+    fp.close()

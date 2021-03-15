@@ -10,10 +10,10 @@ sys.path.append("./common/")
 
 import matinfmod 
 
-fname = "./FENAD_gen_1/list_compatible_OAD/PEAFE/newadata.pkl"
-formula = "(rs_A**3 - exp(rp_B))/((EA_B**3))"
+fname = "./FENAD_gen_1/list_higher_Pauling_electronega/PEAFE/newadata.pkl"
+formula = "(sqrt(fabs(HOMO_C)) - sqrt(fabs(LUMO_B)))/(exp(rs_A))"
 excelfile = "./data/FENAD.xlsx"
-sheetname = "list_compatible_OAD"
+sheetname = "list_higher_Pauling_electronega"
 labelname = "PE-AFE"
 
 df = pd.read_pickle(fname)
