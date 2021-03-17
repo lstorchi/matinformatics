@@ -188,6 +188,7 @@ Final run :
   python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 1 -l "PE-AFE" --sheetnames "list_compatible_OAD,OAD AtomcData" 
   python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.xlsx,PE-AFE,list_compatible_OAD"
   python3 ./checksingleformula.py -i "./data/FENAD.xlsx,PE-AFE,list_compatible_OAD" -n 1000 -f ./newadata.pkl
+  python3 finallinearfit.py 
 
   python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 3 -l "PE-AFE" --sheetnames "list_compatible_OAD,OAD AtomcData"
   python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.xlsx,PE-AFE,list_compatible_OAD"
