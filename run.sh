@@ -16,4 +16,4 @@ export ATOMICSHEETNAME=$5
 python3 generatefeats_pelect.py  -f $DATAFILE -b $ATOMICFEATURES -j -m 1 -l $LABEL \
   --sheetnames "$DATASHEETNAME,$ATOMICSHEETNAME"
 python3 ffilter.py -f newadata.pkl -n 50 -i "$DATAFILE,$LABEL,$DATASHEETNAME"
-python3 check singleformula.py -n 1000 -f newadata.pkl  -i "$DATAFILE,$LABEL,$DATASHEETNAME"
+python3 checksingleformula.py -n 1000 -f newadata.pkl  -i "$DATAFILE,$LABEL,$DATASHEETNAME"
