@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export METHOD = 1
+export METHOD=1
 
 if [ "$#" -ne 6 ];
 then
