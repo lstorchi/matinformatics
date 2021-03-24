@@ -31,7 +31,7 @@ if __name__ == "__main__":
     parser.add_argument("-s","--sortidx", help="Sorting index [default=percoeff]", \
             required=False, type=str, default="percoeff")
     parser.add_argument("-o","--output", help="output csv file ", \
-            required=False, type=str, default="3Dfeature_rmse.csv")
+            required=False, type=str, default="3Dfeature_mse.csv")
     parser.add_argument("-r","--range", help="Specify a range of 1D formulas to use " + \
             "default=\"0:-1\" i.e. all", required=False, type=str, default="0:-1")
     parser.add_argument("-v","--verbose", help="Dump extra files", 
@@ -171,19 +171,19 @@ if __name__ == "__main__":
 
         if len(threeDformulas) > 0:
 
-          generatedrmse = matinfmod.feature3D_check_lr(threeDformulas, 
+          generatedmse = matinfmod.feature3D_check_lr(threeDformulas, 
                   featuresvalue, DE_array, args.numofiterations, 
                   args.showiter)
           
-          if generatedrmse is None:
+          if generatedmse is None:
               print("Error in feature3D_check_lr")
               exit(1)
           
-          generatedrmse.to_csv(args.output + "_" + args.range.replace(":", "_"))
+          generatedmse.to_csv(args.output + "_" + args.range.replace(":", "_"))
           
-          minvalue_lr = np.min(generatedrmse['rmse'].values)
+          minvalue_lr = np.min(generatedmse['mse'].values)
           bestformula_lr = \
-              generatedrmse[generatedrmse['rmse'] \
+              generatedmse[generatedmse['mse'] \
               == minvalue_lr]['formulas'].values[0]
           
           print("")

@@ -631,7 +631,7 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
 
     fd['formulas'] = []
     fd['index']    = []
-    fd['rmse']     = []
+    fd['mse']     = []
     fd['percoeff'] = []
     fd['pval']     = []
     fd['mape']     = []
@@ -661,7 +661,7 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
         progress_bar(jj + 1, len(dataset_keys))
         fd['formulas'].append(keyv)
         fd['index'].append(jj)
-        fd['rmse'].append(avg)
+        fd['mse'].append(avg)
         fd['mape'].append(np.average(mape))
 
         if (math.isnan(val1)):
@@ -671,12 +671,12 @@ def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
 
         fd['pval'].append(val2)
 
-    feature_rmse_dataframe = pd.DataFrame.from_dict(fd)
-    fd2 = feature_rmse_dataframe.copy()
+    feature_mse_dataframe = pd.DataFrame.from_dict(fd)
+    fd2 = feature_mse_dataframe.copy()
     
     print("")
     
-    return feature_rmse_dataframe
+    return feature_mse_dataframe
 
 ###############################################################################
 
@@ -719,7 +719,7 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
     fd = dict()
 
     fd['formulas'] = []
-    fd['rmse']     = []
+    fd['mse']     = []
 
     if nt == 1:
 
@@ -744,7 +744,7 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
             avg = float(np.average(mse))
 
             fd['formulas'].append((f1, f2))
-            fd['rmse'].append(avg)
+            fd['mse'].append(avg)
 
             end = time.time()
 
@@ -790,7 +790,7 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
         
         for res in list(results):
             fd['formulas'].append((res[0], res[1]))
-            fd['rmse'].append(res[2])
+            fd['mse'].append(res[2])
 
     return pd.DataFrame.from_dict(fd)
 
@@ -837,7 +837,7 @@ def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
     fd = dict()
 
     fd['formulas'] = []
-    fd['rmse']     = []
+    fd['mse']     = []
 
     idx = 0
     dim = len(threeDformulas)
@@ -865,7 +865,7 @@ def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
             avg = float(np.average(mse))
             
             fd['formulas'].append((f1, f2, f3))
-            fd['rmse'].append(avg)
+            fd['mse'].append(avg)
             
             end = time.time()
             

@@ -11,8 +11,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f","--file", help="input pki file ", \
             required=True, type=str)
-    parser.add_argument("-o","--output", help="output csv file [default=feature_rmse.csv]", \
-            required=False, type=str, default="feature_rmse.csv")
+    parser.add_argument("-o","--output", help="output csv file [default=feature_mse.csv]", \
+            required=False, type=str, default="feature_mse.csv")
     parser.add_argument("-n","--numofiterations", help="Number of LR iterations ", \
             required=False, type=int, default=1000)
     parser.add_argument("-i","--inputlabels", help="Specify label name, file and sheetname comma separated string"+\
@@ -82,15 +82,15 @@ if __name__ == "__main__":
 
     print("I will process :", len(df.columns), " features " )
 
-    feature_rmse_dataframe = \
+    feature_mse_dataframe = \
             matinfmod.feature_check_lr (range(0, len(df.columns)), df, \
             DE_array, args.numofiterations)
 
-    feature_rmse_dataframe.to_csv(args.output)
+    feature_mse_dataframe.to_csv(args.output)
 
-    minvalue_lr = np.min(feature_rmse_dataframe['rmse'].values)
+    minvalue_lr = np.min(feature_mse_dataframe['mse'].values)
     bestformula_lr = \
-            feature_rmse_dataframe[feature_rmse_dataframe['rmse'] \
+            feature_mse_dataframe[feature_mse_dataframe['mse'] \
             == minvalue_lr]['formulas'].values[0]
 
     print(" Min LR value: ", minvalue_lr)
@@ -98,9 +98,9 @@ if __name__ == "__main__":
 
     fp.write(bestformula_lr + "\n")
 
-    pearson_max = np.max(feature_rmse_dataframe['percoeff'].values)
+    pearson_max = np.max(feature_mse_dataframe['percoeff'].values)
     bestformula_pearson = \
-            feature_rmse_dataframe[feature_rmse_dataframe['percoeff'] \
+            feature_mse_dataframe[feature_mse_dataframe['percoeff'] \
             == pearson_max]['formulas'].values[0]
 
     print("")
@@ -109,9 +109,9 @@ if __name__ == "__main__":
 
     fp.write(bestformula_lr + "\n")
 
-    pval_min = np.min(feature_rmse_dataframe['pval'].values)
+    pval_min = np.min(feature_mse_dataframe['pval'].values)
     bestformula_pval = \
-            feature_rmse_dataframe[feature_rmse_dataframe['pval'] \
+            feature_mse_dataframe[feature_mse_dataframe['pval'] \
             == pval_min]['formulas'].values[0]
 
     print("")

@@ -30,7 +30,7 @@ if __name__ == "__main__":
     parser.add_argument("-s","--sortidx", help="Sorting index [default=percoeff]", \
             required=False, type=str, default="percoeff")
     parser.add_argument("-o","--output", help="output csv file ", \
-            required=False, type=str, default="2Dfeature_rmse.csv")
+            required=False, type=str, default="2Dfeature_mse.csv")
     parser.add_argument("-N","--nt", help="Specify Number of Threads or Processes to use", \
             required=False, type=int, default=1)
     parser.add_argument("-r","--range", help="Specify a range of 1D formulas to use " + \
@@ -201,19 +201,19 @@ if __name__ == "__main__":
 
         if len(twoDformulas) > 0:
 
-          generatedrmse = matinfmod.feature2D_check_lr(twoDformulas, 
+          generatedmse = matinfmod.feature2D_check_lr(twoDformulas, 
                   featuresvalue, DE_array, args.nt, args.numofiterations, 
                   args.showiter)
           
-          if generatedrmse is None:
+          if generatedmse is None:
               print("Error in feature2D_check_lr")
               exit(1)
           
-          generatedrmse.to_csv(args.output + "_" + args.range.replace(":", "_"))
+          generatedmse.to_csv(args.output + "_" + args.range.replace(":", "_"))
           
-          minvalue_lr = np.min(generatedrmse['rmse'].values)
+          minvalue_lr = np.min(generatedmse['mse'].values)
           bestformula_lr = \
-              generatedrmse[generatedrmse['rmse'] \
+              generatedmse[generatedmse['mse'] \
               == minvalue_lr]['formulas'].values[0]
           
           print("")

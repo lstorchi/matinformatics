@@ -101,17 +101,17 @@ if __name__ == "__main__":
     print("Start LR...")
 
     if args.set3Don :
-        generatedrmse = matinfmod.feature3D_check_lr(features, 
+        generatedmse = matinfmod.feature3D_check_lr(features, 
                   featuresvalue, DE_array, args.numofiterations, 
                   True, goodfiles)
     else:
-        generatedrmse = matinfmod.feature2D_check_lr(features, 
+        generatedmse = matinfmod.feature2D_check_lr(features, 
                   featuresvalue, DE_array, 1, args.numofiterations, 
                   True, goodfiles)
  
 
-    minvalue_lr = np.min(generatedrmse['rmse'].values)
-    bestformula_lr = generatedrmse[generatedrmse['rmse'] \
+    minvalue_lr = np.min(generatedmse['mse'].values)
+    bestformula_lr = generatedmse[generatedmse['mse'] \
                   == minvalue_lr]['formulas'].values[0]
           
     print("")

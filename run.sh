@@ -20,4 +20,4 @@ python3 generatefeats_pelect.py  -f $DATAFILE -b $ATOMICFEATURES -j -m $METHOD -
   --sheetnames "$DATASHEETNAME,$ATOMICSHEETNAME"
 python3 ffilter.py -f newadata.pkl -n 50 -i "$DATAFILE,$LABEL,$DATASHEETNAME"
 python3 checksingleformula.py -n 1000 -f newadata.pkl  -i "$DATAFILE,$LABEL,$DATASHEETNAME"
-python3 ./extractNformulas.py -f feature_rmse.csv
+python3 ./extractNformulas.py -f feature_mse.csv

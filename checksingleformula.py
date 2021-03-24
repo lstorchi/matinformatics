@@ -44,30 +44,30 @@ if __name__ == "__main__":
         formula = formula.replace("\n", "")
 
         if  formula in list(df.columns):
-            feature_rmse_dataframe = \
+            feature_mse_dataframe = \
                    matinfmod.feature_check_lr ([list(df.columns).index(formula)], df, \
                    lbl_array, args.numofiterations)
 
             print(formula)
    
-            minvalue_lr = np.min(feature_rmse_dataframe['rmse'].values)
+            minvalue_lr = np.min(feature_mse_dataframe['mse'].values)
             bestformula_lr = \
-                       feature_rmse_dataframe[feature_rmse_dataframe['rmse'] \
+                       feature_mse_dataframe[feature_mse_dataframe['mse'] \
                        == minvalue_lr]['formulas'].values[0]
             print("LR value: ", minvalue_lr)
-            pearson_max = np.max(feature_rmse_dataframe['percoeff'].values)
+            pearson_max = np.max(feature_mse_dataframe['percoeff'].values)
             bestformula_pearson = \
-                feature_rmse_dataframe[feature_rmse_dataframe['percoeff'] \
+                feature_mse_dataframe[feature_mse_dataframe['percoeff'] \
                 == pearson_max]['formulas'].values[0]
             print("Pearson R value: ", pearson_max)
-            pval_min = np.min(feature_rmse_dataframe['pval'].values)
+            pval_min = np.min(feature_mse_dataframe['pval'].values)
             bestformula_pval = \
-                 feature_rmse_dataframe[feature_rmse_dataframe['pval'] \
+                 feature_mse_dataframe[feature_mse_dataframe['pval'] \
                   == pval_min]['formulas'].values[0]
             print("P-Value value: ", pval_min)
-            mape_min = np.min(feature_rmse_dataframe['mape'].values)
+            mape_min = np.min(feature_mse_dataframe['mape'].values)
             bestformula_pval = \
-               feature_rmse_dataframe[feature_rmse_dataframe['mape'] \
+               feature_mse_dataframe[feature_mse_dataframe['mape'] \
                == mape_min]['formulas'].values[0]
             print("MAPE value: ", mape_min)
         else:

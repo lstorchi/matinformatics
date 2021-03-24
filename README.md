@@ -10,10 +10,10 @@ Run using separate Data and AtomicData
   python3 ffilter.py -f newadata.pkl -n 50
 
   # generate 2D features starting from the best 1D and select the best ones
-  python3 generate2Dfeats.py -f feature_rmse.csv -n 50 -k newadata.pkl --numoffeatures 1000
+  python3 generate2Dfeats.py -f feature_mse.csv -n 50 -k newadata.pkl --numoffeatures 1000
 
   # generate 3D features starting from the best 1D and select the best ones
-  python3 generate3Dfeats.py  -f feature_rmse.csv -n 50 -k newadata.pkl --numoffeatures 10
+  python3 generate3Dfeats.py  -f feature_mse.csv -n 50 -k newadata.pkl --numoffeatures 10
 
   # collect output and 
   python3 23Dfeatsexctratand.py -d ./2DFeatures/ -k newadata.pkl
@@ -37,7 +37,7 @@ Run using a single Dataset no Atomic Data
 
   for id in  33 194 227 167 12 206
   do 
-    python3 ffilter.py -f newadataspacegroup_"$id".pkl -i "./data/V_fu_added.csv,formation_energy_ev_natom" --split "spacegroup;$id" -o feature_rmse_"$id".csv > out_ff_"$id" &
+    python3 ffilter.py -f newadataspacegroup_"$id".pkl -i "./data/V_fu_added.csv,formation_energy_ev_natom" --split "spacegroup;$id" -o feature_mse_"$id".csv > out_ff_"$id" &
   done
 
 Running using our data (three atoms):
@@ -63,7 +63,7 @@ Last Run using new  data:
   # 2D features on several machines
   for name in lista machine names:
   do
-      scp  newadata.pkl newadata.csv feature_rmse.csv feature_rmse.csv formulaslist.txt $machinename:matinformatics/
+      scp  newadata.pkl newadata.csv feature_mse.csv feature_mse.csv formulaslist.txt $machinename:matinformatics/
   done
 
   # in the script ./run_mutiple.sh set PROGNAME=generate2Dfeats.py, if we want to scan up to 10000 and use 3 processors
@@ -80,20 +80,20 @@ Last Run using new  data:
   # after I can check the estimated time and adjust:
   ./checktime.sh 
 
-  # then collect all out_* err_* and 2Dfeature_rmse.csv_* in a single machine and dir and run  
+  # then collect all out_* err_* and 2Dfeature_mse.csv_* in a single machine and dir and run  
   python3 23Dfeatsexctratand.py -d ./2DFeatures/ -k newadata.pkl
 
   # 3D features on several machines
   for name in lista machine names:
   do
-      scp  newadata.pkl newadata.csv feature_rmse.csv feature_rmse.csv formulaslist.txt $machinename:matinformatics/
+      scp  newadata.pkl newadata.csv feature_mse.csv feature_mse.csv formulaslist.txt $machinename:matinformatics/
   done
 
   # in the script ./run_mutiple.sh set PROGNAME=generate3Dfeats.py, if we want to scan up to 10000 and use 3 processors
   # the script wil suggest the next run
   ./run_mutiple.sh 100 0 3 0 10000
  
-  # and after we can proceed as for the 2D features, collecting all out_* err_* and 2Dfeature_rmse.csv_* in a single 
+  # and after we can proceed as for the 2D features, collecting all out_* err_* and 2Dfeature_mse.csv_* in a single 
   # machine and dir and run
   python3 23Dfeatsexctratand.py -d ./3DFeatures/ -k newadata.pkl --set3Don
 
@@ -115,7 +115,7 @@ Final run :
   # 2D features on several machines
   for name in lista machine names:
   do
-      scp  newadata.pkl newadata.csv feature_rmse.csv feature_rmse.csv formulaslist.txt $machinename:matinformatics/
+      scp  newadata.pkl newadata.csv feature_mse.csv feature_mse.csv formulaslist.txt $machinename:matinformatics/
   done
 
   # in the script ./run_mutiple.sh set PROGNAME=generate2Dfeats.py, if we want to scan up to 10000 and use 3 processors
@@ -141,7 +141,7 @@ Final run :
   ./run_mutiple.sh 50 31 3 4700 5000
   ./run_mutiple.sh 50 35 3 4900 5000
 
-  # then collect all out_* err_* and 2Dfeature_rmse.csv_* in a single machine and dir and run  
+  # then collect all out_* err_* and 2Dfeature_mse.csv_* in a single machine and dir and run  
   python3 23Dfeatsexctratand.py -d ./2DFeatures/ -k newadata.pkl
 
   # similarly I run the 3D after modifying the run_mutiple.sh script, specifically I used

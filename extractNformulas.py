@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     df = pd.read_csv(filename)
 
-    df = df.sort_values('rmse')
+    df = df.sort_values('mse')
 
     selected = df.head(args.n)
 
