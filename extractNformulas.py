@@ -16,6 +16,8 @@ if __name__ == "__main__":
             required=False, type=int, default=10)
     parser.add_argument("--abc", help="extract formula having A B C ", \
             required=False, action="store_true", default=False)
+    parser.add_argument("--correlation", help="extract by correlation insteda of MSE ", \
+            required=False, action="store_true", default=False)
 
     args = parser.parse_args()
     
@@ -28,7 +30,10 @@ if __name__ == "__main__":
         dfb = dfa[dfa['formulas'].str.contains("_B")]
         df = dfb[dfb['formulas'].str.contains("_C")]
 
-    df = df.sort_values('rmse')
+    if not args.correlation:
+        df = df.sort_values('rmse')
+    else:
+        df = df.sort_values('percoeff', ascending=False)
 
     selected = df.head(args.n)
 
@@ -37,4 +42,8 @@ if __name__ == "__main__":
     pd.set_option('display.width', None)
     pd.set_option('display.max_colwidth', -1)
 
-    print(selected["formulas"])
+    if not args.correlation:
+        print(selected[["formulas", "rmse"]])
+    else:
+        print(selected[["formulas", "percoeff"]])
+
