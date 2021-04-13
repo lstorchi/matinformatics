@@ -336,6 +336,65 @@ def generate_formulas_AB (features, atomicdata, lista, listb, method = 1):
                                 numertype.append(classe)
                                 numer.append(f + " - " + s)
                                 numertype.append(classe)
+    elif method == 4:
+
+        numer = []
+        numertype = []
+        
+        for classe in features:
+            dim = len(features[classe])
+            
+            f1 = []
+            f2 = []
+            f3 = []
+            f4 = []
+            f5 = []
+            for i in range(dim):
+                
+                f1.append(features[classe][i] + "_A")
+                f1.append(features[classe][i] + "_B")
+                
+                f2.append(features[classe][i] + "_A**2")
+                f2.append(features[classe][i] + "_B**2")
+                
+                f3.append(features[classe][i] + "_A**3")
+                f3.append(features[classe][i] + "_B**3")
+                
+                f4.append("sqrt(fabs("+features[classe][i] + "_A))")
+                f4.append("sqrt(fabs("+features[classe][i] + "_B))")
+                
+                f5.append("exp("+features[classe][i] + "_A)")
+                f5.append("exp("+features[classe][i] + "_B)")
+    
+            
+            ftuple = (f1, f2, f3, f4, f5)
+            
+            for i in range(len(ftuple)):
+                first = ftuple[i]
+                for j in range(len(ftuple)):
+                    second = ftuple[j]
+                    for f in first:
+                        for s in second:
+                            if f != s:
+
+                                if (i == 0 and j == 0)  or \
+                                    (i == 1 and j == 1)  or \
+                                    (i == 2 and j == 2):                                        
+                                    numer.append(f + " + " + s)
+                                    numertype.append(classe)
+                                    numer.append(f + " - " + s)
+                                    numertype.append(classe)
+                                if (i == 3 and j == 3)  or \
+                                    (i == 4 and j == 4):
+                                    numer.append(f + " * " + s)
+                                    numer.append(f + " / " + s)
+                                    numer.append(s + " / " + f)
+                                    numertype.append(classe)
+                                if (i == 0 and j == 3)  or \
+                                    (i == 1 and j == 3)  or \
+                                    (i == 2 and j == 3):
+                                    numer.append(f + " * " + s)
+                                    numertype.append(classe)
 
         for idxn in range(len(numer)):
             for idxd in range(idxn+1, len(numer)):
