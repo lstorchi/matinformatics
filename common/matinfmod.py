@@ -371,7 +371,7 @@ def generate_formulas_AB (features, atomicdata, lista, listb, method = 1):
             
             for i in range(len(ftuple)):
                 first = ftuple[i]
-                for j in range(len(ftuple)):
+                for j in range(i, len(ftuple)):
                     second = ftuple[j]
                     for f in first:
                         for s in second:
