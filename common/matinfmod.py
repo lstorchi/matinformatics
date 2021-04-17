@@ -704,11 +704,13 @@ def feature_check_fullsetmse(feature_list_indexes, dataset_features, y_array):
         
         regressor = LinearRegression()
         regressor.fit((np.array(X)).reshape(-1,1), y_array)
+        y_pred = regressor.predict((np.array(X)).reshape(-1,1))
+
         mse = mean_squared_error(y_array, y_pred)
         mape = mean_absolute_percentage_error(y_array, y_pred)
 
         progress_bar(jj + 1, len(dataset_keys))
-        
+
         fd['formulas'].append(keyv)
         fd['index'].append(jj)
         fd['mse'].append(avg)
