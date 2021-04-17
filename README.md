@@ -109,6 +109,9 @@ Final run :
 
   $ python3 generatefeats.py  -f ./data/OAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMOKS[3];LUMOKS[3]" -j -m 3 --variancefilter=0.05 2> stderr.data
   $ python3 ffilter.py -f newadata.pkl -n 50
+  
+  To use full MSE
+  $ python3 ffilter.py -f newadata.pkl -u -i "./data/Data.xlsx,DE,MaterialData"
   $ python3 checksingleformula.py -f ./OAD_gen_3/newadata.pkl --formula "...." -n 1000
 
 
