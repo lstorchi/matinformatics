@@ -683,6 +683,53 @@ def get_new_feature (indatframe, formula):
 
 ###############################################################################
 
+def feature_check_fullsetmse(feature_list_indexes, dataset_features, y_array):
+
+    fd = dict()
+
+    fd['formulas'] = []
+    fd['index']    = []
+    fd['mse']     = []
+    fd['percoeff'] = []
+    fd['pval']     = []
+    fd['mape']     = []
+    
+    dataset_keys = dataset_features.keys()[feature_list_indexes]
+    for jj,keyv in enumerate(dataset_keys):
+        X = dataset_features[keyv]
+
+        val1, val2 = \
+                scipy.stats.pearsonr(dataset_features[keyv].values, \
+                y_array.reshape(dataset_features[keyv].values.shape[0]))
+        
+        regressor = LinearRegression()
+        regressor.fit((np.array(X)).reshape(-1,1), y_array)
+        mse = mean_squared_error(y_array, y_pred)
+        mape = mean_absolute_percentage_error(y_array, y_pred)
+
+        progress_bar(jj + 1, len(dataset_keys))
+        
+        fd['formulas'].append(keyv)
+        fd['index'].append(jj)
+        fd['mse'].append(avg)
+        fd['mape'].append(np.average(mape))
+
+        if (math.isnan(val1)):
+            fd['percoeff'].append(np.fabs(0.0))
+        else:
+            fd['percoeff'].append(np.fabs(val1))
+
+        fd['pval'].append(val2)
+
+    feature_mse_dataframe = pd.DataFrame.from_dict(fd)
+    fd2 = feature_mse_dataframe.copy()
+    
+    print("")
+    
+    return feature_mse_dataframe
+
+###############################################################################
+
 def feature_check_lr(feature_list_indexes, dataset_features, y_array, \
         numoflr = 1000):
 

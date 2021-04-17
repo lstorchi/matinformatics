@@ -20,6 +20,8 @@ if __name__ == "__main__":
             required=False, type=str, default="")
     parser.add_argument("-s", "--split", \
             help="Split by a key [default=\"\"]", required=False, default="")
+    parser.add_argument("-u", "--usefullsetmse", \
+            help="Sort using the fullset MSE instead of the random splitting", action="store_true", default=False)
     
     args = parser.parse_args()
     
@@ -82,7 +84,14 @@ if __name__ == "__main__":
 
     print("I will process :", len(df.columns), " features " )
 
-    feature_mse_dataframe = \
+    feature_mse_dataframe = None
+
+    if args.usefullsetmse:
+        feature_mse_dataframe = \
+            matinfmod.feature_check_fullsetmse (range(0, len(df.columns)), 
+                df, DE_array)
+    else:
+        feature_mse_dataframe = \
             matinfmod.feature_check_lr (range(0, len(df.columns)), df, \
             DE_array, args.numofiterations)
 
