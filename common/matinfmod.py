@@ -713,7 +713,7 @@ def feature_check_fullsetmse(feature_list_indexes, dataset_features, y_array):
 
         fd['formulas'].append(keyv)
         fd['index'].append(jj)
-        fd['mse'].append(avg)
+        fd['mse'].append(mse)
         fd['mape'].append(np.average(mape))
 
         if (math.isnan(val1)):
