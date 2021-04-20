@@ -31,7 +31,7 @@ if __name__ == "__main__":
         df = dfb[dfb['formulas'].str.contains("_C")]
 
     if not args.correlation:
-        df = df.sort_values('rmse')
+        df = df.sort_values('mse')
     else:
         df = df.sort_values('percoeff', ascending=False)
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     pd.set_option('display.max_colwidth', -1)
 
     if not args.correlation:
-        print(selected[["formulas", "rmse"]])
+        print(selected[["formulas", "mse"]])
     else:
         print(selected[["formulas", "percoeff"]])
 
