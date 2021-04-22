@@ -683,13 +683,13 @@ def get_new_feature (indatframe, formula):
 
 ###############################################################################
 
-def feature_check_fullsetmse(feature_list_indexes, dataset_features, y_array):
+def feature_check_fullsetrmse(feature_list_indexes, dataset_features, y_array):
 
     fd = dict()
 
     fd['formulas'] = []
     fd['index']    = []
-    fd['mse']     = []
+    fd['rmse']     = []
     fd['percoeff'] = []
     fd['pval']     = []
     fd['mape']     = []
@@ -707,13 +707,14 @@ def feature_check_fullsetmse(feature_list_indexes, dataset_features, y_array):
         y_pred = regressor.predict((np.array(X)).reshape(-1,1))
 
         mse = mean_squared_error(y_array, y_pred)
+        rmse = math.sqrt(mse)
         mape = mean_absolute_percentage_error(y_array, y_pred)
 
         progress_bar(jj + 1, len(dataset_keys))
 
         fd['formulas'].append(keyv)
         fd['index'].append(jj)
-        fd['mse'].append(mse)
+        fd['rmse'].append(rmse)
         fd['mape'].append(np.average(mape))
 
         if (math.isnan(val1)):

@@ -20,8 +20,8 @@ if __name__ == "__main__":
             required=False, type=str, default="")
     parser.add_argument("-s", "--split", \
             help="Split by a key [default=\"\"]", required=False, default="")
-    parser.add_argument("-u", "--usefullsetmse", \
-            help="Sort using the fullset MSE instead of the random splitting", action="store_true", default=False)
+    parser.add_argument("-u", "--usefullsetrmse", \
+            help="Sort using the fullset RMSE instead of the random splitting", action="store_true", default=False)
     
     args = parser.parse_args()
     
@@ -86,26 +86,36 @@ if __name__ == "__main__":
 
     feature_mse_dataframe = None
 
-    if args.usefullsetmse:
+    if args.usefullsetrmse:
         feature_mse_dataframe = \
-            matinfmod.feature_check_fullsetmse (range(0, len(df.columns)), 
+            matinfmod.feature_check_fullsetrmse (range(0, len(df.columns)), 
                 df, DE_array)
+
+        minvalue_lr = np.min(feature_mse_dataframe['rmse'].values)
+        bestformula_lr = \
+            feature_mse_dataframe[feature_mse_dataframe['rmse'] \
+            == minvalue_lr]['formulas'].values[0]
+
+        print(" Min RMSE value: ", minvalue_lr)
+        print("   Related formula: ", bestformula_lr)
+
+        fp.write(bestformula_lr + "\n")
     else:
         feature_mse_dataframe = \
             matinfmod.feature_check_lr (range(0, len(df.columns)), df, \
             DE_array, args.numofiterations)
 
-    feature_mse_dataframe.to_csv(args.output)
-
-    minvalue_lr = np.min(feature_mse_dataframe['mse'].values)
-    bestformula_lr = \
+        minvalue_lr = np.min(feature_mse_dataframe['mse'].values)
+        bestformula_lr = \
             feature_mse_dataframe[feature_mse_dataframe['mse'] \
             == minvalue_lr]['formulas'].values[0]
 
-    print(" Min LR value: ", minvalue_lr)
-    print("   Related formula: ", bestformula_lr)
+        print(" Min LR value: ", minvalue_lr)
+        print("   Related formula: ", bestformula_lr)
 
-    fp.write(bestformula_lr + "\n")
+        fp.write(bestformula_lr + "\n")
+
+    feature_mse_dataframe.to_csv(args.output)
 
     pearson_max = np.max(feature_mse_dataframe['percoeff'].values)
     bestformula_pearson = \
