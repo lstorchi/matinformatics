@@ -12,7 +12,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f","--file", help="input csv file ", \
             required=True, type=str)
-    parser.add_argument("-n", help="input formulas to dump defaul=10 ", \
+    parser.add_argument("-n", help="sump the first N formulas removing identical R/MSE defaul=10 ", \
             required=False, type=int, default=10)
     parser.add_argument("--abc", help="extract formula having A B C ", \
             required=False, action="store_true", default=False)
@@ -43,7 +43,11 @@ if __name__ == "__main__":
     pd.set_option('display.max_colwidth', -1)
 
     if not args.correlation:
-        print(selected[["formulas", "rmse"]])
+        previousval = float("inf")
+        for f in selected[["formulas", "rmse"]].values:
+            if f[1]  != previousval:
+                print(f[0], f[1])
+                previousval = f[1]
     else:
         print(selected[["formulas", "percoeff"]])
 
