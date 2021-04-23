@@ -48,5 +48,10 @@ if __name__ == "__main__":
 
     selected = df.head(args.n)
 
-    print(selected[["formulas", "rmse"]])
+    previousvalue = float("inf")
+    for f in selected[["formulas", "rmse"]].values:
+        rmse = math.sqrt(f[1])
+        if rmse != previousvalue:
+           print(f[0], rmse)
+           previousvalue =  rmse
 
