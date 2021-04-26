@@ -201,12 +201,12 @@ if __name__ == "__main__":
 
         if len(twoDformulas) > 0:
 
-          generatedmse = matinfmod.feature2D_check_lr(twoDformulas, 
+          generatedmse = matinfmod.feature2D_check_lr_msefullset(twoDformulas, 
                   featuresvalue, DE_array, args.nt, args.numofiterations, 
                   args.showiter)
           
           if generatedmse is None:
-              print("Error in feature2D_check_lr")
+              print("Error in feature2D_check_lr_msefullset")
               exit(1)
           
           generatedmse.to_csv(args.output + "_" + args.range.replace(":", "_"))
