@@ -822,6 +822,33 @@ def task_feature2D_check_lr (inps):
 
 ###############################################################################
 
+def task_feature2D_check_lr_msefullset (inps):
+
+    f1 = inps[0]
+    f2 = inps[1]
+    dataset_features = inps[2]
+    numoflr = inps[3]
+    y_array = inps[4]
+    toprint = inps[5]
+
+    mse = float("inf")
+    if f1 in dataset_features.columns and \
+            f2 in dataset_features.columns:
+        Xdf = dataset_features[[f1, f2]].copy()
+        X = Xdf.values
+    
+        regressor = LinearRegression()
+        regressor.fit(X, y_array)
+        y_pred = regressor.predict(X)
+        mse = mean_squared_error(y_array,y_pred)
+    
+    if toprint != "":
+        print(toprint)
+
+    return (f1, f2, mse)
+
+###############################################################################
+
 def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
         numoflr = 1000, showiter=False, goodfiles=[]):
 
@@ -896,6 +923,83 @@ def feature2D_check_lr(twoDformulas, dataset_features, y_array, nt, \
         #with futures.ThreadPoolExecutor(max_workers=nt) as executor:
         with futures.ProcessPoolExecutor(max_workers=nt) as executor:
             results = executor.map(task_feature2D_check_lr, inputs)
+        
+        for res in list(results):
+            fd['formulas'].append((res[0], res[1]))
+            fd['mse'].append(res[2])
+
+    return pd.DataFrame.from_dict(fd)
+
+###############################################################################
+
+def feature2D_check_lr_msefullset(twoDformulas, dataset_features, y_array, nt, \
+        numoflr = 1000, showiter=False, goodfiles=[]):
+
+    fd = dict()
+
+    fd['formulas'] = []
+    fd['mse']     = []
+
+    if nt == 1:
+
+        idx = 0
+        dim = len(twoDformulas)
+        avgtime = 0.0
+        for f1, f2 in twoDformulas:
+            start = time.time()
+
+            Xdf = dataset_features[[f1, f2]].copy()
+            X = Xdf.values
+        
+            regressor = LinearRegression()
+            regressor.fit(X, y_array)
+            y_pred = regressor.predict(X)
+            mse = mean_squared_error(y_array,y_pred)
+        
+            fd['formulas'].append((f1, f2))
+            fd['mse'].append(mse)
+
+            end = time.time()
+
+            idx += 1
+            if showiter:
+                avgtime += (end - start)
+                est = (float(dim)*(avgtime/float(idx)))/3600.0
+                fname = ""
+                if len(goodfiles) != 0:
+                    fname = goodfiles[idx-1]
+                print("Iter %10d of %10d [%10.6f estimated tot. %10.6f hrs.] %s"%(idx, dim, \
+                        (end - start), est, fname),flush=True)
+            else:
+                progress_bar(idx, dim)
+    else:
+
+        print("Preparing input for ", nt, " threads/processes")
+        inputs = []
+        toprint = ""
+        idx = 0
+        dim = len(twoDformulas)
+        for f1, f2 in twoDformulas:
+            inputs.append((f1, f2, dataset_features,
+                    numoflr, y_array, toprint))
+            idx += 1
+            if idx == int(dim*0.10) or \
+                idx == int(dim*0.20) or \
+                idx == int(dim*0.30) or \
+                idx == int(dim*0.40) or \
+                idx == int(dim*0.50) or \
+                idx == int(dim*0.60) or \
+                idx == int(dim*0.70) or \
+                idx == int(dim*0.80) or \
+                idx == int(dim*0.90) or \
+                idx == int(dim*0.99):
+                    toprint = "%15d of %15d"%(idx, dim) 
+            else:
+                toprint = ""
+        
+        #with futures.ThreadPoolExecutor(max_workers=nt) as executor:
+        with futures.ProcessPoolExecutor(max_workers=nt) as executor:
+            results = executor.map(task_feature2D_check_lr_msefullset, inputs)
         
         for res in list(results):
             fd['formulas'].append((res[0], res[1]))
