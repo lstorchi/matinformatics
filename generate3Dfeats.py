@@ -171,7 +171,7 @@ if __name__ == "__main__":
 
         if len(threeDformulas) > 0:
 
-          generatedmse = matinfmod.feature3D_check_lr(threeDformulas, 
+          generatedmse = matinfmod.feature3D_check_lr_msefullset(threeDformulas, 
                   featuresvalue, DE_array, args.numofiterations, 
                   args.showiter)
           

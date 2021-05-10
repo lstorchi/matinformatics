@@ -23,6 +23,8 @@ if __name__ == "__main__":
     
     all_files = glob.glob(args.dir + "/*.csv_*")
 
+    print(all_files)
+
     li = []
 
     pd.set_option('display.max_rows', None)
@@ -32,9 +34,8 @@ if __name__ == "__main__":
 
     for filename in all_files:
         dfi = pd.read_csv(filename, index_col=None, header=0)
-        dfi = dfi.sort_values('rmse')
+        dfi = dfi.sort_values('mse')
         selectedi = dfi.head(1)
-        print(selectedi[["formulas", "rmse"]])
 
         li.append(dfi)
 
@@ -45,14 +46,14 @@ if __name__ == "__main__":
         dfb = dfa[dfa['formulas'].str.contains("_B")]
         df = dfb[dfb['formulas'].str.contains("_C")]
 
-    df = df.sort_values('rmse')
+    df = df.sort_values('mse')
 
     selected = df.head(args.n)
 
     previousvalue = float("inf")
-    for f in selected[["formulas", "rmse"]].values:
+    for f in selected[["formulas", "mse"]].values:
         rmse = math.sqrt(f[1])
         if rmse != previousvalue:
-           print(f[0], rmse)
-           previousvalue =  rmse
+            print(f[0], rmse)
+            previousvalue =  rmse
 

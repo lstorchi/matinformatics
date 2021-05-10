@@ -1101,3 +1101,55 @@ def feature3D_check_lr(threeDformulas, dataset_features, y_array, \
 
     return pd.DataFrame.from_dict(fd)
 
+###############################################################################
+
+def feature3D_check_lr_msefullset(threeDformulas, dataset_features, y_array, \
+        numoflr = 1000, showiter=False, goodfiles=[]):
+
+    fd = dict()
+
+    fd['formulas'] = []
+    fd['mse']     = []
+
+    idx = 0
+    dim = len(threeDformulas)
+    avgtime = 0.0
+    for f1, f2, f3 in threeDformulas:
+        start = time.time()
+
+        Xdf = None
+        try:
+            Xdf = dataset_features[[f1, f2, f3]].copy()
+
+            #print("\""+f1+"\"\n\""+f2+"\"\n\""+f3+"\"\nKey Found") 
+
+            X = Xdf.values
+    
+            regressor = LinearRegression()
+            regressor.fit(X, y_array)
+            y_pred = regressor.predict(X)
+            mse = (mean_squared_error(y_array, y_pred))
+            
+            fd['formulas'].append((f1, f2, f3))
+            fd['mse'].append(mse)
+            
+            end = time.time()
+            
+            if showiter:
+                avgtime += (end - start)
+                est = (float(dim)*(avgtime/float(idx+1)))/3600.0
+                fname = ""
+                if len(goodfiles) != 0:
+                    fname = goodfiles[idx]
+                print("Iter %10d of %10d [%10.6f estimated tot. %10.6f hrs.] %s"%(idx+1, dim, \
+                        (end - start), est, fname),flush=True)
+            else:
+                progress_bar(idx, dim)
+
+        except KeyError as ki:
+            print("\""+f1+"\"\n\""+f2+"\"\n\""+f3+"\"\nKey Error") 
+        
+        idx += 1
+
+    return pd.DataFrame.from_dict(fd)
+
