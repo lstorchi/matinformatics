@@ -32,21 +32,24 @@ if __name__ == "__main__":
 
     print("Total 1D features ", featuresvalue.shape[1])
 
-    toremove = []
     for i, k1 in enumerate(featuresvalue.columns):
-        print(i+1 , " of ", len(featuresvalue.columns))
-        for k2 in featuresvalue.columns:
+        
+        print(i+1 , " of ", len(featuresvalue.columns), flush=True)
+        toremove = []
+
+        for j, k2 in enumerate(featuresvalue.columns):
             if k1 != 2:
-                if not ((k1 in toremove) and (k2 in toremove)):
-                    Xdf = featuresvalue[[k1, k2]]
-                    corrval = np.fabs(Xdf.corr().values[0,1])
-                    if corrval > correlationlimit:
-                        toremove.append(k2)
+                Xdf = featuresvalue[[k1, k2]]
+                corrval = np.fabs(Xdf.corr().values[0,1])
+                if corrval > correlationlimit:
+                    toremove.append(k2)
+                    print("  Remove ", j+1, flush=True)
+        
+        featuresvalue = featuresvalue.drop(columns=toremove)
 
     print(len(toremove), " To remove ", toremove )
 
-    df = featuresvalue.drop(columns=toremove)
-    df.to_pickle("./uncorrelated.pkl")
+    featuresvalue.to_pickle("./uncorrelated.pkl")
 
 
 
