@@ -36,6 +36,10 @@ if __name__ == "__main__":
     i = 1
     while True: 
 
+        if len(featuresvalue.columns[0]) <= 0:
+            print("no more formulas left")
+            break
+
         k1 = featuresvalue.columns[0]
 
         print(i , " of ", len(featuresvalue.columns), flush=True)
