@@ -36,7 +36,7 @@ if __name__ == "__main__":
     i = 1
     while True: 
 
-        if len(featuresvalue.columns[0]) <= 0:
+        if len(featuresvalue.columns[0]) <= 1:
             print("no more formulas left")
             break
 
