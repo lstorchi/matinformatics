@@ -204,3 +204,9 @@ Final run :
 
   python3 generatefeats_pelect.py  -f ./data/FENAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 1 -l "PE-AFE" --sheetnames "list_higher_Pauling_electronega,NAD AtomicData"; python3 ffilter.py -f newadata.pkl -n 50 -i "./data/FENAD.xlsx,FE-AFE,list_higher_Pauling_electronega" ; python3 checksingleformula.py -n 1000 -f newadata.pkl -i "./data/FENAD.xlsx,PE-AFE,list_higher_Pauling_electronega"
   python3 finallinearfit.py -f ./newadata.pkl -i "./data/FENAD.xlsx,PE-AFE,poolished_revised_list" --formula "..."
+
+python3 generatefeats.py  -f ./data/NAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];HOMO[3];LUMO[3]" -j -m 4 --variancefilter=0.05 --useatomname "A" 2> stderr 
+python3 ffilter.py -f newadata.pkl -n 50
+python3 checksingleformula.py -f "./NAD_gen_4/newadata.pkl" --formulafile ./NAD_gen_4/out.txt  -i "./data/NAD.xlsx,DE,Material Data" -n 1000
+
+

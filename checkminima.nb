@@ -1,0 +1,247 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      9756,        239]
+NotebookOptionsPosition[      8767,        216]
+NotebookOutlinePosition[      9194,        233]
+CellTagsIndexPosition[      9151,        230]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{"DE", " ", "=", " ", 
+  RowBox[{"Import", "[", 
+   RowBox[{
+   "\"\</home/redo/Project_MaterialInformatics/matinformatics/data/OAD.xlsx\>\
+\"", ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"\"\<Data\>\"", ",", " ", "1", ",", 
+      RowBox[{"Range", "[", 
+       RowBox[{"2", ",", "83"}], "]"}], " ", ",", " ", "7"}], "}"}]}], 
+   "]"}]}], "\n", 
+ RowBox[{"IP", " ", "=", " ", 
+  RowBox[{"Import", "[", 
+   RowBox[{
+   "\"\</home/redo/Project_MaterialInformatics/matinformatics/data/OAD.xlsx\>\
+\"", ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"\"\<Data\>\"", ",", " ", "2", ",", 
+      RowBox[{"Range", "[", 
+       RowBox[{"2", ",", "83"}], "]"}], " ", ",", " ", "3"}], "}"}]}], 
+   "]"}]}]}], "Input",
+ CellChangeTimes->{{3.834550854566578*^9, 3.83455100417591*^9}, {
+  3.8345515134496927`*^9, 3.8345515542492533`*^9}, {3.834551605487228*^9, 
+  3.834551643083338*^9}, {3.8345517003130283`*^9, 3.834551702726437*^9}, {
+  3.834551867162549*^9, 3.834551989111001*^9}, {3.8345521442247047`*^9, 
+  3.834552160009679*^9}, {3.834552359226882*^9, 3.8345523957139263`*^9}, {
+  3.8345524694801817`*^9, 3.83455253809063*^9}, {3.8345525758476963`*^9, 
+  3.8345526288322353`*^9}, {3.83455267621903*^9, 3.8345527332268953`*^9}},
+ CellLabel->"In[40]:=",ExpressionUUID->"17d16668-1d85-472f-b114-0f3d2b733d7f"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"-", "0.059`"}], ",", 
+   RowBox[{"-", "0.038`"}], ",", 
+   RowBox[{"-", "0.033`"}], ",", 
+   RowBox[{"-", "0.022`"}], ",", "0.43`", ",", "0.506`", ",", "0.495`", ",", 
+   "0.466`", ",", "1.713`", ",", "1.02`", ",", "0.879`", ",", "2.638`", ",", 
+   RowBox[{"-", "0.146`"}], ",", 
+   RowBox[{"-", "0.133`"}], ",", 
+   RowBox[{"-", "0.127`"}], ",", 
+   RowBox[{"-", "0.115`"}], ",", 
+   RowBox[{"-", "0.178`"}], ",", 
+   RowBox[{"-", "0.087`"}], ",", 
+   RowBox[{"-", "0.055`"}], ",", 
+   RowBox[{"-", "0.005`"}], ",", "0.072`", ",", "0.219`", ",", "0.212`", ",", 
+   "0.15`", ",", "0.668`", ",", "0.275`", ",", 
+   RowBox[{"-", "0.146`"}], ",", 
+   RowBox[{"-", "0.165`"}], ",", 
+   RowBox[{"-", "0.166`"}], ",", 
+   RowBox[{"-", "0.168`"}], ",", 
+   RowBox[{"-", "0.266`"}], ",", 
+   RowBox[{"-", "0.369`"}], ",", 
+   RowBox[{"-", "0.361`"}], ",", 
+   RowBox[{"-", "0.35`"}], ",", 
+   RowBox[{"-", "0.019`"}], ",", "0.156`", ",", "0.152`", ",", "0.203`", ",", 
+   "0.102`", ",", "0.275`", ",", "0.259`", ",", "0.241`", ",", "0.433`", ",", 
+   "0.341`", ",", "0.271`", ",", "0.158`", ",", "0.202`", ",", 
+   RowBox[{"-", "0.136`"}], ",", 
+   RowBox[{"-", "0.161`"}], ",", 
+   RowBox[{"-", "0.164`"}], ",", 
+   RowBox[{"-", "0.169`"}], ",", 
+   RowBox[{"-", "0.221`"}], ",", 
+   RowBox[{"-", "0.369`"}], ",", 
+   RowBox[{"-", "0.375`"}], ",", 
+   RowBox[{"-", "0.381`"}], ",", 
+   RowBox[{"-", "0.156`"}], ",", 
+   RowBox[{"-", "0.044`"}], ",", 
+   RowBox[{"-", "0.03`"}], ",", "0.037`", ",", 
+   RowBox[{"-", "0.087`"}], ",", "0.07`", ",", "0.083`", ",", "0.113`", ",", 
+   "0.15`", ",", "0.17`", ",", "0.122`", ",", "0.08`", ",", "0.016`", ",", 
+   "0.581`", ",", 
+   RowBox[{"-", "0.112`"}], ",", 
+   RowBox[{"-", "0.152`"}], ",", 
+   RowBox[{"-", "0.158`"}], ",", 
+   RowBox[{"-", "0.165`"}], ",", 
+   RowBox[{"-", "0.095`"}], ",", 
+   RowBox[{"-", "0.326`"}], ",", 
+   RowBox[{"-", "0.35`"}], ",", 
+   RowBox[{"-", "0.381`"}], ",", "0.808`", ",", "0.45`", ",", "0.264`", ",", 
+   "0.136`", ",", "0.087`"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.834551647126891*^9, 3.834551705493415*^9, {3.8345518942564287`*^9, 
+   3.8345519792207737`*^9}, {3.8345521537770767`*^9, 3.83455216223393*^9}, {
+   3.834552365559265*^9, 3.8345524002658567`*^9}, {3.8345524858143587`*^9, 
+   3.8345525156736803`*^9}, {3.834552600994307*^9, 3.8345526229700813`*^9}, {
+   3.8345526884198923`*^9, 3.834552697941695*^9}, 3.834552737220385*^9},
+ CellLabel->"Out[40]=",ExpressionUUID->"bec78f7e-bd61-43c2-9beb-7131e3e365ee"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Import", "noelem", 
+   "\"The Import element \\\"\\!\\(\\*RowBox[{\\\"38\\\"}]\\)\\\" is not \
+present when importing as \\!\\(\\*RowBox[{\\\"\\\\\\\"XLSX\\\\\\\"\\\"}]\\).\
+\"", 2, 41, 10, 21336311227068947987, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.834552737265533*^9},
+ CellLabel->
+  "During evaluation of \
+In[40]:=",ExpressionUUID->"feeec0d5-2d6b-4a61-9d36-4451f3c48503"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Import", "noelem", 
+   "\"The Import element \\\"\\!\\(\\*RowBox[{\\\"39\\\"}]\\)\\\" is not \
+present when importing as \\!\\(\\*RowBox[{\\\"\\\\\\\"XLSX\\\\\\\"\\\"}]\\).\
+\"", 2, 41, 11, 21336311227068947987, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.8345527372935123`*^9},
+ CellLabel->
+  "During evaluation of \
+In[40]:=",ExpressionUUID->"ed279d37-bc77-4e83-84da-7ea48ed4439c"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Import", "noelem", 
+   "\"The Import element \\\"\\!\\(\\*RowBox[{\\\"40\\\"}]\\)\\\" is not \
+present when importing as \\!\\(\\*RowBox[{\\\"\\\\\\\"XLSX\\\\\\\"\\\"}]\\).\
+\"", 2, 41, 12, 21336311227068947987, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.834552737311886*^9},
+ CellLabel->
+  "During evaluation of \
+In[40]:=",ExpressionUUID->"93c0bb6e-d228-40fd-af72-491b817e994c"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General", "stop", 
+   "\"Further output of \\!\\(\\*StyleBox[RowBox[{\\\"Import\\\", \\\"::\\\", \
+\\\"noelem\\\"}], \\\"MessageName\\\"]\\) will be suppressed during this \
+calculation.\"", 2, 41, 13, 21336311227068947987, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.8345527373259153`*^9},
+ CellLabel->
+  "During evaluation of \
+In[40]:=",ExpressionUUID->"4f3290ec-a21e-4137-8913-5089c822eb1a"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"-", "5.329`"}], ",", 
+   RowBox[{"-", "9.459`"}], ",", 
+   RowBox[{"-", "8.19`"}], ",", 
+   RowBox[{"-", "10.852`"}], ",", 
+   RowBox[{"-", "13.585`"}], ",", 
+   RowBox[{"-", "16.433`"}], ",", 
+   RowBox[{"-", "19.404`"}], ",", 
+   RowBox[{"-", "5.223`"}], ",", 
+   RowBox[{"-", "8.037`"}], ",", 
+   RowBox[{"-", "5.78`"}], ",", 
+   RowBox[{"-", "7.758`"}], ",", 
+   RowBox[{"-", "9.751`"}], ",", 
+   RowBox[{"-", "11.795`"}], ",", 
+   RowBox[{"-", "13.902`"}], ",", 
+   RowBox[{"-", "4.433`"}], ",", 
+   RowBox[{"-", "6.428`"}], ",", 
+   RowBox[{"-", "8.389`"}], ",", 
+   RowBox[{"-", "10.136`"}], ",", 
+   RowBox[{"-", "5.818`"}], ",", 
+   RowBox[{"-", "7.567`"}], ",", 
+   RowBox[{"-", "9.262`"}], ",", 
+   RowBox[{"-", "10.946`"}], ",", 
+   RowBox[{"-", "12.65`"}], ",", 
+   RowBox[{"-", "4.289`"}], ",", 
+   RowBox[{"-", "6.032`"}], ",", 
+   RowBox[{"-", "8.058`"}], ",", 
+   RowBox[{"-", "9.581`"}], ",", 
+   RowBox[{"-", "5.537`"}], ",", 
+   RowBox[{"-", "7.043`"}], ",", 
+   RowBox[{"-", "8.468`"}], ",", 
+   RowBox[{"-", "9.867`"}], ",", 
+   RowBox[{"-", "11.257`"}], ",", 
+   RowBox[{"-", "4.006`"}], ",", 
+   RowBox[{"-", "5.516`"}], ",", "\<\"\"\>", ",", "\<\"\"\>", ",", "$Failed", 
+   ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", 
+   "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", 
+   ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", 
+   "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", 
+   ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", 
+   "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", 
+   ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", 
+   "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", 
+   ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", 
+   "$Failed", ",", "$Failed", ",", "$Failed", ",", "$Failed", ",", 
+   "$Failed"}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.834551647126891*^9, 3.834551705493415*^9, {3.8345518942564287`*^9, 
+   3.8345519792207737`*^9}, {3.8345521537770767`*^9, 3.83455216223393*^9}, {
+   3.834552365559265*^9, 3.8345524002658567`*^9}, {3.8345524858143587`*^9, 
+   3.8345525156736803`*^9}, {3.834552600994307*^9, 3.8345526229700813`*^9}, {
+   3.8345526884198923`*^9, 3.834552697941695*^9}, 3.834552737351233*^9},
+ CellLabel->"Out[41]=",ExpressionUUID->"c17cd524-4e5f-49df-a176-c87ea4ec008b"]
+}, Open  ]]
+},
+WindowSize->{1920, 1043},
+WindowMargins->{{1920, Automatic}, {0, Automatic}},
+Magnification:>1.6 Inherited,
+FrontEndVersion->"12.2 for Linux x86 (64-bit) (December 12, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"f624eb83-fef5-4ad0-b71e-0929233ddaf7"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 1314, 28, 81, "Input",ExpressionUUID->"17d16668-1d85-472f-b114-0f3d2b733d7f"],
+Cell[1897, 52, 2554, 57, 186, "Output",ExpressionUUID->"bec78f7e-bd61-43c2-9beb-7131e3e365ee"],
+Cell[4454, 111, 441, 10, 33, "Message",ExpressionUUID->"feeec0d5-2d6b-4a61-9d36-4451f3c48503"],
+Cell[4898, 123, 443, 10, 33, "Message",ExpressionUUID->"ed279d37-bc77-4e83-84da-7ea48ed4439c"],
+Cell[5344, 135, 441, 10, 33, "Message",ExpressionUUID->"93c0bb6e-d228-40fd-af72-491b817e994c"],
+Cell[5788, 147, 455, 10, 33, "Message",ExpressionUUID->"4f3290ec-a21e-4137-8913-5089c822eb1a"],
+Cell[6246, 159, 2505, 54, 202, "Output",ExpressionUUID->"c17cd524-4e5f-49df-a176-c87ea4ec008b"]
+}, Open  ]]
+}
+]
+*)
+
