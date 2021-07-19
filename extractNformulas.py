@@ -25,13 +25,15 @@ if __name__ == "__main__":
 
     df = pd.read_csv(filename)
 
+    jeymse = "rmse"
+
     if args.abc:
         dfa = df[df['formulas'].str.contains("_A")]
         dfb = dfa[dfa['formulas'].str.contains("_B")]
         df = dfb[dfb['formulas'].str.contains("_C")]
 
     if not args.correlation:
-        df = df.sort_values('rmse')
+        df = df.sort_values(jeymse)
     else:
         df = df.sort_values('percoeff', ascending=False)
 
@@ -44,7 +46,7 @@ if __name__ == "__main__":
 
     if not args.correlation:
         previousval = float("inf")
-        for f in selected[["formulas", "rmse"]].values:
+        for f in selected[["formulas", jeymse]].values:
             if f[1]  != previousval:
                 print(f[0], f[1])
                 previousval = f[1]
