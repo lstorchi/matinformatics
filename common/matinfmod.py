@@ -299,7 +299,7 @@ def generate_formulas_AB (features, atomicdata, lista, listb, method = 1):
         
         for classe in features:
             dim = len(features[classe])
-            
+
             f1 = []
             f2 = []
             f3 = []
@@ -324,7 +324,7 @@ def generate_formulas_AB (features, atomicdata, lista, listb, method = 1):
     
             
             ftuple = (f1, f2, f3, f4, f5)
-            
+
             for i in range(len(ftuple)):
                 first = ftuple[i]
                 for j in range(i, len(ftuple)):
@@ -336,6 +336,12 @@ def generate_formulas_AB (features, atomicdata, lista, listb, method = 1):
                                 numertype.append(classe)
                                 numer.append(f + " - " + s)
                                 numertype.append(classe)
+
+        for idxn in range(len(numer)):
+            for idxd in range(idxn+1, len(numer)):
+                if (numertype[idxn] != numertype[idxd]) and (numer[idxn] != numer[idxd]) :
+                    formulas.append("("+numer[idxn]+")/("+numer[idxd]+")")
+ 
     elif method == 4:
 
         numer = []

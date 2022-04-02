@@ -52,9 +52,9 @@ if __name__ == "__main__":
     
     xls = pd.ExcelFile(filename)
     
-    atomicdata = pd.read_excel(xls, "Atomic Data")
+    atomicdata = pd.read_excel(xls, "OAD")
     basicfeatureslist = args.basicfeatures.split(";")
-    materialdata = pd.read_excel(xls, "Material Data")
+    materialdata = pd.read_excel(xls, "MaterialData")
 
     if (len(basicfeatureslist) <= 1):
         print("Basic features thata can be used:")
