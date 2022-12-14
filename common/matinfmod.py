@@ -157,8 +157,7 @@ def generate_formulas_AB (features, atomicdata, lista, listb, method = 1):
             newdataframeAB[k+"_B"].append(bdict[k])
     
     featuresAB = pd.DataFrame.from_dict(newdataframeAB) 
-    
- 
+     
     if method == 1:
 
         numer = []
@@ -420,7 +419,56 @@ def generate_formulas_AB_mixed (features, data, method = 1):
 
     # TODO
 
+    for k in features:
+        for f in features[k]:
+            newdataframeAB[f] = list(data[f].values)
+
     featuresAB = pd.DataFrame.from_dict(newdataframeAB) 
+
+    if method == 1:
+
+        numer = []
+        deno = []
+    
+        for classe in features:
+            dim = len(features[classe])
+            
+            f1 = []
+            f2 = []
+            f3 = []
+            f4 = []
+            f5 = []
+            for i in range(dim):
+                
+                f1.append(features[classe][i])
+                f2.append(features[classe][i] + "**2")
+                f3.append(features[classe][i] + "**3")
+                f4.append("sqrt(fabs("+features[classe][i] + "))")
+                f5.append("exp("+features[classe][i] + ")")
+            
+            ftuple = (f1, f2, f3, f4, f5)
+            
+            for i in range(len(ftuple)):
+                first = ftuple[i]
+                for j in range(i, len(ftuple)):
+                    second = ftuple[j]
+                    for f in first:
+                        for s in second:
+                            if f != s:
+                                numer.append(f + " + " + s)
+                                numer.append(f + " - " + s)
+    
+        for classe in features:
+            dim = len(features[classe])
+            for i in range(dim):
+                deno.append("sqrt(fabs("+features[classe][i]+"))")
+                deno.append("exp("+features[classe][i]+")")
+                deno.append("("+features[classe][i]+"**2)")
+                deno.append("("+features[classe][i]+"**3)")
+
+        for n in numer:
+            for d in deno:
+                formulas.append("("+n+")/("+d+")")
 
     return formulas, featuresAB
 
