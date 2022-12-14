@@ -42,38 +42,22 @@ if __name__ == "__main__":
     parser.add_argument("--variancefilter", \
                         help="Remove all the formula with small variance [default=0.0 no filter]", required=False, default=0.0,
                         type=float)
-    parser.add_argument("--useatomname", \
-                        help="Use atom name instead of Z", required=False, default="",
-                        type=str)
     
     args = parser.parse_args()
     
     filename = args.file
     
     xls = pd.ExcelFile(filename)
-    
-    atomicdata = pd.read_excel(xls, "OAD")
     basicfeatureslist = args.basicfeatures.split(";")
-    materialdata = pd.read_excel(xls, "MaterialData")
+    data = pd.read_excel(xls)
 
     if (len(basicfeatureslist) <= 1):
         print("Basic features thata can be used:")
-        for basicf in atomicdata.columns:
+        for basicf in data.columns:
             print("  \""+basicf+"\"")
         exit(1)
-
-    if args.useatomname != "":
-        atomicsymbols = atomicdata[args.useatomname].values
-        zlist = []
-        for a in atomicsymbols:
-            z = element(a).atomic_number
-            print(a, " Z= ", z )
-            zlist.append(z)
-        atomicdata["Z"] = zlist
         
-    
-    lista =  materialdata["ZA"].values
-    listb =  materialdata["ZB"].values
+    exit(1)
 
     #print(atomicdata.keys())
         
