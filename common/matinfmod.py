@@ -413,6 +413,19 @@ def generate_formulas_AB (features, atomicdata, lista, listb, method = 1):
 
 ###############################################################################
 
+def generate_formulas_AB_mixed (features, data, method = 1):
+
+    formulas = []
+    newdataframeAB = {}
+
+    # TODO
+
+    featuresAB = pd.DataFrame.from_dict(newdataframeAB) 
+
+    return formulas, featuresAB
+
+###############################################################################
+
 def generate_formulas_ABC (features, atomicdata, lista, listb, listc, \
     method = 1):
 

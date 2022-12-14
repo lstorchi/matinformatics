@@ -209,4 +209,11 @@ python3 generatefeats.py  -f ./data/NAD.xlsx -b "IP[1];EA[1];rs[2];rp[2];rd[2];H
 python3 ffilter.py -f newadata.pkl -n 50
 python3 checksingleformula.py -f "./NAD_gen_4/newadata.pkl" --formulafile ./NAD_gen_4/out.txt  -i "./data/NAD.xlsx,DE,Material Data" -n 1000
 
+###########################################################################################
+
+Vec/Z_A[1];Vec/Z_B[1];Rdce_A[1];Rdce_B[1];Rdve_A[1];Rdve_B[1];RI_A[1];RI_B[1];AR_A[1];AR_B[1];AV_A[1];AV_B[1];CVW_A[1];CVW_B[1];EVW_A[1];EVW_B[1];
+Rcov_A[1];Rcov_B[1];W_A[1];W_B[1];AN_A[1];AN_B[1];DP_A[1];DP_B[1];EN-MB_A[1];EN-MB_B[1];EN-P_A[1];EN-P_B[1];EA_A[2];EA_B[2];EI_A[2];EI_B[2]
+
+python3 ./generatefeats_tcdata.py -f BFO_with_AB.xlsx -b "Vec/Z_A[1];Vec/Z_B[1];Rdce_A[1];Rdce_B[1];Rdve_A[1];Rdve_B[1];RI_A[1];RI_B[1];AR_A[1];AR_B[1];AV_A[1];AV_B[1];CVW_A[1];CVW_B[1];EVW_A[1];EVW_B[1];Rcov_A[1];Rcov_B[1];W_A[1];W_B[1];AN_A[1];AN_B[1];DP_A[1];DP_B[1];EN-MB_A[1];EN-MB_B[1];EN-P_A[1];EN-P_B[1];EA_A[2];EA_B[2];EI_A[2];EI_B[2]"
+
 

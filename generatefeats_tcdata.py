@@ -56,8 +56,6 @@ if __name__ == "__main__":
         for basicf in data.columns:
             print("  \""+basicf+"\"")
         exit(1)
-        
-    exit(1)
 
     #print(atomicdata.keys())
         
@@ -71,7 +69,7 @@ if __name__ == "__main__":
         classe = newb[1].replace("]", "")
         name = newb[0]
         
-        if not (name in atomicdata.columns):
+        if not (name in data.columns):
             print("Error feature not present")
             exit(1)
             
@@ -84,8 +82,9 @@ if __name__ == "__main__":
     try:
         newdataframe = {}
         print("Start generating formulas...")
-        formulas, atomicdataAB = matinfmod.generate_formulas_AB \
-            (basicfeaturesdict, atomicdata, lista, listb, args.method)
+        formulas, atomicdataAB = matinfmod.generate_formulas_AB_mixed \
+            (basicfeaturesdict, data, args.method)
+
         fname  = "formulaslist.txt"
         if os.path.exists(fname):
             os.remove(fname)
